@@ -1,0 +1,90 @@
+.login-background {
+  background-color: #b7d5ff;
+  overflow: auto;
+}
+
+.info-area {
+  height: 45%;
+  width: 45%;
+  float: left;
+  padding-top: 3%;
+  padding-left: 0%;
+  position: relative;
+  text-align: center;
+}
+
+.logo {
+  border: 10px solid #5656d6;
+  border-radius: 50%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+}
+
+.login-area {
+  background-color: #ffffff;
+  margin: 5%;
+  height: 45%;
+  width: 45%;
+  border: 1px solid #b7d5ff;
+  border-radius: 10%;
+  padding: 5%;
+  float: right;
+  position: relative;
+}
+
+.class-name {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.login-menu {
+  .ant-menu {
+    background-color: #001529;
+    a {
+      font-size: 16px;
+      color: #ffffff;
+    }
+  }
+  .ant-menu-inline, .ant-menu-vertical, .ant-menu-vertical-left {
+    border-right: none;
+  }
+  float: right;
+  position: relative;
+  display: flex;
+}
+
+.ant-layout-sider {
+  background-color: #ffffff;
+}
+
+.ant-layout-sider-trigger {
+  height: 25px;
+  line-height: 25px;
+}
+
+.site-layout .site-layout-background {
+  background-color: #ffffff;
+  min-height: 525px;
+  width: calc(100% - 50px);
+  border: 1px solid #b7d5ff;
+  border-radius: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+  position: relative;
+}
+
+.content .site-layout-background {
+  padding: 25px 40px;
+  margin-bottom: 15px;
+  min-height: 570px;
+}
+
+.content {
+  height: 100%;
+}
+
+.ant-layout {
+  height: 100%;
+}

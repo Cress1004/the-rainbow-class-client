@@ -1,0 +1,32 @@
+@import "react-big-calendar/lib/sass/styles";
+@import "../style/app.scss";
+.dashboard {
+  &__title {
+    font-size: $title-font-size;
+    font-weight: $title-font-weight;
+    color: $primary-color;
+  }
+}
+
+.events {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.show-lesson-detail {
+    right: 15px;
+    bottom: 15px;
+    position: absolute;
+}
+
+.class-schedule {
+  &__title {
+    font-size: $title-font-size;
+    font-weight: $title-font-weight;
+    color: $primary-color;
+  }
+  &__filter-input {
+    width: 100%;
+  }
+}

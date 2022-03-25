@@ -1,0 +1,38 @@
+.login-area {
+  background-color: #ffffff;
+  margin: 5%;
+  height: 45%;
+  width: 45%;
+  border: 1px solid #b7d5ff;
+  border-radius: 10%;
+  padding: 5%;
+  float: right;
+  position: relative;
+}
+
+.ant-btn.login-button-disable.ant-btn-primary {
+  min-width: 100%;
+  border-color: #858383;
+  background-color: #858383;
+  color: #ffffff;
+}
+
+.ant-btn.reset-pass-button-disable.ant-btn-primary {
+  border-color: #858383;
+  background-color: #858383;
+  color: #ffffff;
+}
+
+.ant-btn.login-button-enable {
+  min-width: 100%;
+  background-color: #5656d6;
+  color: #ffffff;
+}
+
+.ant-input .input-reset-email {
+  align-content: center;
+}
+
+.reset-password-modal {
+  text-align: center;
+}

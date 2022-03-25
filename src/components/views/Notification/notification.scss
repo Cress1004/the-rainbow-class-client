@@ -1,0 +1,40 @@
+@import "../style/app.scss";
+
+.notification {
+    &__icon {
+        color: white;
+        font-size: 25px;
+        padding: 10px 25px;
+        margin-top: 10px;
+    }
+    &__content {
+        border: 1px solid rgb(202, 199, 199);
+        background-color: rgb(255, 244, 244);
+        position: absolute;
+        z-index: 5;
+        top: 50px;
+        left: -250px;
+        width: 300px;
+    }
+    &__header {
+        font-weight: $title-font-weight;
+        color: $primary-color;
+    }
+    &__footer {
+        text-align: center;
+        &--active {
+            font-weight: $title-font-weight;
+            color: $primary-color;
+        }
+        &--deactive {
+            font-weight: $title-font-weight;
+            color: $disable-color;
+        }
+    }
+    &__close-icon {
+        float: right;
+        > a {
+            color: $primary-color;
+        }
+    }
+}
