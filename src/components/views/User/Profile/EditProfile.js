@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import Axios from "axios";
 import "./profile.scss";
 import { phoneRegExp } from "../../../common/constant";
+import apis from "../../../../apis";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -32,6 +33,29 @@ function EditProfile(props) {
     wrapperCol: { offset: 18, span: 4 },
   };
 
+  const fetchEditProfile = async (dataToSend) => {
+    const data = await apis.users.editProfile(dataToSend);
+    if (data.success) {
+      history.push("/profile");
+    } else {
+      alert(t("fail_to_get_api"));
+    }
+  }
+
+  const fetchCurrentUserProfile = async () => {
+    const data = await apis.users.getCurrentUserProfile();
+    if (data.success) {
+      const userData = data.userData;
+      setUserData(userData);
+      if (userData.address.address) {
+        setAddress(userData.address);
+        setProvince(userData.address.address.province);
+        setDistrict(userData.address.address.district);
+        setWard(userData.address.address.ward);
+      }
+    }
+  };
+
   const formik = useFormik({
     initialValues: userData ? userData : {},
     enableReinitialize: true,
@@ -46,16 +70,7 @@ function EditProfile(props) {
     }),
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
-        const valuesToSend = { ...values, address };
-        Axios.post(`/api/users/profile/edit`, { userData: valuesToSend }).then(
-          (response) => {
-            if (response.data.success) {
-              history.push("/profile");
-            } else {
-              alert(t("fail_to_get_api"));
-            }
-          }
-        );
+        fetchEditProfile({ ...values, address });
         setSubmitting(false);
       }, 400);
     },
@@ -65,20 +80,9 @@ function EditProfile(props) {
     Axios.post("/api/common-data/location", null).then((response) => {
       if (response.data.success) {
         setLocation(response.data.location);
-      } 
+      }
     });
-    Axios.post(`/api/users/profile`, { userId: userId }).then((response) => {
-      if (response.data.success) {
-        const data = response.data.userData;
-        setUserData(data);
-        if (data.address.address) {
-          setAddress(data.address);
-          setProvince(data.address.address.province);
-          setDistrict(data.address.address.district);
-          setWard(data.address.address.ward);
-        }
-      } 
-    });
+    fetchCurrentUserProfile();
   }, [t, userId]);
 
   const handleChangeProvice = (value) => {

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Row, Col, Button, Form, Modal, Input } from "antd";
+import { Row, Col, Button, Form } from "antd";
 import { Link } from "react-router-dom";
-import Axios from "axios";
 import "./profile.scss";
 import { transformAddressData } from "../../../common/transformData";
 import ChangePassword from "./ChangePassword";
+import apis from "../../../../apis";
 
 const { Item } = Form;
 const layout = {
@@ -20,43 +20,40 @@ function Profile() {
   const [showChangeAvatar, setShowChangeAvatar] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
 
+  const fetchCurrentUserProfile = async () => {
+    const data = await apis.users.getCurrentUserProfile();
+    if (data.success) setUserData(data.userData);
+  }
+
+  const fetchChangeAvatar = async (newAvtLink) => {
+    const data = await apis.users.changeAvatar(newAvtLink);
+    if (data.success) {
+      setShowChangeAvatar(false);
+      fetchCurrentUserProfile();
+    }
+  }
+
+  const fetchUploadAvatar = async (formData) => {
+    const data = await apis.upload.uploadAvatar(formData);
+    if (data.success) {
+      setUserData({ ...userData, image: data.link });
+      setShowChangeAvatar(true);
+    }
+  }
+
   useEffect(() => {
-    Axios.post(`/api/users/profile`, { userId: userId }).then((response) => {
-      if (response.data.success) {
-        const data = response.data.userData;
-        setUserData(data);
-      } 
-    });
+    fetchCurrentUserProfile();
   }, [t, userId]);
 
   const handleChangeAvatar = (e) => {
     const file = e.target.files[0];
     const formData = new FormData();
     formData.append("avatar", file);
-
-    Axios.post(`/api/upload/upload-avatar`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }).then((response) => {
-      if (response.data.success) {
-        setUserData({ ...userData, image: response.data.link });
-        setShowChangeAvatar(true);
-      } else {
-        alert(t("fail_to_upload_avatar"));
-      }
-    });
+    fetchUploadAvatar(formData);
   };
 
   const submitSaveAvatar = () => {
-    Axios.post(`/api/users/change-avatar`, userData).then((response) => {
-      if (response.data.success) {
-        setShowChangeAvatar(false);
-        window.location.reload();
-      } else {
-        alert(t("fail_to_save_avatar"));
-      }
-    });
+    fetchChangeAvatar(userData.image);
   };
 
   const changeAvatar = () => {

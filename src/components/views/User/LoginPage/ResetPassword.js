@@ -4,14 +4,33 @@ import "./LoginPage.scss";
 import { Modal, Button, Form, Input } from "antd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import Axios from "axios";
 import CustomFlashMessage from "../../FlashMessage/CustomFlashMessage";
 import { STATUS } from "../../../common/constant";
+import apis from "../../../../apis";
 
 function ResetPassword(props) {
   const { t } = useTranslation();
   const [showPopupResetPassword, setPopupResetPassword] = useState(false);
   const [message, setMessage] = useState({});
+
+  const fetchResetPassword = async (email) => {
+    const data = await apis.users.resetPassword(email);
+    if (data.success) {
+      formik.values.resetEmail = "";
+      setPopupResetPassword(false);
+      setMessage({
+        type: STATUS.success,
+        content: t("reset_email_was_sent"),
+        showFlashMessage: true,
+      });
+    } else {
+      setMessage({
+        type: STATUS.error,
+        content: t("some_thing_went_wrong"),
+        showFlashMessage: true,
+      });
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -23,25 +42,7 @@ function ResetPassword(props) {
         .required("required_email_message"),
     }),
     onSubmit: (values) => {
-      Axios.post(`api/users/reset-password`, {
-        resetEmail: values.resetEmail,
-      }).then((response) => {
-        if (response.data.success) {
-          formik.values.resetEmail = "";
-          setPopupResetPassword(false);
-          setMessage({
-            type: STATUS.success,
-            content: t("reset_email_was_sent"),
-            showFlashMessage: true,
-          });
-        } else {
-          setMessage({
-            type: STATUS.error,
-            content: t("some_thing_went_wrong"),
-            showFlashMessage: true,
-          });
-        }
-      });
+      fetchResetPassword(values.resetEmail);
     },
   });
 

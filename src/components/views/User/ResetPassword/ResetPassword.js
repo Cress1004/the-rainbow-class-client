@@ -4,11 +4,11 @@ import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Form, Icon, Input, Button, Typography } from "antd";
-import Axios from "axios";
 
 import "./ResetPassword.scss";
 import { STATUS } from "../../../common/constant";
 import CustomFlashMessage from "../../FlashMessage/CustomFlashMessage";
+import apis from "../../../../apis";
 
 const { Title } = Typography;
 const { Item } = Form;
@@ -19,6 +19,29 @@ function ResetPassword(props) {
   const verifyToken = new URLSearchParams(search).get("verifyToken");
   const [message, setMessage] = useState({});
   const history = useHistory();
+
+  const fetchSetNewPassword = async (valueToSend) => {
+    const data = await apis.users.setNewPassword(valueToSend);
+    if (data.success) {
+      setMessage({
+        type: STATUS.success,
+        content: t("reset_password_success"),
+        showFlashMessage: true,
+      });
+    } else if (!data.success) {
+      setMessage({
+        type: STATUS.error,
+        content: data.message,
+        showFlashMessage: true,
+      });
+    } else {
+      setMessage({
+        type: STATUS.error,
+        content: t("some_thing_went_wrong"),
+        showFlashMessage: true,
+      });
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -43,30 +66,10 @@ function ResetPassword(props) {
     }),
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
-        Axios.post(`api/users/set-new-password`, {
+        fetchSetNewPassword({
           resetEmail: values.resetEmail,
           verifyToken: verifyToken,
           newPassword: values.newPassword,
-        }).then((response) => {
-          if (response.data.success) {
-            setMessage({
-              type: STATUS.success,
-              content: t("reset_password_success"),
-              showFlashMessage: true,
-            });
-          } else if (!response.data.success) {
-            setMessage({
-              type: STATUS.error,
-              content: response.data.message,
-              showFlashMessage: true,
-            });
-          } else {
-            setMessage({
-              type: STATUS.error,
-              content: t("some_thing_went_wrong"),
-              showFlashMessage: true,
-            });
-          }
         });
         setSubmitting(false);
       }, 400);

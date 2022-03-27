@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Axios from "axios";
 import { Modal, Button, Form, Input } from "antd";
 import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import apis from "../../../../apis";
 
 const { Item } = Form;
 
@@ -11,6 +11,21 @@ function ChangePassword(props) {
   const { t } = useTranslation();
   const { showChangePassword, userId, layout, hideChangePasswordPopup } = props;
   const [beErrorMess, setBeErrorMess] = useState("");
+
+  const fetchChangePassword = async (dataToSend) => {
+    const data = await apis.users.changePassword(dataToSend);
+    if (data.success) {
+      hideChangePasswordPopup();
+      formik.resetForm({
+        values: { oldPassword: "", newPassWord: "", confirmPassword: "" },
+      });
+      setBeErrorMess("");
+    } else if (!data.success) {
+      setBeErrorMess(t("old_password_is_not_match"));
+    } else {
+      alert(t("fail_to_save_avatar"));
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -35,21 +50,9 @@ function ChangePassword(props) {
     }),
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
-        Axios.post(`/api/users/change-password`, {
+        fetchChangePassword({
           password: values,
           userId: userId,
-        }).then((response) => {
-          if (response.data.success) {
-            hideChangePasswordPopup();
-            formik.resetForm({
-              values: { oldPassword: "", newPassWord: "", confirmPassword: "" },
-            });
-            setBeErrorMess("");
-          } else if (!response.data.success) {
-            setBeErrorMess(t("old_password_is_not_match"));
-          } else {
-            alert(t("fail_to_save_avatar"));
-          }
         });
         setSubmitting(false);
       }, 400);

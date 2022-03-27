@@ -5,6 +5,7 @@ const axiosClient = axios.create({
   baseURL: `${LOCAL_API_URL}`,
   responseType: 'json',
   timeout: 15 * 1000,
+  withCredentials: true
 });
 
 axiosClient.interceptors.request.use(

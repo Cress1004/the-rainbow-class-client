@@ -1,24 +1,20 @@
 import React, { useEffect, useState } from "react";
-import Axios from "axios";
 import MyCalendar from "../Sessions/Calendar";
 import { useTranslation } from "react-i18next";
+import apis from "../../../../apis";
 
 function VolunteerTimesheet(props) {
   const { t } = useTranslation();
   const { userId } = props;
   const [schedule, setSchedule] = useState([]);
 
-  useEffect(() => {
-    Axios.post(`/api/users/my-schedule`, { userId: userId }).then(
-      (response) => {
-        if (response.data.success) {
-          const data = response.data.schedule;
-          setSchedule(data);
-        } else {
-          alert(t("fail_to_get_api"));
-        }
-      }
-    );
+  const fetchCurrentUserSchedule = async () => {
+    const data = await apis.users.getCurrentUserSchedule();
+    if (data.success) setSchedule(data.schedule);
+  }
+
+  useEffect(() => { 
+    fetchCurrentUserSchedule();
   }, [t, userId]);
 
   return (
