@@ -26,8 +26,8 @@ import {
 import { generateKey } from "../../../common/function";
 import PermissionDenied from "../../Error/PermissionDenied";
 import { checkCurrentMonitorBelongToCurrentClass } from "../../../common/checkRole";
-import useFetchRole from "../../../../hook/useFetchRole";
 import moment from "moment";
+import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
 
 const { Item } = Form;
 const { TextArea } = Input;
@@ -50,7 +50,7 @@ function AddLesson(props) {
   const [time, setTime] = useState(null);
   const [teachOption, setTeachOption] = useState(OFFLINE_OPTION);
   const userId = localStorage.getItem("userId");
-  const currentUser = useFetchRole(userId);
+  const currentUser = useFetchCurrentUserData();
 
   const layout = {
     labelCol: { span: 5 },

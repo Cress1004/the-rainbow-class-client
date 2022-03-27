@@ -16,9 +16,9 @@ import * as Yup from "yup";
 import { useHistory } from "react-router";
 import { WEEKDAY, FORMAT_TIME_SCHEDULE } from "../../common/constant";
 import { generateKey } from "../../common/function";
-import useFetchRole from "../../../hook/useFetchRole";
 import { checkAdminRole } from "../../common/checkRole";
 import PermissionDenied from "../Error/PermissionDenied";
+import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -35,8 +35,7 @@ function AddClass(props) {
     wrapperCol: { offset: 18, span: 4 },
   };
 
-  const userId = localStorage.getItem("userId");
-  const currentUserData = useFetchRole(userId);
+  const currentUserData = useFetchCurrentUserData();
   const userRole = currentUserData.userRole;
 
   const [location, setLocation] = useState([]);

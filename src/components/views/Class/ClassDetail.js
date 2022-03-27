@@ -12,7 +12,6 @@ import {
   transformStudentTypes,
 } from "../../common/transformData";
 import LessonList from "./Lesson/LessonList";
-import useFetchRole from "../../../hook/useFetchRole";
 import { checkAdminAndMonitorRole } from "../../common/function";
 import {
   checkCurrentMonitorBelongToCurrentClass,
@@ -22,6 +21,7 @@ import {
 import { SUPER_ADMIN } from "../../common/constant";
 import PermissionDenied from "../Error/PermissionDenied";
 import useFetchClassData from "../../../hook/useFetchClassData";
+import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
 
 function ClassDetail(props) {
   const { t } = useTranslation();
@@ -29,7 +29,7 @@ function ClassDetail(props) {
   const { id } = useParams();
   const [confirmDelete, setConfirmDelete] = useState(false);
   const userId = localStorage.getItem("userId");
-  const currentUserData = useFetchRole(userId);
+  const currentUserData = useFetchCurrentUserData();
   const userRole = currentUserData.userRole;
 
   const classData = useFetchClassData(id);

@@ -1,26 +1,26 @@
-import Axios from "axios";
 import { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import apis from "../../apis";
 
 export default function useFetchCurrentUserData() {
-  const userId = localStorage.getItem("userId");
   const [userRole, setUserRole] = useState({});
   const [userClassId, setUserClassId] = useState({});
 
-  const { t } = useTranslation();
+  const fetchCurrentUser = async () => {
+    const data = await apis.users.getCurrentUser();
+    if (data.success) {
+      setUserRole(data.userRole);
+      setUserRole((userRole) => {
+        return userRole;
+      });
+      setUserClassId(data.classId);
+      setUserClassId((classId) => {
+        return classId;
+      });
+    }
+  };
+
   useEffect(() => {
-    Axios.post(`/api/users/get-role`, { userId: userId }).then((response) => {
-      if (response.data.success) {
-        setUserRole(response.data.userRole);
-        setUserRole((userRole) => {
-          return userRole;
-        });
-        setUserClassId(response.data.classId);
-        setUserClassId((classId) => {
-          return classId;
-        });
-      }
-    });
-  }, [t, userId]);
+   fetchCurrentUser();
+  }, []);
   return { userRole, userClassId };
 }

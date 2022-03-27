@@ -8,12 +8,12 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { generateKey } from "../../common/function";
 import { WEEKDAY, FORMAT_TIME_SCHEDULE } from "../../common/constant";
-import useFetchRole from "../../../hook/useFetchRole";
 import {
   checkCurrentMonitorBelongToCurrentClass,
 } from "../../common/checkRole";
 import PermissionDenied from "../Error/PermissionDenied";
 import moment from "moment";
+import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -41,7 +41,7 @@ function EditClass(props) {
   const [defaultSchedule, setDefaultSchedule] = useState([]);
   const [address, setAddress] = useState({});
   const userId = localStorage.getItem("userId");
-  const currentUser = useFetchRole(userId);
+  const currentUser = useFetchCurrentUserData();
 
   const formik = useFormik({
     initialValues: classData ? classData : {},

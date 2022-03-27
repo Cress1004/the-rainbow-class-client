@@ -6,10 +6,10 @@ import Axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./student.scss";
-import useFetchRole from "../../../../../hook/useFetchRole";
 import { phoneRegExp } from "../../../../common/constant";
 import { checkAdminAndMonitorRole } from "../../../../common/function";
 import PermissionDenied from "../../../Error/PermissionDenied";
+import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUserData";
 
 const { Option } = Select;
 const { Item } = Form;
@@ -27,7 +27,7 @@ function AddStudent(props) {
   const [province, setProvince] = useState({});
   const [classes, setClasses] = useState({});
   const userId = localStorage.getItem("userId");
-  const userRole = useFetchRole(userId).userRole;
+  const userRole =useFetchCurrentUserData();
 
   const layout = {
     labelCol: { span: 5 },

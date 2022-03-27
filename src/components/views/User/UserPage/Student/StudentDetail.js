@@ -8,13 +8,13 @@ import {
   transformStudentTypes,
 } from "../../../../common/transformData";
 import Axios from "axios";
-import useFetchRole from "../../../../../hook/useFetchRole";
 import {
   checkAdminAndMonitorRole,
   checkStudentAndCurrentUserSameClass,
 } from "../../../../common/function";
 import PermissionDenied from "../../../Error/PermissionDenied";
 import Description from "./StudentDescription/Description";
+import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUserData";
 
 const { Item } = Form;
 const layout = {
@@ -28,8 +28,7 @@ function StudentDetail(props) {
   const history = useHistory();
   const [studentData, setStudentData] = useState({});
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const userId = localStorage.getItem("userId");
-  const currentUserData = useFetchRole(userId);
+  const currentUserData = useFetchCurrentUserData();
   const userRole = currentUserData?.userRole;
 
   const fetchStudentData = (studentId) => {

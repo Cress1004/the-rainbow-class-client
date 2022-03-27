@@ -8,21 +8,20 @@ import {
   transformAddressData,
   transformStudentTypes,
 } from "../../common/transformData";
-import useFetchRole from "../../../hook/useFetchRole";
 import {
   checkAdminAndVolunteerRole,
   checkAdminRole,
 } from "../../common/checkRole";
 import PermissionDenied from "../Error/PermissionDenied";
 import { checkStringContentSubString } from "../../common/function";
+import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
 
 function ClassList(props) {
   const { t } = useTranslation();
   const [classes, setClasses] = useState();
   const [searchData, setSearchData] = useState([]);
   const [inputValue, setInputValue] = useState("");
-  const userId = localStorage.getItem("userId");
-  const currentUserData = useFetchRole(userId);
+  const currentUserData = useFetchCurrentUserData();
   const userRole = currentUserData.userRole;
   useEffect(() => {
     Axios.post("/api/classes/get-all-classes", null).then((response) => {

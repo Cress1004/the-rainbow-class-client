@@ -9,6 +9,7 @@ import {
   checkStringContentSubString,
 } from "../../../../common/function";
 import { CLASS_MONITOR, SUB_CLASS_MONITOR } from "../../../../common/constant";
+import apis from "../../../../../apis";
 
 function VolunteerList(props) {
   const { t } = useTranslation();
@@ -17,6 +18,11 @@ function VolunteerList(props) {
   const [userRole, setUserRole] = useState(null);
   const [searchData, setSearchData] = useState([]);
   const [inputValue, setInputValue] = useState("");
+
+  const fetchCurrentUser = async () => {
+    const data = await apis.users.getCurrentUser();
+    if (data.success) setUserRole(data.userRole);
+  };
 
   useEffect(() => {
     Axios.post("/api/volunteers/get-volunteers", { userId: userId }).then(
@@ -30,12 +36,7 @@ function VolunteerList(props) {
         }
       }
     );
-    Axios.post(`/api/users/get-role`, { userId: userId }).then((response) => {
-      if (response.data.success) {
-        const data = response.data.userRole;
-        setUserRole(data);
-      } 
-    });
+    fetchCurrentUser();
   }, [t, userId]);
 
   const transformVolunteerData = (data) => {

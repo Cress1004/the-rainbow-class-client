@@ -6,11 +6,10 @@ import Axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./volunteer.scss";
-import {
-  phoneRegExp,
-} from "../../../../common/constant";
+import { phoneRegExp } from "../../../../common/constant";
 import PermissionDenied from "../../../Error/PermissionDenied";
 import { checkAdminAndMonitorRole } from "../../../../common/function";
+import apis from "../../../../../apis";
 
 const { Option } = Select;
 
@@ -26,6 +25,11 @@ function AddVolunteer(props) {
   };
   const tailLayout = {
     wrapperCol: { offset: 18, span: 4 },
+  };
+
+  const fetchCurrentUser = async () => {
+    const data = await apis.users.getCurrentUser();
+    if (data.success) setUserRole(data.userRole);
   };
 
   const formik = useFormik({
@@ -71,12 +75,7 @@ function AddVolunteer(props) {
         data ? setClasses(response.data.classes) : setClasses(null);
       }
     });
-    Axios.post(`/api/users/get-role`, { userId: userId }).then((response) => {
-      if (response.data.success) {
-        const data = response.data.userRole;
-        setUserRole(data);
-      }
-    });
+    fetchCurrentUser();
   }, [t, userId]);
 
   const fieldError = (formik) => {

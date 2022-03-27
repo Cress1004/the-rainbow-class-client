@@ -4,12 +4,12 @@ import { useParams } from "react-router-dom";
 import { Table } from "antd";
 import useFetchStudentByClass from "../../../../hook/useFetchStudentByClass";
 import useFetchLessonByClass from "../../../../hook/useFetchLessonByClass";
-import useFetchRole from "../../../../hook/useFetchRole";
 import { getArrayLength } from "../../../common/transformData";
 import EditCommentModal from "./EditComment/EditCommentModal";
 import { checkCurrentVolunteerBelongToCurrentClass } from "../../../common/checkRole";
 import PermissionDenied from "../../Error/PermissionDenied";
 import "./comment-student.scss";
+import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
 
 function CommentStudent(props) {
   const { t } = useTranslation();
@@ -19,7 +19,7 @@ function CommentStudent(props) {
   const [editingAchievement, setEditingAchievement] = useState({});
   const lessonData = useFetchLessonByClass(id);
   const studentData = useFetchStudentByClass(id);
-  const currentUser = useFetchRole(userId);
+  const currentUser = useFetchCurrentUserData();
 
   const fixedColumns = [
     {

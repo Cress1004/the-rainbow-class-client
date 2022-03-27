@@ -12,6 +12,7 @@ import {
 } from "../../../../common/constant";
 import PermissionDenied from "../../../Error/PermissionDenied";
 import { checkAdminAndMonitorRole } from "../../../../common/function";
+import apis from "../../../../../apis";
 
 const { Item } = Form;
 const layout = {
@@ -28,13 +29,13 @@ function VolunteerDetail(props) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [userRole, setUserRole] = useState({});
 
+  const fetchCurrentUser = async () => {
+    const data = await apis.users.getCurrentUser();
+    if (data.success) setUserRole(data.userRole);
+  };
+
   useEffect(() => {
-    Axios.post(`/api/users/get-role`, { userId: userId }).then((response) => {
-      if (response.data.success) {
-        const data = response.data.userRole;
-        setUserRole(data);
-      }
-    });
+    fetchCurrentUser();
     Axios.post(`/api/volunteers/${id}`, { id: id, userId: userId }).then(
       (response) => {
         if (response.data.success) {

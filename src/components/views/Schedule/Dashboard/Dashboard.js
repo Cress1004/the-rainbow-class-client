@@ -1,14 +1,14 @@
 import React from "react";
 import "../schedule.scss";
-import useFetchRole from "../../../../hook/useFetchRole";
 import { STUDENT, SUPER_ADMIN } from "../../../common/constant";
 import PermissionDenied from "../../Error/PermissionDenied";
 import StudentTimesheet from "./StudentTimesheet";
 import VolunteerTimesheet from "./VolunteerTimesheet";
+import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
 
 function Dashboard(props) {
   const userId = localStorage.getItem("userId");
-  const currentUserData = useFetchRole(userId);
+  const currentUserData = useFetchCurrentUserData();
   const userRole = currentUserData.userRole;
 
   if (userRole && userRole.role === STUDENT) {

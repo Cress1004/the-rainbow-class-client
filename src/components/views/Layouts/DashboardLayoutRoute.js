@@ -12,9 +12,9 @@ import {
   SUPER_ADMIN,
   VOLUNTEER,
 } from "../../common/constant";
-import useFetchRole from "../../../hook/useFetchRole";
 import Footer from "../Footer/Footer";
 import Notification from "../Notification/Notification";
+import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
 
 const { Title } = Typography;
 const { SubMenu } = Menu;
@@ -23,8 +23,7 @@ const { Header, Content, Sider } = Layout;
 const DashboardLayout = ({ children, ...rest }) => {
   const { t } = useTranslation();
   const [collapsed, setCollapsed] = useState(false);
-  const userId = localStorage.getItem("userId");
-  const userData = useFetchRole(userId);
+  const userData = useFetchCurrentUserData();
   const userRole = userData.userRole;
   const handleCollapse = (collapsed) => {
     setCollapsed(collapsed);

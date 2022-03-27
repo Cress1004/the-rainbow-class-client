@@ -5,13 +5,13 @@ import Axios from "axios";
 import "./student.scss";
 import { Link } from "react-router-dom";
 import { transformStudentTypes } from "../../../../common/transformData";
-import useFetchRole from "../../../../../hook/useFetchRole";
 import { SUPER_ADMIN } from "../../../../common/constant";
 import PermissionDenied from "../../../Error/PermissionDenied";
 import {
   checkAdminAndMonitorRole,
   checkStringContentSubString,
 } from "../../../../common/function";
+import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUserData";
 
 function StudentList(props) {
   const { t } = useTranslation();
@@ -19,7 +19,7 @@ function StudentList(props) {
   const [searchData, setSearchData] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const userId = localStorage.getItem("userId");
-  const userData = useFetchRole(userId);
+  const userData = useFetchCurrentUserData();
   const userRole = userData.userRole;
   useEffect(() => {
     Axios.post("/api/students/get-students", { userId: userId }).then(

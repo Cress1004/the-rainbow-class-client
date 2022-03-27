@@ -27,10 +27,10 @@ import {
 import { generateKey } from "../../../common/function";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import useFetchRole from "../../../../hook/useFetchRole";
 import PermissionDenied from "../../Error/PermissionDenied";
 import { checkCurrentMonitorBelongToCurrentClass } from "../../../common/checkRole";
 import moment from "moment";
+import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
 
 const { Item } = Form;
 const { TextArea } = Input;
@@ -53,7 +53,7 @@ function EditLesson(props) {
   const [address, setAddress] = useState({});
   const [teachOption, setTeachOption] = useState();
   const userId = localStorage.getItem("userId");
-  const currentUser = useFetchRole(userId);
+  const currentUser = useFetchCurrentUserData();
   const layout = {
     labelCol: { span: 5 },
     wrapperCol: { span: 15 },

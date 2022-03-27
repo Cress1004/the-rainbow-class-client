@@ -6,10 +6,10 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import Axios from "axios";
 import "./student.scss";
-import useFetchRole from "../../../../../hook/useFetchRole";
 import { phoneRegExp } from "../../../../common/constant";
 import PermissionDenied from "../../../Error/PermissionDenied";
 import { checkAdminAndMonitorRole } from "../../../../common/function";
+import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUserData";
 
 const { Option } = Select;
 const { Item } = Form;
@@ -29,7 +29,7 @@ function EditStudent(props) {
   const [ward, setWard] = useState({});
   const [province, setProvince] = useState({});
   const userId = localStorage.getItem("userId");
-  const userData = useFetchRole(userId);
+  const userData = useFetchCurrentUserData();
   const userRole = userData.userRole;
 
   const layout = {

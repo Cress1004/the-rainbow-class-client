@@ -10,7 +10,6 @@ import {
 } from "../../../common/transformData";
 import { OFFLINE_OPTION, STUDENT } from "../../../common/constant";
 import PaticipantList from "./Paticipant/PaticipantList";
-import useFetchRole from "../../../../hook/useFetchRole";
 import { checkCurrentUserBelongToCurrentClass } from "../../../common/checkRole";
 import PermissionDenied from "../../Error/PermissionDenied";
 import { checkAdminAndMonitorRole } from "../../../common/function";
@@ -18,6 +17,7 @@ import {
   checkOverTimeToRegister,
   checkUserCanUnRegisterAction,
 } from "../../../common/checkCondition";
+import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
 
 function LessonDetail(props) {
   const { t } = useTranslation();
@@ -27,7 +27,7 @@ function LessonDetail(props) {
   const [lessonData, setLessonData] = useState({});
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [assign, setAssign] = useState(false);
-  const currentUser = useFetchRole(userId);
+  const currentUser = useFetchCurrentUserData();
   const userRole = currentUser.userRole;
 
   const fetchLessonData = (lessonId, userId) => {

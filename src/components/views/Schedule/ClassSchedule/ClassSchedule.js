@@ -6,6 +6,7 @@ import MyCalendar from "../Sessions/Calendar";
 import { Col, Form, Row, Select } from "antd";
 import { STUDENT, SUPER_ADMIN, VOLUNTEER } from "../../../common/constant";
 import PermissionDenied from "../../Error/PermissionDenied";
+import apis from "../../../../apis";
 
 const { Option } = Select;
 function ClassSchedule() {
@@ -16,13 +17,13 @@ function ClassSchedule() {
   const [classes, setClasses] = useState([]);
   const [userRole, setUserRole] = useState({});
 
+  const fetchCurrentUser = async () => {
+    const data = await apis.users.getCurrentUser();
+    if (data.success) setUserRole(data.userRole);
+  };
+
   useEffect(() => {
-    Axios.post(`/api/users/get-role`, { userId: userId }).then((response) => {
-      if (response.data.success) {
-        const data = response.data.userRole;
-        setUserRole(data);
-      } 
-    });
+    fetchCurrentUser();
     Axios.post(`/api/classes/my-class-schedules`, { userId: userId }).then(
       (response) => {
         if (response.data.success) {

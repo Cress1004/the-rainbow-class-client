@@ -7,8 +7,8 @@ import { phoneRegExp } from "../../../../common/constant";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import PermissionDenied from "../../../Error/PermissionDenied";
-import useFetchRole from "../../../../../hook/useFetchRole";
 import { checkAdminAndMonitorRole } from "../../../../common/function";
+import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUserData";
 
 const { Option } = Select;
 const { Item } = Form;
@@ -26,7 +26,7 @@ function EditVolunteer(props) {
   const tailLayout = {
     wrapperCol: { offset: 18, span: 4 },
   };
-  const userData = useFetchRole(userId);
+  const userData = useFetchCurrentUserData();
   const userRole = userData.userRole;
 
   const [volunteerData, setVolunteerData] = useState({});
