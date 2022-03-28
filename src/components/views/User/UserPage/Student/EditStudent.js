@@ -10,6 +10,9 @@ import { phoneRegExp } from "../../../../common/constant";
 import PermissionDenied from "../../../Error/PermissionDenied";
 import { checkAdminAndMonitorRole } from "../../../../common/function";
 import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUserData";
+import useFetchLocation from "../../../../../hook/CommonData.js/useFetchLocation";
+import useFetchStudentTypes from "../../../../../hook/CommonData.js/useFetchStudentTypes";
+import apis from "../../../../../apis";
 
 const { Option } = Select;
 const { Item } = Form;
@@ -20,9 +23,7 @@ function EditStudent(props) {
   const history = useHistory();
   const [address, setAddress] = useState([]);
   const [classes, setClasses] = useState([]);
-  const [studentTypes, setStudentTypes] = useState([]);
   const [studentData, setStudentData] = useState({});
-  const [location, setLocation] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [district, setDistrict] = useState({});
   const [wards, setWards] = useState([]);
@@ -31,6 +32,8 @@ function EditStudent(props) {
   const userId = localStorage.getItem("userId");
   const userData = useFetchCurrentUserData();
   const userRole = userData.userRole;
+  const location = useFetchLocation();
+  const studentTypes = useFetchStudentTypes();
 
   const layout = {
     labelCol: { span: 5 },
@@ -38,6 +41,20 @@ function EditStudent(props) {
   };
   const tailLayout = {
     wrapperCol: { offset: 18, span: 4 },
+  };
+  
+  const fetchDistricts = async (provinceId) => {
+    const data = await apis.commonData.getDistricts(provinceId);
+    if (data.success) {
+      setDistricts(data.districts);
+    }
+  };
+
+  const fetchWards = async (provinceId, districtId) => {
+    const data = await apis.commonData.getWards(provinceId, districtId);
+    if (data.success) {
+      setWards(data.wards);
+    }
   };
 
   const formik = useFormik({
@@ -83,19 +100,10 @@ function EditStudent(props) {
         }
       }
     );
-    Axios.post("/api/common-data/student-types", null).then((response) => {
-      if (response.data.success) {
-        setStudentTypes(response.data.studentTypes);
-      } 
-    });
-    Axios.post("/api/common-data/location", null).then((response) => {
-      if (response.data.success) {
-        setLocation(response.data.location);
-      } 
-    });
     Axios.post(`/api/students/${id}`, { studentId: id }).then((response) => {
       if (response.data.success) {
         const data = response.data.studentData;
+        const addressData = data.user.address;
         setStudentData({
           id: data._id,
           name: data.user.name,
@@ -105,14 +113,19 @@ function EditStudent(props) {
           studentTypes: data.studentTypes.map((type) => type._id),
           image: data.user.image,
           phoneNumber: data.user.phoneNumber,
-          address: data.user.address,
+          address: addressData,
           class: data.user.class?._id,
         });
-        if (data.user.address) {
-          setAddress(data.user.address);
-          setProvince(data.user.address.address.province);
-          setDistrict(data.user.address.address.district);
-          setWard(data.user.address.address.ward);
+        if (addressData) {
+          setAddress(addressData);
+          setProvince(addressData.address.province);
+          setDistrict(addressData.address.district);
+          setWard(addressData.address.ward);
+          fetchDistricts(addressData.address.province.id);
+          fetchWards(
+            addressData.address.province.id,
+            addressData.address.district.id
+          );
         }
       } 
     });
@@ -121,7 +134,8 @@ function EditStudent(props) {
   const handleChangeProvice = (value) => {
     const currentProvince = location.find((item) => value === item.id);
     setProvince({ id: currentProvince.id, name: currentProvince.name });
-    setDistricts(currentProvince.districts);
+    fetchDistricts(currentProvince.id);
+    setWards([]);
     setDistrict({});
     setWard({});
     setAddress({
@@ -138,7 +152,7 @@ function EditStudent(props) {
   const handleChangeDistrict = (value) => {
     const currentDistrict = districts.find((item) => value === item.id);
     setDistrict({ id: currentDistrict.id, name: currentDistrict.name });
-    setWards(currentDistrict.wards);
+    fetchWards(province.id, currentDistrict.id);
     setWard({});
     setAddress({
       ...address,
@@ -257,7 +271,7 @@ function EditStudent(props) {
           className="add-student__input-address-select-form"
         >
           <Select
-            value={address.address?.province?.name}
+            value={province?.name}
             showSearch
             placeholder={t("input_province")}
             onChange={handleChangeProvice}
@@ -269,7 +283,7 @@ function EditStudent(props) {
             ))}
           </Select>
           <Select
-            value={address.address?.district?.name}
+            value={district?.name}
             showSearch
             placeholder={t("input_district")}
             onChange={handleChangeDistrict}
@@ -284,7 +298,7 @@ function EditStudent(props) {
               : null}
           </Select>
           <Select
-            value={address.address?.ward?.name}
+            value={ward?.name}
             showSearch
             placeholder={t("input_ward")}
             onChange={handleChangeWard}

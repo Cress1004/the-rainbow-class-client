@@ -8,12 +8,13 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { generateKey } from "../../common/function";
 import { WEEKDAY, FORMAT_TIME_SCHEDULE } from "../../common/constant";
-import {
-  checkCurrentMonitorBelongToCurrentClass,
-} from "../../common/checkRole";
+import { checkCurrentMonitorBelongToCurrentClass } from "../../common/checkRole";
 import PermissionDenied from "../Error/PermissionDenied";
 import moment from "moment";
 import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
+import useFetchLocation from "../../../hook/CommonData.js/useFetchLocation";
+import useFetchStudentTypes from "../../../hook/CommonData.js/useFetchStudentTypes";
+import apis from "../../../apis";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -30,18 +31,32 @@ function EditClass(props) {
     wrapperCol: { offset: 18, span: 4 },
   };
   const { id } = useParams();
-  const [location, setLocation] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [district, setDistrict] = useState("");
   const [wards, setWards] = useState([]);
   const [ward, setWard] = useState("");
   const [classData, setClassData] = useState({});
   const [province, setProvince] = useState({});
-  const [studentTypes, setStudentTypes] = useState([]);
   const [defaultSchedule, setDefaultSchedule] = useState([]);
   const [address, setAddress] = useState({});
   const userId = localStorage.getItem("userId");
   const currentUser = useFetchCurrentUserData();
+  const location = useFetchLocation();
+  const studentTypes = useFetchStudentTypes();
+
+  const fetchDistricts = async (provinceId) => {
+    const data = await apis.commonData.getDistricts(provinceId);
+    if (data.success) {
+      setDistricts(data.districts);
+    }
+  };
+
+  const fetchWards = async (provinceId, districtId) => {
+    const data = await apis.commonData.getWards(provinceId, districtId);
+    if (data.success) {
+      setWards(data.wards);
+    }
+  };
 
   const formik = useFormik({
     initialValues: classData ? classData : {},
@@ -79,48 +94,36 @@ function EditClass(props) {
   });
 
   useEffect(() => {
-    Axios.post("/api/common-data/location", null).then((response) => {
-      if (response.data.success) {
-        setLocation(response.data.location);
-      } else {
-        alert(t("fail_to_get_api_location"));
-      }
-    });
-
-    Axios.post("/api/common-data/student-types", null).then((response) => {
-      if (response.data.success) {
-        setStudentTypes(response.data.studentTypes);
-      } else {
-        alert(t("fail_to_get_api_student_types"));
-      }
-    });
-
     Axios.post(`/api/classes/${id}`, { classId: id }).then((response) => {
       if (response.data.success) {
         const data = response.data.classData;
+        const addressData = data.address
         setClassData({
           _id: data._id,
           name: data.name,
           description: data.description,
-          address: data.address,
+          address: addressData,
           studentTypes: data.studentTypes.map((type) => type._id),
           defaultSchedule: data.defaultSchedule,
         });
-        if (data.address) {
-          setAddress(data.address);
-          setProvince(data.address.address.province);
-          setDistrict(data.address.address.district);
-          setWard(data.address.address.ward);
+        if (addressData) {
+          setAddress(addressData);
+          setProvince(addressData.address.province);
+          setDistrict(addressData.address.district);
+          setWard(addressData.address.ward);
+          fetchDistricts(addressData.address.province.id);
+          fetchWards(addressData.address.province.id, addressData.address.district.id);
         }
         setDefaultSchedule(data.defaultSchedule);
-      } 
+      }
     });
   }, [t, id]);
 
   const handleChangeProvice = (value) => {
     const currentProvince = location.find((item) => value === item.id);
     setProvince({ id: currentProvince.id, name: currentProvince.name });
-    setDistricts(currentProvince.districts);
+    fetchDistricts(currentProvince.id);
+    setWards([]);
     setDistrict({});
     setWard({});
     setAddress({
@@ -137,7 +140,7 @@ function EditClass(props) {
   const handleChangeDistrict = (value) => {
     const currentDistrict = districts.find((item) => value === item.id);
     setDistrict({ id: currentDistrict.id, name: currentDistrict.name });
-    setWards(currentDistrict.wards);
+    fetchWards(province.id, currentDistrict.id);
     setWard({});
     setAddress({
       ...address,
@@ -318,7 +321,7 @@ function EditClass(props) {
                 width: "calc(33% - 12px)",
                 marginRight: "10px",
               }}
-              value={address.address?.province?.name}
+              value={province?.name}
               placeholder={t("input_province")}
               onChange={handleChangeProvice}
             >
@@ -335,7 +338,7 @@ function EditClass(props) {
                 width: "calc(33% - 12px)",
                 margin: "0px 10px",
               }}
-              value={address.address?.district?.name}
+              value={district?.name}
               placeholder={t("input_district")}
               onChange={handleChangeDistrict}
             >
@@ -354,7 +357,7 @@ function EditClass(props) {
                 width: "calc(33% - 12px)",
                 marginLeft: "10px",
               }}
-              value={address.address?.ward?.name}
+              value={ward?.name}
               placeholder={t("input_ward")}
               onChange={handleChangeWard}
             >

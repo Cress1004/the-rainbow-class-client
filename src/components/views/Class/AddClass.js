@@ -1,16 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import Axios from "axios";
-import {
-  Form,
-  Input,
-  Select,
-  Button,
-  TimePicker,
-  Icon,
-  Row,
-  Col,
-} from "antd";
+import { Form, Input, Select, Button, TimePicker, Icon, Row, Col } from "antd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useHistory } from "react-router";
@@ -19,6 +10,9 @@ import { generateKey } from "../../common/function";
 import { checkAdminRole } from "../../common/checkRole";
 import PermissionDenied from "../Error/PermissionDenied";
 import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
+import useFetchLocation from "../../../hook/CommonData.js/useFetchLocation";
+import useFetchStudentTypes from "../../../hook/CommonData.js/useFetchStudentTypes";
+import apis from "../../../apis";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -37,8 +31,9 @@ function AddClass(props) {
 
   const currentUserData = useFetchCurrentUserData();
   const userRole = currentUserData.userRole;
+  const location = useFetchLocation();
+  const studentTypes = useFetchStudentTypes();
 
-  const [location, setLocation] = useState([]);
   const [province, setProvince] = useState("");
   const [districts, setDistricts] = useState([]);
   const [district, setDistrict] = useState("");
@@ -53,8 +48,6 @@ function AddClass(props) {
       endTime: "00:00",
     },
   ]);
-
-  const [studentTypes, setStudentTypes] = useState([]);
 
   const formik = useFormik({
     initialValues: {
@@ -91,24 +84,25 @@ function AddClass(props) {
     },
   });
 
-  useEffect(() => {
-    Axios.post("/api/common-data/location", null).then((response) => {
-      if (response.data.success) {
-        setLocation(response.data.location);
-      } 
-    });
+  const fetchDistricts = async (provinceId) => {
+    const data = await apis.commonData.getDistricts(provinceId);
+    if (data.success) {
+      setDistricts(data.districts);
+    }
+  };
 
-    Axios.post("/api/common-data/student-types", null).then((response) => {
-      if (response.data.success) {
-        setStudentTypes(response.data.studentTypes);
-      } 
-    });
-  }, [t]);
+  const fetchWards = async (provinceId, districtId) => {
+    const data = await apis.commonData.getWards(provinceId, districtId);
+    if (data.success) {
+      setWards(data.wards);
+    }
+  };
 
   const handleChangeProvice = (value) => {
     const currentProvince = location.find((item) => value === item.id);
     setProvince({ id: currentProvince.id, name: currentProvince.name });
-    setDistricts(currentProvince.districts);
+    fetchDistricts(currentProvince.id);
+    setWards([])
     setDistrict({});
     setWard({});
     setAddress({
@@ -125,7 +119,7 @@ function AddClass(props) {
   const handleChangeDistrict = (value) => {
     const currentDistrict = districts.find((item) => value === item.id);
     setDistrict({ id: currentDistrict.id, name: currentDistrict.name });
-    setWards(currentDistrict.wards);
+    fetchWards(province.id, currentDistrict.id);
     setWard({});
     setAddress({
       ...address,
@@ -311,6 +305,7 @@ function AddClass(props) {
               marginRight: "10px",
             }}
             placeholder={t("input_province")}
+            value={province?.name}
             onChange={handleChangeProvice}
           >
             {location.map((option) => (
@@ -327,6 +322,7 @@ function AddClass(props) {
               margin: "0px 10px",
             }}
             placeholder={t("input_district")}
+            value={district?.name}
             onChange={handleChangeDistrict}
           >
             {districts.length
@@ -345,6 +341,7 @@ function AddClass(props) {
               marginLeft: "10px",
             }}
             placeholder={t("input_ward")}
+            value={ward?.name}
             onChange={handleChangeWard}
           >
             {wards.length

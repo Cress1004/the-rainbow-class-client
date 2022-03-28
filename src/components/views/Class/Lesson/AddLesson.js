@@ -28,6 +28,8 @@ import PermissionDenied from "../../Error/PermissionDenied";
 import { checkCurrentMonitorBelongToCurrentClass } from "../../../common/checkRole";
 import moment from "moment";
 import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
+import useFetchLocation from "../../../../hook/CommonData.js/useFetchLocation";
+import apis from "../../../../apis";
 
 const { Item } = Form;
 const { TextArea } = Input;
@@ -37,7 +39,6 @@ function AddLesson(props) {
   const { t } = useTranslation();
   const { id } = useParams();
   const history = useHistory();
-  const [location, setLocation] = useState([]);
   const [province, setProvince] = useState("");
   const [districts, setDistricts] = useState([]);
   const [district, setDistrict] = useState("");
@@ -49,8 +50,8 @@ function AddLesson(props) {
   const [lessonData, setLessonData] = useState({});
   const [time, setTime] = useState(null);
   const [teachOption, setTeachOption] = useState(OFFLINE_OPTION);
-  const userId = localStorage.getItem("userId");
   const currentUser = useFetchCurrentUserData();
+  const location = useFetchLocation();
 
   const layout = {
     labelCol: { span: 5 },
@@ -58,6 +59,20 @@ function AddLesson(props) {
   };
   const tailLayout = {
     wrapperCol: { offset: 18, span: 4 },
+  };
+
+  const fetchDistricts = async (provinceId) => {
+    const data = await apis.commonData.getDistricts(provinceId);
+    if (data.success) {
+      setDistricts(data.districts);
+    }
+  };
+
+  const fetchWards = async (provinceId, districtId) => {
+    const data = await apis.commonData.getWards(provinceId, districtId);
+    if (data.success) {
+      setWards(data.wards);
+    }
   };
 
   const formik = useFormik({
@@ -104,22 +119,20 @@ function AddLesson(props) {
     Axios.post(`/api/classes/${id}`, { classId: id }).then((response) => {
       if (response.data.success) {
         const data = response.data.classData;
+        const addressData = data.address;
         setClassData(data);
-        if (data.address) {
+        if (addressData) {
           setAddress({
-            address: data.address.address,
-            description: data.address.description,
+            address: addressData.address,
+            description: addressData.description,
           });
-          setLessonData({ ...lessonData, address: data.address });
-          setProvince(data.address.address.province);
-          setDistrict(data.address.address.district);
-          setWard(data.address.address.ward);
+          setLessonData({ ...lessonData, address: addressData });
+          setProvince(addressData.address.province);
+          setDistrict(addressData.address.district);
+          setWard(addressData.address.ward);
+          fetchDistricts(addressData.address.province.id);
+          fetchWards(addressData.address.province.id, addressData.address.district.id);
         }
-      } 
-    });
-    Axios.post("/api/common-data/location", null).then((response) => {
-      if (response.data.success) {
-        setLocation(response.data.location);
       } 
     });
   }, [t, id]);
@@ -127,7 +140,8 @@ function AddLesson(props) {
   const handleChangeProvice = (value) => {
     const currentProvince = location.find((item) => value === item.id);
     setProvince({ id: currentProvince.id, name: currentProvince.name });
-    setDistricts(currentProvince.districts);
+    fetchDistricts(currentProvince.id);
+    setWards([]);
     setDistrict({});
     setWard({});
     setAddress({
@@ -144,7 +158,7 @@ function AddLesson(props) {
   const handleChangeDistrict = (value) => {
     const currentDistrict = districts.find((item) => value === item.id);
     setDistrict({ id: currentDistrict.id, name: currentDistrict.name });
-    setWards(currentDistrict.wards);
+    fetchWards(province.id, currentDistrict.id);
     setWard({});
     setAddress({
       ...address,
@@ -215,7 +229,7 @@ function AddLesson(props) {
           width: "calc(33% - 12px)",
           marginRight: "10px",
         }}
-        value={province ? province.name : undefined}
+        value={province?.name}
         placeholder={t("input_province")}
         onChange={handleChangeProvice}
       >
@@ -232,7 +246,7 @@ function AddLesson(props) {
           width: "calc(33% - 12px)",
           margin: "0px 10px",
         }}
-        value={district ? district.name : undefined}
+        value={district?.name}
         placeholder={t("input_district")}
         onChange={handleChangeDistrict}
       >
@@ -251,7 +265,7 @@ function AddLesson(props) {
           width: "calc(33% - 12px)",
           marginLeft: "10px",
         }}
-        value={ward ? ward.name : undefined}
+        value={ward?.name}
         placeholder={t("input_ward")}
         onChange={handleChangeWard}
       >

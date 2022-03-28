@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import Axios from "axios";
 import "../../master-setting.scss";
+import apis from "../../../../../apis";
 
 function StudentType() {
   const { t } = useTranslation();
@@ -11,12 +12,34 @@ function StudentType() {
   const [newType, setNewType] = useState("");
   const [add, setAdd] = useState(false);
 
+  const fetchStudentTypes = async () => {
+    const data = await apis.commonData.getStudentTypes();
+    if (data.success) {
+      setStudentTypes(data.studentTypes);
+    }
+  };
+
+  const fetchAddStudentType = async (dataToSend) => {
+    const data = await apis.commonData.addStudentType(dataToSend);
+    if (data.success) {
+      alert("Success");
+    } else if (!data.success) {
+      alert(data.message);
+    }
+  };
+
+  const fetchDeleteStudentType = async (id) => {
+    const data = await apis.commonData.deleteStudentType(id);
+    if (data.success) {
+      fetchStudentTypes();
+      alert(t("delete success"));
+    } else if (!data.success) {
+      alert(data.message);
+    }
+  };
+
   useEffect(() => {
-    Axios.post("/api/common-data/student-types", null).then((response) => {
-      if (response.data.success) {
-        setStudentTypes(response.data.studentTypes);
-      } 
-    });
+    fetchStudentTypes();
   }, [t]);
 
   const columns = [
@@ -55,38 +78,11 @@ function StudentType() {
 
   const handleDelete = async (e, id) => {
     e.preventDefault();
-    try {
-      const response = await Axios.post(
-        `/api/common-data/student-types/${id}`,
-        { id: id }
-      );
-      if (response.data.success) {
-        setStudentTypes(studentTypes.filter((item) => item._id !== id));
-        alert(t("delete success"));
-      } else if (!response.data.success) {
-        alert(response.data.message);
-      }
-    } catch (error) {
-      alert(t("fail-to-send-data"));
-    }
+    fetchDeleteStudentType(id);
   };
 
   const handleSubmit = async (e) => {
-    const type = { title: newType };
-    try {
-      const response = await Axios.post(
-        "/api/common-data/add-student-type",
-        type
-      );
-      if (response.data.success) {
-        alert("Success")
-      }
-      else if (!response.data.success) {
-        alert(response.data.message);
-      }
-    } catch (error) {
-      alert(t("fail-to-send-data"));
-    }
+    fetchAddStudentType({ title: newType });
   };
 
   const openMessage = () => {

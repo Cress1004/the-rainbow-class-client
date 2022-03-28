@@ -9,6 +9,8 @@ import * as Yup from "yup";
 import PermissionDenied from "../../../Error/PermissionDenied";
 import { checkAdminAndMonitorRole } from "../../../../common/function";
 import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUserData";
+import useFetchLocation from "../../../../../hook/CommonData.js/useFetchLocation";
+import apis from "../../../../../apis";
 
 const { Option } = Select;
 const { Item } = Form;
@@ -28,9 +30,9 @@ function EditVolunteer(props) {
   };
   const userData = useFetchCurrentUserData();
   const userRole = userData.userRole;
+  const location = useFetchLocation();
 
   const [volunteerData, setVolunteerData] = useState({});
-  const [location, setLocation] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [district, setDistrict] = useState({});
   const [wards, setWards] = useState([]);
@@ -38,37 +40,21 @@ function EditVolunteer(props) {
   const [province, setProvince] = useState({});
   const [address, setAddress] = useState({});
 
-  const fetchLocation = () => {
-    Axios.post("/api/common-data/location", null).then((response) => {
-      if (response.data.success) {
-        setLocation(response.data.location);
-      }
-    });
+  const fetchDistricts = async (provinceId) => {
+    const data = await apis.commonData.getDistricts(provinceId);
+    if (data.success) {
+      setDistricts(data.districts);
+    }
   };
 
-  const fetchDistricts = (provinceId) => {
-    Axios.post(`/api/common-data/province/${provinceId}/get-districts`, {
-      provinceId: provinceId,
-    }).then((response) => {
-      if (response.data.success) {
-        setDistricts(response.data.districts);
-      }
-    });
-  };
-
-  const fetchWards = (provinceId, districtId) => {
-    Axios.post(`/api/common-data/district/${districtId}/get-wards`, {
-      provinceId: provinceId,
-      districtId: districtId,
-    }).then((response) => {
-      if (response.data.success) {
-        setWards(response.data.wards);
-      }
-    });
+  const fetchWards = async (provinceId, districtId) => {
+    const data = await apis.commonData.getWards(provinceId, districtId);
+    if (data.success) {
+      setWards(data.wards);
+    }
   };
 
   useEffect(() => {
-    fetchLocation();
     Axios.post("/api/volunteers/:id", { id: id, userId: userId }).then(
       (response) => {
         if (response.data.success) {
@@ -138,7 +124,8 @@ function EditVolunteer(props) {
   const handleChangeProvice = (value) => {
     const currentProvince = location.find((item) => value === item.id);
     setProvince({ id: currentProvince.id, name: currentProvince.name });
-    setDistricts(currentProvince.districts);
+    fetchDistricts(currentProvince.id);
+    setWards([]);
     setDistrict({});
     setWard({});
     setAddress({
@@ -155,7 +142,7 @@ function EditVolunteer(props) {
   const handleChangeDistrict = (value) => {
     const currentDistrict = districts.find((item) => value === item.id);
     setDistrict({ id: currentDistrict.id, name: currentDistrict.name });
-    setWards(currentDistrict.wards);
+    fetchWards(province.id, currentDistrict.id);
     setWard({});
     setAddress({
       ...address,
@@ -262,7 +249,7 @@ function EditVolunteer(props) {
               marginRight: "10px",
             }}
             placeholder={t("input_province")}
-            value={address.address?.province?.name}
+            value={province?.name}
             onChange={handleChangeProvice}
           >
             {location.map((option) => (
@@ -278,7 +265,7 @@ function EditVolunteer(props) {
               width: "calc(33% - 12px)",
               margin: "0px 10px",
             }}
-            value={address.address?.district?.name}
+            value={district?.name}
             placeholder={t("input_district")}
             onChange={handleChangeDistrict}
           >
@@ -298,7 +285,7 @@ function EditVolunteer(props) {
               marginLeft: "10px",
             }}
             placeholder={t("input_ward")}
-            value={address.address?.ward?.name}
+            value={ward?.name}
             onChange={handleChangeWard}
           >
             {wards.length

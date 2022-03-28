@@ -4,10 +4,10 @@ import { useHistory } from "react-router-dom";
 import { Form, Input, Button, Select } from "antd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import Axios from "axios";
 import "./profile.scss";
 import { phoneRegExp } from "../../../common/constant";
 import apis from "../../../../apis";
+import useFetchLocation from "../../../../hook/CommonData.js/useFetchLocation";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -17,13 +17,13 @@ function EditProfile(props) {
   const history = useHistory();
   const [userData, setUserData] = useState({});
   const userId = localStorage.getItem("userId");
-  const [location, setLocation] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [district, setDistrict] = useState({});
   const [wards, setWards] = useState([]);
   const [ward, setWard] = useState({});
   const [province, setProvince] = useState({});
   const [address, setAddress] = useState({});
+  const location = useFetchLocation();
 
   const layout = {
     labelCol: { span: 5 },
@@ -31,6 +31,20 @@ function EditProfile(props) {
   };
   const tailLayout = {
     wrapperCol: { offset: 18, span: 4 },
+  };
+
+  const fetchDistricts = async (provinceId) => {
+    const data = await apis.commonData.getDistricts(provinceId);
+    if (data.success) {
+      setDistricts(data.districts);
+    }
+  };
+
+  const fetchWards = async (provinceId, districtId) => {
+    const data = await apis.commonData.getWards(provinceId, districtId);
+    if (data.success) {
+      setWards(data.wards);
+    }
   };
 
   const fetchEditProfile = async (dataToSend) => {
@@ -46,12 +60,15 @@ function EditProfile(props) {
     const data = await apis.users.getCurrentUserProfile();
     if (data.success) {
       const userData = data.userData;
+      const addressData = userData.address;
       setUserData(userData);
-      if (userData.address.address) {
-        setAddress(userData.address);
-        setProvince(userData.address.address.province);
-        setDistrict(userData.address.address.district);
-        setWard(userData.address.address.ward);
+      if (addressData.address) {
+        setAddress(addressData);
+        setProvince(addressData.address.province);
+        setDistrict(addressData.address.district);
+        setWard(addressData.address.ward);
+        fetchDistricts(addressData.address.province.id);
+        fetchWards(addressData.address.province.id, addressData.address.district.id);
       }
     }
   };
@@ -77,18 +94,14 @@ function EditProfile(props) {
   });
 
   useEffect(() => {
-    Axios.post("/api/common-data/location", null).then((response) => {
-      if (response.data.success) {
-        setLocation(response.data.location);
-      }
-    });
     fetchCurrentUserProfile();
   }, [t, userId]);
 
   const handleChangeProvice = (value) => {
     const currentProvince = location.find((item) => value === item.id);
     setProvince({ id: currentProvince.id, name: currentProvince.name });
-    setDistricts(currentProvince.districts);
+    fetchDistricts(currentProvince.id);
+    setWards([]);
     setDistrict({});
     setWard({});
     setAddress({
@@ -105,7 +118,7 @@ function EditProfile(props) {
   const handleChangeDistrict = (value) => {
     const currentDistrict = districts.find((item) => value === item.id);
     setDistrict({ id: currentDistrict.id, name: currentDistrict.name });
-    setWards(currentDistrict.wards);
+    fetchWards(province.id, currentDistrict.id);
     setWard({});
     setAddress({
       ...address,
@@ -202,7 +215,7 @@ function EditProfile(props) {
           className="edit-profile__input-address-select-form"
         >
           <Select
-            value={address.address?.province?.name}
+            value={province?.name}
             showSearch
             placeholder={t("input_province")}
             onChange={handleChangeProvice}
@@ -214,7 +227,7 @@ function EditProfile(props) {
             ))}
           </Select>
           <Select
-            value={address.address?.district?.name}
+            value={district?.name}
             showSearch
             placeholder={t("input_district")}
             onChange={handleChangeDistrict}
@@ -229,7 +242,7 @@ function EditProfile(props) {
               : null}
           </Select>
           <Select
-            value={address.address?.ward?.name}
+            value={ward?.name}
             showSearch
             placeholder={t("input_ward")}
             onChange={handleChangeWard}

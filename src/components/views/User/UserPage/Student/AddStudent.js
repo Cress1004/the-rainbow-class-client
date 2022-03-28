@@ -10,6 +10,9 @@ import { phoneRegExp } from "../../../../common/constant";
 import { checkAdminAndMonitorRole } from "../../../../common/function";
 import PermissionDenied from "../../../Error/PermissionDenied";
 import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUserData";
+import useFetchLocation from "../../../../../hook/CommonData.js/useFetchLocation";
+import useFetchStudentTypes from "../../../../../hook/CommonData.js/useFetchStudentTypes";
+import apis from "../../../../../apis";
 
 const { Option } = Select;
 const { Item } = Form;
@@ -17,8 +20,6 @@ const { Item } = Form;
 function AddStudent(props) {
   const { t } = useTranslation();
   const history = useHistory();
-  const [studentTypes, setStudentTypes] = useState([]);
-  const [location, setLocation] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [address, setAddress] = useState([]);
   const [district, setDistrict] = useState({});
@@ -27,7 +28,9 @@ function AddStudent(props) {
   const [province, setProvince] = useState({});
   const [classes, setClasses] = useState({});
   const userId = localStorage.getItem("userId");
-  const userRole =useFetchCurrentUserData();
+  const currentUser = useFetchCurrentUserData();
+  const location = useFetchLocation();
+  const studentTypes = useFetchStudentTypes();
 
   const layout = {
     labelCol: { span: 5 },
@@ -35,6 +38,20 @@ function AddStudent(props) {
   };
   const tailLayout = {
     wrapperCol: { offset: 18, span: 4 },
+  };
+
+  const fetchDistricts = async (provinceId) => {
+    const data = await apis.commonData.getDistricts(provinceId);
+    if (data.success) {
+      setDistricts(data.districts);
+    }
+  };
+
+  const fetchWards = async (provinceId, districtId) => {
+    const data = await apis.commonData.getWards(provinceId, districtId);
+    if (data.success) {
+      setWards(data.wards);
+    }
   };
 
   const formik = useFormik({
@@ -78,31 +95,20 @@ function AddStudent(props) {
   });
 
   useEffect(() => {
-    Axios.post("/api/common-data/student-types", null).then((response) => {
+    Axios.post(`/api/classes/get-all-classes`, null).then((response) => {
       if (response.data.success) {
-        setStudentTypes(response.data.studentTypes);
-      } 
-    });
-    Axios.post("/api/common-data/location", null).then((response) => {
-      if (response.data.success) {
-        setLocation(response.data.location);
-      } 
-    });
-    Axios.post(`/api/classes/get-all-classes`, null).then(
-      (response) => {
-        if (response.data.success) {
-          setClasses(response.data.classes);
-        } else {
-          alert(t("fail_to_get_api"));
-        }
+        setClasses(response.data.classes);
+      } else {
+        alert(t("fail_to_get_api"));
       }
-    );
+    });
   }, [t, userId]);
 
   const handleChangeProvice = (value) => {
     const currentProvince = location.find((item) => value === item.id);
     setProvince({ id: currentProvince.id, name: currentProvince.name });
-    setDistricts(currentProvince.districts);
+    fetchDistricts(currentProvince.id);
+    setWards([]);
     setDistrict({});
     setWard({});
     setAddress({
@@ -119,7 +125,7 @@ function AddStudent(props) {
   const handleChangeDistrict = (value) => {
     const currentDistrict = districts.find((item) => value === item.id);
     setDistrict({ id: currentDistrict.id, name: currentDistrict.name });
-    setWards(currentDistrict.wards);
+    fetchWards(province.id, currentDistrict.id);
     setWard({});
     setAddress({
       ...address,
@@ -169,7 +175,8 @@ function AddStudent(props) {
     );
   };
 
-  if (!checkAdminAndMonitorRole(userRole)) return <PermissionDenied />;
+  if (!checkAdminAndMonitorRole(currentUser.userRole))
+    return <PermissionDenied />;
 
   return (
     <div className="add-student">
@@ -244,6 +251,7 @@ function AddStudent(props) {
             showSearch
             placeholder={t("input_province")}
             onChange={handleChangeProvice}
+            value={province?.name}
           >
             {location.map((option) => (
               <Option key={option._id} value={option.id}>
@@ -254,6 +262,7 @@ function AddStudent(props) {
           <Select
             showSearch
             placeholder={t("input_district")}
+            value={district?.name}
             onChange={handleChangeDistrict}
             className="add-student__input-address-center-form"
           >
@@ -268,6 +277,7 @@ function AddStudent(props) {
           <Select
             showSearch
             placeholder={t("input_ward")}
+            value={ward?.name}
             onChange={handleChangeWard}
           >
             {wards.length
