@@ -1,5 +1,4 @@
 import { Input, Modal, Table } from "antd";
-import Axios from "axios";
 import { useFormik } from "formik";
 import React from "react";
 import apis from "../../../../../apis";

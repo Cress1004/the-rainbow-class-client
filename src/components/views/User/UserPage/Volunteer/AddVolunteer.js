@@ -2,7 +2,6 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Form, Input, Select, Button } from "antd";
-import Axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./volunteer.scss";
@@ -11,6 +10,7 @@ import PermissionDenied from "../../../Error/PermissionDenied";
 import { checkAdminAndMonitorRole } from "../../../../common/function";
 import useFetchAllClasses from "../../../../../hook/Class/useFetchAllClasses";
 import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUserData";
+import apis from "../../../../../apis";
 
 const { Option } = Select;
 
@@ -28,6 +28,15 @@ function AddVolunteer(props) {
   };
   const tailLayout = {
     wrapperCol: { offset: 18, span: 4 },
+  };
+
+  const fetchAddVolunteer = async (valuesToSend) => {
+    const data = await apis.volunteer.addVolunteer(valuesToSend);
+    if (data.success) {
+      history.push("/volunteers");
+    } else if (!data.success) {
+      alert(data.message);
+    }
   };
 
   const formik = useFormik({
@@ -49,18 +58,7 @@ function AddVolunteer(props) {
     }),
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
-        Axios.post("/api/volunteers/add-volunteer", {
-          volunteerData: values,
-          userId: userId,
-        }).then((response) => {
-          if (response.data.success) {
-            history.push("/volunteers");
-          } else if (!response.data.success) {
-            alert(response.data.message);
-          } else {
-            alert(t("fail_to_get_api"));
-          }
-        });
+        fetchAddVolunteer({ volunteerData: values, userId: userId });
         setSubmitting(false);
       }, 400);
     },

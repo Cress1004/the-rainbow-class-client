@@ -12,7 +12,6 @@ import {
 } from "antd";
 import { useHistory, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Axios from "axios";
 import "./lesson.scss";
 import {
   WEEKDAY,

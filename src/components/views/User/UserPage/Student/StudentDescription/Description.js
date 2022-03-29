@@ -2,8 +2,8 @@ import { Form, Icon, Input, Button } from "antd";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
-import Axios from "axios";
 import { checkAdminAndMonitorRole } from "../../../../../common/function";
+import apis from "../../../../../../apis";
 
 const { Item } = Form;
 const { TextArea } = Input;
@@ -12,6 +12,18 @@ function Description(props) {
   const { studentData, userRole, fetchStudentData } = props;
   const { t } = useTranslation();
   const [openForm, setOpenForm] = useState(false);
+
+  const fetchUpdateOverview = async (dataToSend) => {
+    const data = await apis.student.updateOverview(dataToSend);
+    if (data.success) {
+      setOpenForm(false);
+      fetchStudentData(studentData.id);
+    } else if (!data.success) {
+      alert(data.message);
+    } else {
+      alert(t("fail_to_get_api"));
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -23,18 +35,7 @@ function Description(props) {
     enableReinitialize: true,
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
-        Axios.post(`/api/students/${studentData.id}/update-overview`, {
-          values: values,
-        }).then((response) => {
-          if (response.data.success) {
-            setOpenForm(false);
-            fetchStudentData(studentData.id)
-          } else if (!response.data.success) {
-            alert(response.data.message);
-          } else {
-            alert(t("fail_to_save_avatar"));
-          }
-        });
+       fetchUpdateOverview(values);
         setSubmitting(false);
       }, 400);
     },

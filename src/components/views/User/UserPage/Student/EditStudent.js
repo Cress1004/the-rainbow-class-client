@@ -4,7 +4,6 @@ import { useHistory, useParams } from "react-router-dom";
 import { Form, Input, Select, Button, Radio } from "antd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import Axios from "axios";
 import "./student.scss";
 import { phoneRegExp } from "../../../../common/constant";
 import PermissionDenied from "../../../Error/PermissionDenied";
@@ -14,6 +13,7 @@ import useFetchLocation from "../../../../../hook/CommonData.js/useFetchLocation
 import useFetchStudentTypes from "../../../../../hook/CommonData.js/useFetchStudentTypes";
 import apis from "../../../../../apis";
 import useFetchAllClasses from "../../../../../hook/Class/useFetchAllClasses";
+import useFetchStudentData from "../../../../../hook/Student/useFetchStudentData";
 
 const { Option } = Select;
 const { Item } = Form;
@@ -23,18 +23,17 @@ function EditStudent(props) {
   const { id } = useParams();
   const history = useHistory();
   const [address, setAddress] = useState([]);
-  const [studentData, setStudentData] = useState({});
   const [districts, setDistricts] = useState([]);
   const [district, setDistrict] = useState({});
   const [wards, setWards] = useState([]);
   const [ward, setWard] = useState({});
   const [province, setProvince] = useState({});
-  const userId = localStorage.getItem("userId");
   const userData = useFetchCurrentUserData();
   const userRole = userData.userRole;
   const location = useFetchLocation();
   const studentTypes = useFetchStudentTypes();
   const classes = useFetchAllClasses();
+  const studentData = useFetchStudentData(id);
 
   const layout = {
     labelCol: { span: 5 },
@@ -43,7 +42,7 @@ function EditStudent(props) {
   const tailLayout = {
     wrapperCol: { offset: 18, span: 4 },
   };
-  
+
   const fetchDistricts = async (provinceId) => {
     const data = await apis.commonData.getDistricts(provinceId);
     if (data.success) {
@@ -55,6 +54,17 @@ function EditStudent(props) {
     const data = await apis.commonData.getWards(provinceId, districtId);
     if (data.success) {
       setWards(data.wards);
+    }
+  };
+
+  const fetchEditStudent = async (valueToSend) => {
+    const data = await apis.student.editStudent(valueToSend);
+    if (data.success) {
+      history.push("/students");
+    } else if (!data.success) {
+      alert(data.message);
+    } else {
+      alert(t("fail_to_get_api"));
     }
   };
 
@@ -75,53 +85,26 @@ function EditStudent(props) {
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
         const valuesToSend = { ...values, address };
-        Axios.post(`/api/students/${id}/edit`, {
-          studentData: valuesToSend,
-        }).then((response) => {
-          if (response.data.success) {
-            history.push("/students");
-          } else if (!response.data.success) {
-            alert(response.data.message);
-          } else {
-            alert(t("fail_to_get_api"));
-          }
-        });
+        fetchEditStudent({ studentData: valuesToSend });
         setSubmitting(false);
       }, 400);
     },
   });
 
   useEffect(() => {
-    Axios.post(`/api/students/${id}`, { studentId: id }).then((response) => {
-      if (response.data.success) {
-        const data = response.data.studentData;
-        const addressData = data.user.address;
-        setStudentData({
-          id: data._id,
-          name: data.user.name,
-          email: data.user.email,
-          gender: data.user.gender,
-          parentName: data.parentName,
-          studentTypes: data.studentTypes.map((type) => type._id),
-          image: data.user.image,
-          phoneNumber: data.user.phoneNumber,
-          address: addressData,
-          class: data.user.class?._id,
-        });
-        if (addressData) {
-          setAddress(addressData);
-          setProvince(addressData.address.province);
-          setDistrict(addressData.address.district);
-          setWard(addressData.address.ward);
-          fetchDistricts(addressData.address.province.id);
-          fetchWards(
-            addressData.address.province.id,
-            addressData.address.district.id
-          );
-        }
-      } 
-    });
-  }, [t, id, userId]);
+    const addressData = studentData.address;
+    if (addressData) {
+      setAddress(addressData);
+      setProvince(addressData.address.province);
+      setDistrict(addressData.address.district);
+      setWard(addressData.address.ward);
+      fetchDistricts(addressData.address.province.id);
+      fetchWards(
+        addressData.address.province.id,
+        addressData.address.district.id
+      );
+    }
+  }, [studentData]);
 
   const handleChangeProvice = (value) => {
     const currentProvince = location.find((item) => value === item.id);

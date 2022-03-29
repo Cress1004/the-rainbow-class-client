@@ -11,10 +11,10 @@ import {
   WEEKDAY,
 } from "../../common/constant";
 import { calcFileSize } from "../../common/function";
-import Axios from "axios";
 import ThanksPage from "./ThanksPage";
 import { getArrayLength } from "../../common/transformData";
 import useFetchClassNameList from "../../../hook/Class/useFetchClassNameList";
+import apis from "../../../apis";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -81,6 +81,18 @@ function UploadCV(props) {
     },
   }));
 
+  const fetchUploadCV = async (formData) => {
+    const data = await apis.upload.uploadCV(formData);
+    if (data.success) {
+      localStorage.removeItem("cvInfo");
+      setSubmitted(true);
+    } else if (!data.success) {
+      alert(data.message);
+    } else {
+      alert(t("fail_to_get_api"));
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       userName: cvInfo?.userName,
@@ -125,21 +137,7 @@ function UploadCV(props) {
         for (var key in values) {
           formData.append(key, values[key]);
         }
-        Axios.post(`/api/upload/upload-cv-file`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }).then((response) => {
-          if (response.data.success) {
-            localStorage.removeItem("cvInfo");
-            setSubmitted(true);
-          } else if (!response.data.success) {
-            alert(response.data.message);
-          } else {
-            alert(t("fail_to_get_api"));
-          }
-        });
-        setSubmitting(false);
+        fetchUploadCV(formData);
       }, 400);
     },
   });

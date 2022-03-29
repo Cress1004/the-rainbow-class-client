@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Table, Button, Row, Input, Icon } from "antd";
-import Axios from "axios";
 import "./student.scss";
 import { Link } from "react-router-dom";
 import { transformStudentTypes } from "../../../../common/transformData";
@@ -12,28 +11,21 @@ import {
   checkStringContentSubString,
 } from "../../../../common/function";
 import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUserData";
+import useFetchStudents from "../../../../../hook/Student/useFetchStudents";
 
 function StudentList(props) {
   const { t } = useTranslation();
   const [students, setStudents] = useState([]);
   const [searchData, setSearchData] = useState([]);
   const [inputValue, setInputValue] = useState("");
-  const userId = localStorage.getItem("userId");
   const userData = useFetchCurrentUserData();
   const userRole = userData.userRole;
+  const studentsData = useFetchStudents();
+
   useEffect(() => {
-    Axios.post("/api/students/get-students", { userId: userId }).then(
-      (response) => {
-        if (response.data.success) {
-          const data = response.data.students;
-          setStudents(transformStudentData(data));
-          setSearchData(transformStudentData(data));
-        } else {
-          alert(t("fail_to_get_api"));
-        }
-      }
-    );
-  }, [t, userId]);
+    setStudents(transformStudentData(studentsData));
+    setSearchData(transformStudentData(studentsData));
+  }, [studentsData]);
 
   const transformStudentData = (data) => {
     return data.map((item, index) => ({

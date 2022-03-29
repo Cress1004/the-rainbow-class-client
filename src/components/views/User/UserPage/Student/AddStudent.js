@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Form, Input, Select, Button, Radio } from "antd";
-import Axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./student.scss";
@@ -54,6 +53,17 @@ function AddStudent(props) {
     }
   };
 
+  const fetchAddStudent = async (dataToSend) => {
+    const data = await apis.student.addStudent(dataToSend);
+    if (data.success) {
+      history.push("/students");
+    } else if (!data.success) {
+      alert(data.message);
+    } else {
+      alert(t("fail_to_get_api"));
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -78,17 +88,7 @@ function AddStudent(props) {
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
         const valuesToSend = { ...values, address };
-        Axios.post("/api/students/add-student", {
-          studentData: valuesToSend,
-        }).then((response) => {
-          if (response.data.success) {
-            history.push("/students");
-          } else if (!response.data.success) {
-            alert(response.data.message);
-          } else {
-            alert(t("fail_to_get_api"));
-          }
-        });
+        fetchAddStudent({ studentData: valuesToSend });
         setSubmitting(false);
       }, 400);
     },

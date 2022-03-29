@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import Axios from "axios";
 import { Button, Form, Input, Select, Radio } from "antd";
 import { useHistory, useParams } from "react-router-dom";
 import { phoneRegExp } from "../../../../common/constant";
@@ -11,6 +10,7 @@ import { checkAdminAndMonitorRole } from "../../../../common/function";
 import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUserData";
 import useFetchLocation from "../../../../../hook/CommonData.js/useFetchLocation";
 import apis from "../../../../../apis";
+import useFetchVolunteerData from "../../../../../hook/Volunteer/useFetchVolunteerData";
 
 const { Option } = Select;
 const { Item } = Form;
@@ -20,7 +20,6 @@ function EditVolunteer(props) {
   const { t } = useTranslation();
   const { id } = useParams();
   const history = useHistory();
-  const userId = localStorage.getItem("userId");
   const layout = {
     labelCol: { span: 5 },
     wrapperCol: { span: 15 },
@@ -31,8 +30,7 @@ function EditVolunteer(props) {
   const userData = useFetchCurrentUserData();
   const userRole = userData.userRole;
   const location = useFetchLocation();
-
-  const [volunteerData, setVolunteerData] = useState({});
+  const volunteerData = useFetchVolunteerData(id);
   const [districts, setDistricts] = useState([]);
   const [district, setDistrict] = useState({});
   const [wards, setWards] = useState([]);
@@ -54,42 +52,28 @@ function EditVolunteer(props) {
     }
   };
 
+  const fetchEditVolunteer = async (valueToSend) => {
+    const data = await apis.volunteer.editVolunteer(valueToSend);
+    if (data.success) {
+      history.push(`/volunteers/${id}`);
+    } else if (!data.success) {
+      alert(data.message);
+    }
+  };
+
   useEffect(() => {
-    Axios.post("/api/volunteers/:id", { id: id, userId: userId }).then(
-      (response) => {
-        if (response.data.success) {
-          const data = response.data.volunteer;
-          const address = data.user.address;
-          setVolunteerData({
-            id: data._id,
-            name: data.user.name,
-            email: data.user.email,
-            gender: data.user.gender,
-            address: data.user.address,
-            phoneNumber: data.user.phoneNumber,
-            role: data.role,
-            className: data.user?.class?.name,
-            isAdmin: data.isAdmin,
-          });
-          if (address) {
-            setAddress(address);
-            if (address.address) {
-              setProvince(address.address.province);
-              setDistrict(address.address.district);
-              setWard(address.address.ward);
-              fetchDistricts(address.address.province.id);
-              fetchWards(
-                address.address.province.id,
-                address.address.district.id
-              );
-            }
-          }
-        } else {
-          alert(t("fail_to_get_api"));
-        }
+    const address = volunteerData.address;
+    if (address) {
+      setAddress(address);
+      if (address.address) {
+        setProvince(address.address.province);
+        setDistrict(address.address.district);
+        setWard(address.address.ward);
+        fetchDistricts(address.address.province.id);
+        fetchWards(address.address.province.id, address.address.district.id);
       }
-    );
-  }, [t, id, userId]);
+    }
+  }, [volunteerData]);
   const formik = useFormik({
     initialValues: volunteerData ? volunteerData : {},
     enableReinitialize: true,
@@ -105,17 +89,7 @@ function EditVolunteer(props) {
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
         const valuesToSend = { ...values, address };
-        Axios.post(`/api/volunteers/${id}/edit`, valuesToSend).then(
-          (response) => {
-            if (response.data.success) {
-              history.push(`/volunteers/${id}`);
-            } else if (!response.data.success) {
-              alert(response.data.message);
-            } else {
-              alert(t("fail_to_get_api"));
-            }
-          }
-        );
+        fetchEditVolunteer(valuesToSend);
         setSubmitting(false);
       }, 400);
     },

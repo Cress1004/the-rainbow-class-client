@@ -7,7 +7,6 @@ import {
   transformAddressData,
   transformStudentTypes,
 } from "../../../../common/transformData";
-import Axios from "axios";
 import {
   checkAdminAndMonitorRole,
   checkStudentAndCurrentUserSameClass,
@@ -15,6 +14,7 @@ import {
 import PermissionDenied from "../../../Error/PermissionDenied";
 import Description from "./StudentDescription/Description";
 import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUserData";
+import apis from "../../../../../apis";
 
 const { Item } = Form;
 const layout = {
@@ -31,30 +31,37 @@ function StudentDetail(props) {
   const currentUserData = useFetchCurrentUserData();
   const userRole = currentUserData?.userRole;
 
-  const fetchStudentData = (studentId) => {
-    Axios.post(`/api/students/${id}`, { studentId: studentId }).then(
-      (response) => {
-        if (response.data.success) {
-          const data = response.data.studentData;
-          setStudentData({
-            id: data._id,
-            name: data.user.name,
-            email: data.user.email,
-            gender: data.user.gender,
-            parentName: data.parentName,
-            studentTypes: transformStudentTypes(data.studentTypes),
-            image: data.user.image,
-            address: transformAddressData(data.user.address),
-            phoneNumber: data.user.phoneNumber,
-            className: data.user.class ? data.user.class.name : t("unset"),
-            classId: data.user.class?._id,
-            overview: data.overview,
-            interest: data.interest,
-            character: data.character,
-          });
-        }
-      }
-    );
+  const fetchStudentData = async (studentId) => {
+    const data = await apis.student.getStudentData(studentId);
+    if (data.success) {
+      const student = data.studentData;
+      setStudentData({
+        id: student._id,
+        name: student.user.name,
+        email: student.user.email,
+        gender: student.user.gender,
+        parentName: student.parentName,
+        studentTypes: transformStudentTypes(student.studentTypes),
+        image: student.user.image,
+        address: transformAddressData(student.user.address),
+        phoneNumber: student.user.phoneNumber,
+        className: student.user.class ? student.user.class.name : t("unset"),
+        classId: student.user.class?._id,
+        overview: student.overview,
+        interest: student.interest,
+        character: student.character,
+      });
+    }
+  };
+
+  const fetchDeleteStudent = async (studentId) => {
+    const data = await apis.student.deleteStudent(studentId);
+    if (data.success) {
+      alert(t("delete_student_success"));
+      history.push("/students");
+    } else {
+      alert(t("fail_to_delete_student"));
+    }
   };
 
   useEffect(() => {
@@ -67,16 +74,7 @@ function StudentDetail(props) {
 
   const deleteStudent = () => {
     setConfirmDelete(false);
-    Axios.post(`/api/students/${id}/delete`, { studentId: id }).then(
-      (response) => {
-        if (response.data.success) {
-          alert(t("delete_student_success"));
-          history.push("/students");
-        } else {
-          alert(t("fail_to_delete_student"));
-        }
-      }
-    );
+    fetchDeleteStudent(id);
   };
 
   const cancelDelete = () => {

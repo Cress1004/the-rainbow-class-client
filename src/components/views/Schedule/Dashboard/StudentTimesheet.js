@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Axios from "axios";
 import MyCalendar from "../Sessions/Calendar";
 import { useTranslation } from "react-i18next";
 import apis from "../../../../apis";

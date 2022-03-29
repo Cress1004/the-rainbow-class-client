@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Axios from "axios";
 import { useParams } from "react-router";
 import { Form, Input, Select, Button, Row, Col, TimePicker, Icon } from "antd";
 import { useFormik } from "formik";

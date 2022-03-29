@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import Axios from "axios";
 import "../schedule.scss";
 import MyCalendar from "../Sessions/Calendar";
 import { Col, Form, Row, Select } from "antd";

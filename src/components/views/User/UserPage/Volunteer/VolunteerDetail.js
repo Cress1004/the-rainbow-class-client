@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router";
 import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Row, Col, Button, Modal, Form } from "antd";
 import { transformAddressData } from "../../../../common/transformData";
-import Axios from "axios";
 import {
   CLASS_MONITOR,
   SUB_CLASS_MONITOR,
@@ -12,6 +11,8 @@ import {
 } from "../../../../common/constant";
 import PermissionDenied from "../../../Error/PermissionDenied";
 import { checkAdminAndMonitorRole } from "../../../../common/function";
+import useFetchVolunteerData from "../../../../../hook/Volunteer/useFetchVolunteerData";
+import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUserData";
 import apis from "../../../../../apis";
 
 const { Item } = Form;
@@ -24,59 +25,28 @@ function VolunteerDetail(props) {
   const { t } = useTranslation();
   const { id } = useParams();
   const history = useHistory();
-  const userId = localStorage.getItem("userId");
-  const [volunteerData, setVolunteerData] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const [userRole, setUserRole] = useState({});
-
-  const fetchCurrentUser = async () => {
-    const data = await apis.users.getCurrentUser();
-    if (data.success) setUserRole(data.userRole);
-  };
-
-  useEffect(() => {
-    fetchCurrentUser();
-    Axios.post(`/api/volunteers/${id}`, { id: id, userId: userId }).then(
-      (response) => {
-        if (response.data.success) {
-          const data = response.data.volunteer;
-          data
-            ? setVolunteerData({
-                id: data._id,
-                name: data.user.name,
-                email: data.user.email,
-                gender: data.user.gender,
-                image: data.user.image,
-                address: transformAddressData(data.user.address),
-                phoneNumber: data.user.phoneNumber,
-                role: data.role,
-                className: data.user.class ? data.user.class.name : t("unset"),
-              })
-            : setVolunteerData(null);
-        } else {
-          alert(t("fail_to_get_api"));
-        }
-      }
-    );
-  }, [t, id, userId]);
+  const volunteerData = useFetchVolunteerData(id);
+  const currentUser = useFetchCurrentUserData();
+  const userRole = currentUser.userRole;
 
   const openDeletePopup = () => {
     setConfirmDelete(true);
   };
 
+  const fetchDeleteVolunteer = async (volunteerId) => {
+    const data = await apis.volunteer.deleteVolunteer(volunteerId);
+    if (data.success) {
+      alert(t("delete_volunteer_success"));
+      history.push("/volunteers");
+    } else if (!data.success) {
+      alert(data.message);
+    }
+  };
+
   const deleteVolunteer = () => {
     setConfirmDelete(false);
-    Axios.post(`/api/volunteers/${id}/delete`, {
-      volunteerId: id,
-      userId: userId,
-    }).then((response) => {
-      if (response.data.success) {
-        alert(t("delete_volunteer_success"));
-        history.push("/volunteers");
-      } else {
-        alert(t("fail_to_delete_volunteer"));
-      }
-    });
+    fetchDeleteVolunteer(id);
   };
 
   const cancelDelete = () => {
@@ -132,7 +102,9 @@ function VolunteerDetail(props) {
               <Form {...layout} className="volunteer-detail__info-area">
                 <Item label={t("user_name")}>{volunteerData.name}</Item>
                 <Item label={t("email")}>{volunteerData.email}</Item>
-                <Item label={t("address")}>{volunteerData.address}</Item>
+                <Item label={t("address")}>
+                  {transformAddressData(volunteerData.address)}
+                </Item>
                 <Item label={t("phone_number")}>
                   {volunteerData.phoneNumber}
                 </Item>

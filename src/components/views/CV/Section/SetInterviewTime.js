@@ -5,7 +5,6 @@ import { Modal } from "antd";
 import { Button } from "antd";
 import { Select } from "antd";
 import { Form } from "antd";
-import Axios from "axios";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { FORMAT_TIME_SCHEDULE } from "../../../common/constant";

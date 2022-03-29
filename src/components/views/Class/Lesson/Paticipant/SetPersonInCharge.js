@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button, Col, Form, Icon, Row, Select } from "antd";
 import { useFormik } from "formik";
-import Axios from "axios";
 import apis from "../../../../../apis";
 
 const { Option } = Select;

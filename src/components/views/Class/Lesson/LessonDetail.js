@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
-import Axios from "axios";
 import { useTranslation } from "react-i18next";
 import { Row, Dropdown, Icon, Col, Menu, Button, Modal } from "antd";
 import {
