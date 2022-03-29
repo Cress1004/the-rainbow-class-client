@@ -2,22 +2,21 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { Table } from "antd";
-import useFetchStudentByClass from "../../../../hook/useFetchStudentByClass";
-import useFetchLessonByClass from "../../../../hook/useFetchLessonByClass";
+import useFetchStudentByClass from "../../../../hook/Class/useFetchStudentByClass";
 import { getArrayLength } from "../../../common/transformData";
 import EditCommentModal from "./EditComment/EditCommentModal";
 import { checkCurrentVolunteerBelongToCurrentClass } from "../../../common/checkRole";
 import PermissionDenied from "../../Error/PermissionDenied";
 import "./comment-student.scss";
 import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
+import useFetchAllLessonByClass from "../../../../hook/Lesson/useFetchAllLessonByClass";
 
 function CommentStudent(props) {
   const { t } = useTranslation();
   const { id } = useParams();
-  const userId = localStorage.getItem("userId");
   const [editing, setEditing] = useState(false);
   const [editingAchievement, setEditingAchievement] = useState({});
-  const lessonData = useFetchLessonByClass(id);
+  const lessonData = useFetchAllLessonByClass(id);
   const studentData = useFetchStudentByClass(id);
   const currentUser = useFetchCurrentUserData();
 

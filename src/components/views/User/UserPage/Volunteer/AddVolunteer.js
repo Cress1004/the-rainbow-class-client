@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Form, Input, Select, Button } from "antd";
@@ -9,27 +9,25 @@ import "./volunteer.scss";
 import { phoneRegExp } from "../../../../common/constant";
 import PermissionDenied from "../../../Error/PermissionDenied";
 import { checkAdminAndMonitorRole } from "../../../../common/function";
-import apis from "../../../../../apis";
+import useFetchAllClasses from "../../../../../hook/Class/useFetchAllClasses";
+import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUserData";
 
 const { Option } = Select;
 
 function AddVolunteer(props) {
   const { t } = useTranslation();
-  const [classes, setClasses] = useState(null);
   const history = useHistory();
-  const [userRole, setUserRole] = useState(null);
   const userId = localStorage.getItem("userId");
+  const currentUserData = useFetchCurrentUserData();
+  const userRole = currentUserData.userRole;
+  const classes = useFetchAllClasses();
+
   const layout = {
     labelCol: { span: 5 },
     wrapperCol: { span: 15 },
   };
   const tailLayout = {
     wrapperCol: { offset: 18, span: 4 },
-  };
-
-  const fetchCurrentUser = async () => {
-    const data = await apis.users.getCurrentUser();
-    if (data.success) setUserRole(data.userRole);
   };
 
   const formik = useFormik({
@@ -67,16 +65,6 @@ function AddVolunteer(props) {
       }, 400);
     },
   });
-
-  useEffect(() => {
-    Axios.post("/api/classes/get-all-classes", null).then((response) => {
-      if (response.data.success) {
-        const data = response.data.classes;
-        data ? setClasses(response.data.classes) : setClasses(null);
-      }
-    });
-    fetchCurrentUser();
-  }, [t, userId]);
 
   const fieldError = (formik) => {
     return (

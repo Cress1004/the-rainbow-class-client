@@ -6,10 +6,10 @@ import {
     LOGOUT_USER,
     RESET_PASSWORD,
 } from './types';
-import { USER_SERVER } from '../components/Config.js';
+import { USER_API } from '../config';
 
 export function registerUser(dataToSubmit){
-    const request = axios.post(`${USER_SERVER}/register`,dataToSubmit)
+    const request = axios.post(`${USER_API}/register`,dataToSubmit)
         .then(response => response.data);
     
     return {
@@ -19,7 +19,7 @@ export function registerUser(dataToSubmit){
 }
 
 export function loginUser(dataToSubmit){
-    const request = axios.post(`${USER_SERVER}/login`,dataToSubmit)
+    const request = axios.post(`${USER_API}/login`,dataToSubmit)
                 .then(response => response.data);
 
     return {
@@ -29,7 +29,7 @@ export function loginUser(dataToSubmit){
 }
 
 export function auth(){
-    const request = axios.get(`${USER_SERVER}/auth`)
+    const request = axios.get(`${USER_API}/auth`)
     .then(response => response.data);
 
     return {
@@ -39,7 +39,7 @@ export function auth(){
 }
 
 export function logoutUser(){
-    const request = axios.get(`${USER_SERVER}/logout`)
+    const request = axios.get(`${USER_API}/logout`)
     .then(response => response.data);
 
     return {
@@ -49,7 +49,7 @@ export function logoutUser(){
 }
 
 export function resetPassword(){
-    const request = axios.get(`${USER_SERVER}/reset-password`)
+    const request = axios.get(`${USER_API}/reset-password`)
     .then(response => response.data);
 
     return {

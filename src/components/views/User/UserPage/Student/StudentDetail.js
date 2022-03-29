@@ -59,7 +59,7 @@ function StudentDetail(props) {
 
   useEffect(() => {
     fetchStudentData(id);
-  }, [t, id]);
+  }, [id]);
 
   const openDeletePopup = () => {
     setConfirmDelete(true);

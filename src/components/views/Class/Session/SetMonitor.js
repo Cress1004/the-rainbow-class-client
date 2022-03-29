@@ -3,9 +3,9 @@ import { useFormik } from "formik";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
-import Axios from "axios";
-import useFetchClassData from "../../../../hook/useFetchClassData";
 import { getArrayLength } from "../../../common/transformData";
+import apis from "../../../../apis";
+import useFetchClassData from "../../../../hook/Class/useFetchClassData";
 const { Option } = Select;
 
 function SetMonitor(props) {
@@ -23,6 +23,16 @@ function SetMonitor(props) {
 
   const classData = useFetchClassData(id);
   const volunteers = classData.volunteers;
+
+  const fetchSetMonitor = async (dataToSend) => {
+    const data = await apis.classes.setMonitor(dataToSend);
+    if (data.success) {
+      history.push(`/classes/${id}`);
+    } else if (!data.success) {
+      alert(data.message);
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       classId: id,
@@ -32,18 +42,8 @@ function SetMonitor(props) {
     enableReinitialize: true,
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
-        Axios.post(`/api/classes/${id}/set-monitor`, {
-          values: values,
-        }).then((response) => {
-          if (response.data.success) {
-            setSubmitting(false);
-            history.push(`/classes/${id}`);
-          } else if (!response.data.success) {
-            alert(response.data.message);
-          } else {
-            alert(t("fail_to_get_api"));
-          }
-        });
+        fetchSetMonitor({ value: values });
+        setSubmitting(false);
       }, 400);
     },
   });

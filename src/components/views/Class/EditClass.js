@@ -15,6 +15,7 @@ import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData"
 import useFetchLocation from "../../../hook/CommonData.js/useFetchLocation";
 import useFetchStudentTypes from "../../../hook/CommonData.js/useFetchStudentTypes";
 import apis from "../../../apis";
+import useFetchClassData from "../../../hook/Class/useFetchClassData";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -35,19 +36,27 @@ function EditClass(props) {
   const [district, setDistrict] = useState("");
   const [wards, setWards] = useState([]);
   const [ward, setWard] = useState("");
-  const [classData, setClassData] = useState({});
   const [province, setProvince] = useState({});
   const [defaultSchedule, setDefaultSchedule] = useState([]);
   const [address, setAddress] = useState({});
-  const userId = localStorage.getItem("userId");
   const currentUser = useFetchCurrentUserData();
   const location = useFetchLocation();
   const studentTypes = useFetchStudentTypes();
+  const classData = useFetchClassData(id);
 
   const fetchDistricts = async (provinceId) => {
     const data = await apis.commonData.getDistricts(provinceId);
     if (data.success) {
       setDistricts(data.districts);
+    }
+  };
+
+  const fetchEditClass = async (classId, dataToSend) => {
+    const data = await apis.classes.editClass(classId, dataToSend);
+    if (data.success) {
+      history.push(`/classes/${id}`);
+    } else if (!data.success) {
+      alert(data.message);
     }
   };
 
@@ -76,48 +85,27 @@ function EditClass(props) {
         else {
           valuesToSend = { ...values, address, defaultSchedule };
         }
-        Axios.post(`/api/classes/${id}/edit`, {
-          classData: valuesToSend,
-          userId: userId,
-        }).then((response) => {
-          if (response.data.success) {
-            history.push(`/classes/${id}`);
-          } else if (!response.data.success) {
-            alert(response.data.message);
-          } else {
-            alert(t("fail_to_get_api"));
-          }
-        });
+        fetchEditClass(id, valuesToSend);
         setSubmitting(false);
       }, 400);
     },
   });
 
   useEffect(() => {
-    Axios.post(`/api/classes/${id}`, { classId: id }).then((response) => {
-      if (response.data.success) {
-        const data = response.data.classData;
-        const addressData = data.address
-        setClassData({
-          _id: data._id,
-          name: data.name,
-          description: data.description,
-          address: addressData,
-          studentTypes: data.studentTypes.map((type) => type._id),
-          defaultSchedule: data.defaultSchedule,
-        });
-        if (addressData) {
-          setAddress(addressData);
-          setProvince(addressData.address.province);
-          setDistrict(addressData.address.district);
-          setWard(addressData.address.ward);
-          fetchDistricts(addressData.address.province.id);
-          fetchWards(addressData.address.province.id, addressData.address.district.id);
-        }
-        setDefaultSchedule(data.defaultSchedule);
-      }
-    });
-  }, [t, id]);
+    const addressData = classData.address;
+    if (addressData) {
+      setAddress(addressData);
+      setProvince(addressData.address.province);
+      setDistrict(addressData.address.district);
+      setWard(addressData.address.ward);
+      fetchDistricts(addressData.address.province.id);
+      fetchWards(
+        addressData.address.province.id,
+        addressData.address.district.id
+      );
+    }
+    setDefaultSchedule(classData.defaultSchedule);
+  }, [classData]);
 
   const handleChangeProvice = (value) => {
     const currentProvince = location.find((item) => value === item.id);

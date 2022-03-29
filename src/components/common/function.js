@@ -11,7 +11,7 @@ export function generateKey() {
 }
 
 export function setColorForClass(classes) {
-  if (!classes.length) return {};
+  if (!classes) return {};
   return classes.map((item, index) => ({
     classId: item._id,
     color:

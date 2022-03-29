@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Form, Input, Select, Button, Radio } from "antd";
@@ -13,6 +13,7 @@ import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUse
 import useFetchLocation from "../../../../../hook/CommonData.js/useFetchLocation";
 import useFetchStudentTypes from "../../../../../hook/CommonData.js/useFetchStudentTypes";
 import apis from "../../../../../apis";
+import useFetchAllClasses from "../../../../../hook/Class/useFetchAllClasses";
 
 const { Option } = Select;
 const { Item } = Form;
@@ -26,8 +27,7 @@ function AddStudent(props) {
   const [wards, setWards] = useState([]);
   const [ward, setWard] = useState({});
   const [province, setProvince] = useState({});
-  const [classes, setClasses] = useState({});
-  const userId = localStorage.getItem("userId");
+  const classes = useFetchAllClasses();
   const currentUser = useFetchCurrentUserData();
   const location = useFetchLocation();
   const studentTypes = useFetchStudentTypes();
@@ -93,16 +93,6 @@ function AddStudent(props) {
       }, 400);
     },
   });
-
-  useEffect(() => {
-    Axios.post(`/api/classes/get-all-classes`, null).then((response) => {
-      if (response.data.success) {
-        setClasses(response.data.classes);
-      } else {
-        alert(t("fail_to_get_api"));
-      }
-    });
-  }, [t, userId]);
 
   const handleChangeProvice = (value) => {
     const currentProvince = location.find((item) => value === item.id);

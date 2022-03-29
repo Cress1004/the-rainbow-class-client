@@ -11,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import { FORMAT_TIME_SCHEDULE } from "../../../common/constant";
 import FreeTimeTable from "./FreeTimeTable";
 import "../upload-cv.scss";
+import apis from "../../../../apis";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -24,29 +25,22 @@ function SetInterviewTime(props) {
     columns,
     fixedData,
     interviewData,
-    classData,
+    classId,
   } = props;
 
   const [adminAndCurrentMonitor, setAdminAndCurrentMonitor] = useState([]);
-  const classId = classData?._id;
 
-  const fetchAdminAndCurrentMonitor = (classId) => {
-    if (classId) {
-      Axios.post(`/api/classes/${classId}/get-admin-monitor`, {
-        classId: classId,
-      }).then((response) => {
-        const res = response.data;
-        if (res.success) {
-          setAdminAndCurrentMonitor(res.data);
-        } else if (!res.success) {
-          alert(res.message);
-        }
-      });
+  const fetchAdminAndMonitor = async (classId) => {
+    const data = await apis.classes.getAdminMonitor(classId);
+    if (data.success) {
+      setAdminAndCurrentMonitor(data.data);
+    } else if (!data.success) {
+      alert(data.message);
     }
   };
 
   useEffect(() => {
-    fetchAdminAndCurrentMonitor(classId);
+    fetchAdminAndMonitor(classId);
   }, [classId]);
 
   const cancelModal = () => {

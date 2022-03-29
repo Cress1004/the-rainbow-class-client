@@ -1,27 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Table, Row } from "antd";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { transformScheduleTimeData } from "../../../common/transformData";
 import { OFFLINE_OPTION } from "../../../common/constant";
-import Axios from "axios";
 
 function LessonList(props) {
   const { t } = useTranslation();
-  const { id, userId } = props;
-  const [lessons, setLessons] = useState([]);
-
-  useEffect(() => {
-    Axios.post(`/api/classes/${id}/get-lessons`, {
-      classId: id,
-      userId: userId,
-    }).then((response) => {
-      if (response.data.success) {
-        setLessons(response.data.lessons);
-      } 
-    });
-  }, [t, id, userId]);
-
+  const { id, lessons } = props;
   const data = lessons
     ? lessons.map((item, index) => ({
         key: index,

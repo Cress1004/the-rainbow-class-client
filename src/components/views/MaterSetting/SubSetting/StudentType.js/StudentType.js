@@ -1,7 +1,6 @@
 import { Button, Table, Form, Input, message } from "antd";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import Axios from "axios";
 import "../../master-setting.scss";
 import apis from "../../../../../apis";
 

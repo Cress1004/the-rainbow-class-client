@@ -7,6 +7,8 @@ import { Col, Form, Row, Select } from "antd";
 import { STUDENT, SUPER_ADMIN, VOLUNTEER } from "../../../common/constant";
 import PermissionDenied from "../../Error/PermissionDenied";
 import apis from "../../../../apis";
+import useFetchAllClasses from "../../../../hook/Class/useFetchAllClasses";
+import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
 
 const { Option } = Select;
 function ClassSchedule() {
@@ -14,48 +16,35 @@ function ClassSchedule() {
   const userId = localStorage.getItem("userId");
   const [schedule, setSchedule] = useState([]);
   const [classData, setClassData] = useState();
-  const [classes, setClasses] = useState([]);
-  const [userRole, setUserRole] = useState({});
+  const classes = useFetchAllClasses();
+  const currentUser = useFetchCurrentUserData();
+  const userRole = currentUser.userRole;
 
-  const fetchCurrentUser = async () => {
-    const data = await apis.users.getCurrentUser();
-    if (data.success) setUserRole(data.userRole);
+  const fetchCurrentUserClassSchedule = async () => {
+    const data = await apis.classes.getCurrentUserClassSchedule();
+    if (data.success) {
+      setSchedule(data.schedule);
+      setClassData(data.classData);
+    } else if (!data.success) {
+      alert(data.message);
+    }
+  };
+
+  const fetchClassschedule = async (dataToSend) => {
+    const data = await apis.classes.getClassSchedules(dataToSend);
+    if (data.success) {
+      const classData = data.classData;
+      setClassData(classData ? classData : { _id: "0", name: t("all_option") });
+      setSchedule(data.schedule);
+    }
   };
 
   useEffect(() => {
-    fetchCurrentUser();
-    Axios.post(`/api/classes/my-class-schedules`, { userId: userId }).then(
-      (response) => {
-        if (response.data.success) {
-          const data = response.data;
-          setSchedule(data.schedule);
-          setClassData(data.classData);
-        } else {
-          alert(t("fail_to_get_api"));
-        }
-      }
-    );
-    Axios.post(`/api/classes/get-all-classes`, null).then((response) => {
-      if (response.data.success) {
-        setClasses(response.data.classes);
-      } 
-    });
-  }, [t, userId]);
+    fetchCurrentUserClassSchedule();
+  }, []);
 
   const onSelectClass = (value) => {
-    Axios.post(`/api/classes/get-class-schedules`, { classId: value }).then(
-      (response) => {
-        if (response.data.success) {
-          const classData = response.data.classData;
-          setClassData(
-            classData ? classData : { _id: "0", name: t("all_option") }
-          );
-          setSchedule(response.data.schedule);
-        } else {
-          alert(t("fail_to_get_api"));
-        }
-      }
-    );
+    fetchClassschedule({ classId: value });
   };
   return (
     <div className="class-schedule">

@@ -18,6 +18,7 @@ import {
   checkUserCanUnRegisterAction,
 } from "../../../common/checkCondition";
 import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
+import apis from "../../../../apis";
 
 function LessonDetail(props) {
   const { t } = useTranslation();
@@ -30,39 +31,67 @@ function LessonDetail(props) {
   const currentUser = useFetchCurrentUserData();
   const userRole = currentUser.userRole;
 
-  const fetchLessonData = (lessonId, userId) => {
-    Axios.post(`/api/classes/${id}/lessons/${lessonId}`, {
-      lessonId: lessonId,
-      userId: userId,
-    }).then((response) => {
-      if (response.data.success) {
-        const data = response.data.lessonData;
-        setLessonData({
-          scheduleId: data.schedule._id,
-          teachOption: data.schedule.teachOption,
-          linkOnline: data.schedule.linkOnline,
-          title: data.title,
-          description: data.description,
-          address: transformAddressData(data.schedule.address),
-          time: transformLessonTimeToString(data.schedule.time),
-          date: new Date(data.schedule.time.date),
-          paticipants: data.schedule.paticipants,
-          personInCharge: data.schedule.personInCharge,
-        });
-        data.schedule.paticipants.find(
-          (participant) => participant._id === userId
-        )
-          ? setAssign(true)
-          : setAssign(false);
-      } else if (!response.data.success) {
-        alert(response.data.message);
-      } 
-    });
-  }
- 
+  const fetchLessonData = async (classId, lessonId) => {
+    const responseData = await apis.lessons.getLessonData(classId, lessonId);
+    if (responseData.success) {
+      const data = responseData.lessonData;
+      setLessonData({
+        scheduleId: data.schedule._id,
+        teachOption: data.schedule.teachOption,
+        linkOnline: data.schedule.linkOnline,
+        title: data.title,
+        description: data.description,
+        address: transformAddressData(data.schedule.address),
+        time: transformLessonTimeToString(data.schedule.time),
+        date: new Date(data.schedule.time.date),
+        paticipants: data.schedule.paticipants,
+        personInCharge: data.schedule.personInCharge,
+      });
+      data.schedule.paticipants.find(
+        (participant) => participant._id === userId
+      )
+        ? setAssign(true)
+        : setAssign(false);
+    } else if (!responseData.success) {
+      alert(responseData.message);
+    }
+  };
+
+  const fetchDeleteLesson = async (classId, lessonId) => {
+    const data = await apis.lessons.deleteLesson(classId, lessonId);
+    if (data.success) {
+      alert(t("delete_lesson_success"));
+      history.push(`/classes/${classId}/`);
+    }
+  };
+
+  const fetchAssignSchedule = async (classId, lessonId, scheduleId) => {
+    const data = await apis.lessons.assignSchedule(
+      classId,
+      lessonId,
+      scheduleId
+    );
+    if (data.success) {
+      setAssign(true);
+      fetchLessonData(id, lessonId);
+    }
+  };
+
+  const fetchUnassignSchedule = async (classId, lessonId, scheduleId) => {
+    const data = await apis.lessons.unassignSchedule(
+      classId,
+      lessonId,
+      scheduleId
+    );
+    if (data.success) {
+      setAssign(false);
+      fetchLessonData(id, lessonId);
+    }
+  };
+
   useEffect(() => {
-    fetchLessonData(lessonId, userId);
-  }, [t, id, lessonId, userId]);
+    fetchLessonData(id, lessonId);
+  }, [id, lessonId]);
 
   const openDeletePopup = () => {
     setConfirmDelete(true);
@@ -70,16 +99,7 @@ function LessonDetail(props) {
 
   const deleteLesson = () => {
     setConfirmDelete(false);
-    Axios.post(`/api/classes/${id}/lessons/${lessonId}}/delete`, {
-      lessonId: lessonId,
-    }).then((response) => {
-      if (response.data.success) {
-        alert(t("delete_lesson_success"));
-        history.push(`/classes/${id}/`);
-      } else {
-        alert(t("fail_to_delete_lesson"));
-      }
-    });
+    fetchDeleteLesson(id, lessonId);
   };
 
   const cancelDelete = () => {
@@ -87,33 +107,11 @@ function LessonDetail(props) {
   };
 
   const assignSchedule = () => {
-    Axios.post(`/api/classes/${id}/lessons/${lessonId}}/assign`, {
-      userId: userId,
-      scheduleId: lessonData.scheduleId,
-    }).then((response) => {
-      if (response.data.success) {
-        alert(t("assign_success"));
-        setAssign(true);
-        fetchLessonData(lessonId, userId);
-      } else {
-        alert(t("fail_to_delete_lesson"));
-      }
-    });
+    fetchAssignSchedule(id, lessonId, lessonData.scheduleId);
   };
 
   const unassignSchedule = () => {
-    Axios.post(`/api/classes/${id}/lessons/${lessonId}}/unassign`, {
-      userId: userId,
-      scheduleId: lessonData.scheduleId,
-    }).then((response) => {
-      if (response.data.success) {
-        alert(t("unassign_success"));
-        setAssign(false);
-        fetchLessonData(lessonId, userId);
-      } else {
-        alert(t("fail_to_delete_lesson"));
-      }
-    });
+    fetchUnassignSchedule(id, lessonId, lessonData.scheduleId);
   };
 
   const menu = (

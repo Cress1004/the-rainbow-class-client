@@ -16,7 +16,6 @@ function EditProfile(props) {
   const { t } = useTranslation();
   const history = useHistory();
   const [userData, setUserData] = useState({});
-  const userId = localStorage.getItem("userId");
   const [districts, setDistricts] = useState([]);
   const [district, setDistrict] = useState({});
   const [wards, setWards] = useState([]);
@@ -95,7 +94,7 @@ function EditProfile(props) {
 
   useEffect(() => {
     fetchCurrentUserProfile();
-  }, [t, userId]);
+  }, []);
 
   const handleChangeProvice = (value) => {
     const currentProvince = location.find((item) => value === item.id);

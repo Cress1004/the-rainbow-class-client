@@ -260,7 +260,7 @@ function CVDetail(props) {
                 ) : null}
               </div>
             ) : null}
-             <Item label={t("cv_file")}>
+            <Item label={t("cv_file")}>
               <a onClick={() => downloadFile()} target="_blank">
                 {t("download_here")}
               </a>
@@ -298,16 +298,18 @@ function CVDetail(props) {
         setConfirmReject={setConfirmReject}
         formik={formik}
       />
-      <SetInterviewTime
-        t={t}
-        confirmInterview={confirmInterview}
-        setConfirmInterview={setConfirmInterview}
-        interviewData={cvData.schedule}
-        formik={formik}
-        columns={columns}
-        fixedData={fixedData}
-        classData={cvData.class}
-      />
+      {cvData.class?._id ? (
+        <SetInterviewTime
+          t={t}
+          confirmInterview={confirmInterview}
+          setConfirmInterview={setConfirmInterview}
+          interviewData={cvData.schedule}
+          formik={formik}
+          columns={columns}
+          fixedData={fixedData}
+          classId={cvData.class._id}
+        />
+      ) : null}
       <ConfirmPassStatus
         t={t}
         confirmPass={confirmPass}

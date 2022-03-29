@@ -14,7 +14,6 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useHistory, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Axios from "axios";
 import "./lesson.scss";
 import {
   WEEKDAY,
@@ -30,6 +29,7 @@ import moment from "moment";
 import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
 import useFetchLocation from "../../../../hook/CommonData.js/useFetchLocation";
 import apis from "../../../../apis";
+import useFetchClassData from "../../../../hook/Class/useFetchClassData";
 
 const { Item } = Form;
 const { TextArea } = Input;
@@ -46,12 +46,12 @@ function AddLesson(props) {
   const [ward, setWard] = useState("");
   const [address, setAddress] = useState({});
   const [defaultSchedule, setDefaultSchedule] = useState({});
-  const [classData, setClassData] = useState({});
   const [lessonData, setLessonData] = useState({});
   const [time, setTime] = useState(null);
   const [teachOption, setTeachOption] = useState(OFFLINE_OPTION);
   const currentUser = useFetchCurrentUserData();
   const location = useFetchLocation();
+  const classData = useFetchClassData(id);
 
   const layout = {
     labelCol: { span: 5 },
@@ -75,6 +75,17 @@ function AddLesson(props) {
     }
   };
 
+  const fetchAddLesson = async (classId, dataToSend) => {
+    const data = await apis.lessons.addLesson(classId, dataToSend);
+    if (data.success) {
+      history.push(`/classes/${classId}`);
+    } else if (!data.success) {
+      alert(data.message);
+    } else {
+      alert("Fail to get api")
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -94,48 +105,35 @@ function AddLesson(props) {
       setTimeout(() => {
         let valuesToSend;
         if (teachOption === ONLINE_OPTION) {
-          valuesToSend = { ...values, teachOption,time };
+          valuesToSend = { ...values, teachOption, address, time };
         }
         if (teachOption === OFFLINE_OPTION) {
           valuesToSend = { ...values, teachOption, address, time };
         }
-        Axios.post(`/api/classes/${id}/add-lesson`, valuesToSend).then(
-          (response) => {
-            if (response.data.success) {
-              history.push(`/classes/${id}`);
-            } else if (!response.data.success) {
-              alert(response.data.message);
-            } else {
-              alert(t("fail_to_get_api"));
-            }
-          }
-        );
+        fetchAddLesson(id, valuesToSend);
         setSubmitting(false);
       }, 400);
     },
   });
 
   useEffect(() => {
-    Axios.post(`/api/classes/${id}`, { classId: id }).then((response) => {
-      if (response.data.success) {
-        const data = response.data.classData;
-        const addressData = data.address;
-        setClassData(data);
-        if (addressData) {
-          setAddress({
-            address: addressData.address,
-            description: addressData.description,
-          });
-          setLessonData({ ...lessonData, address: addressData });
-          setProvince(addressData.address.province);
-          setDistrict(addressData.address.district);
-          setWard(addressData.address.ward);
-          fetchDistricts(addressData.address.province.id);
-          fetchWards(addressData.address.province.id, addressData.address.district.id);
-        }
-      } 
-    });
-  }, [t, id]);
+    const addressData = classData.address;
+    if (addressData) {
+      setAddress({
+        address: addressData.address,
+        description: addressData.description,
+      });
+      setLessonData({ ...lessonData, address: addressData });
+      setProvince(addressData.address.province);
+      setDistrict(addressData.address.district);
+      setWard(addressData.address.ward);
+      fetchDistricts(addressData.address.province.id);
+      fetchWards(
+        addressData.address.province.id,
+        addressData.address.district.id
+      );
+    }
+  }, [classData]);
 
   const handleChangeProvice = (value) => {
     const currentProvince = location.find((item) => value === item.id);
@@ -358,7 +356,11 @@ function AddLesson(props) {
           <Col span={5}>
             <TimePicker
               format={FORMAT_TIME_SCHEDULE}
-              value={time && time.startTime ? moment(time.startTime, FORMAT_TIME_SCHEDULE) : undefined}
+              value={
+                time && time.startTime
+                  ? moment(time.startTime, FORMAT_TIME_SCHEDULE)
+                  : undefined
+              }
               placeholder={t("time_placeholder")}
               onChange={(e, timeString) =>
                 setTime({ ...time, startTime: timeString })
@@ -369,7 +371,11 @@ function AddLesson(props) {
           <Col span={5}>
             <TimePicker
               format={FORMAT_TIME_SCHEDULE}
-              value={time && time.endTime ? moment(time.endTime, FORMAT_TIME_SCHEDULE) : undefined}
+              value={
+                time && time.endTime
+                  ? moment(time.endTime, FORMAT_TIME_SCHEDULE)
+                  : undefined
+              }
               placeholder={t("time_placeholder")}
               onChange={(e, timeString) =>
                 setTime({ ...time, endTime: timeString })

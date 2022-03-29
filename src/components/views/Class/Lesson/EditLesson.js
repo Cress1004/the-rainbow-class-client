@@ -21,9 +21,7 @@ import {
   ONLINE_OPTION,
   urlRegExp,
 } from "../../../common/constant";
-import {
-  convertDateStringToMoment,
-} from "../../../common/transformData";
+import { convertDateStringToMoment } from "../../../common/transformData";
 import { generateKey } from "../../../common/function";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -33,6 +31,8 @@ import moment from "moment";
 import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
 import useFetchLocation from "../../../../hook/CommonData.js/useFetchLocation";
 import apis from "../../../../apis";
+import useFetchClassData from "../../../../hook/Class/useFetchClassData";
+import useFetchLessonData from "../../../../hook/Lesson/useFetchLessonData";
 
 const { Item } = Form;
 const { TextArea } = Input;
@@ -48,14 +48,14 @@ function EditLesson(props) {
   const [wards, setWards] = useState([]);
   const [ward, setWard] = useState("");
   const [defaultSchedule, setDefaultSchedule] = useState({});
-  const [classData, setClassData] = useState({});
-  const [lessonData, setLessonData] = useState({});
   const [time, setTime] = useState({});
   const [address, setAddress] = useState({});
   const [teachOption, setTeachOption] = useState();
-  const userId = localStorage.getItem("userId");
   const currentUser = useFetchCurrentUserData();
+  const classData = useFetchClassData(id);
   const location = useFetchLocation();
+  const lessonData = useFetchLessonData(id, lessonId);
+
   const layout = {
     labelCol: { span: 5 },
     wrapperCol: { span: 15 },
@@ -78,44 +78,31 @@ function EditLesson(props) {
     }
   };
 
+  const fetchEditLesson = async (classId, lessonId, dataToSend) => {
+    const data = await apis.lessons.editLesson(classId, lessonId, dataToSend);
+    if (data.success) {
+      history.push(`/classes/${classId}`);
+    } else if (!data.success) {
+      alert(data.message);
+    }
+  };
+
   useEffect(() => {
-    Axios.post(`/api/classes/${id}`, { classId: id }).then((response) => {
-      if (response.data.success) {
-        const data = response.data.classData;
-        setClassData(data);
-      } 
-    });
-    Axios.post(`/api/classes/${id}/lessons/${lessonId}`, {
-      userId: userId,
-      lessonId: lessonId,
-    }).then((response) => {
-      if (response.data.success) {
-        const data = response.data.lessonData;
-        const addressData = data.schedule.address
-        setLessonData({
-          _id: data._id,
-          scheduleId: data.schedule._id,
-          teachOption: data.schedule.teachOption,
-          linkOnline: data.schedule.linkOnline,
-          title: data.title,
-          description: data.description,
-          address: addressData,
-          time: data.schedule.time,
-          // paticipants: data.schedule.paticipants,
-        });
-        setTime(data.schedule.time);
-        setTeachOption(data.schedule.teachOption);
-        if (addressData) {
-          setAddress(addressData);
-          setProvince(addressData.address.province);
-          setDistrict(addressData.address.district);
-          setWard(addressData.address.ward);
-          fetchDistricts(addressData.address.province.id);
-          fetchWards(addressData.address.province.id, addressData.address.district.id);
-        }
-      } 
-    });
-  }, [t, id, lessonId]);
+    setTime(lessonData.time);
+    setTeachOption(lessonData.teachOption);
+    const addressData = lessonData.address;
+    if (addressData) {
+      setAddress(addressData);
+      setProvince(addressData.address.province);
+      setDistrict(addressData.address.district);
+      setWard(addressData.address.ward);
+      fetchDistricts(addressData.address.province.id);
+      fetchWards(
+        addressData.address.province.id,
+        addressData.address.district.id
+      );
+    }
+  }, [lessonData]);
 
   const formik = useFormik({
     initialValues: {
@@ -144,17 +131,7 @@ function EditLesson(props) {
         if (teachOption === OFFLINE_OPTION) {
           valuesToSend = { ...values, teachOption, address, time };
         }
-        Axios.post(`/api/classes/${id}/lessons/${lessonId}/edit`, {
-          lessonData: valuesToSend,
-        }).then((response) => {
-          if (response.data.success) {
-            history.push(`/classes/${id}`);
-          } else if (!response.data.success) {
-            alert(response.data.message);
-          } else {
-            alert(t("fail_to_get_api"));
-          }
-        });
+        fetchEditLesson(id, lessonId, valuesToSend);
         setSubmitting(false);
       }, 400);
     },
@@ -385,7 +362,11 @@ function EditLesson(props) {
             <Col span={5}>
               <TimePicker
                 format={FORMAT_TIME_SCHEDULE}
-                value={time && time.endTime ? moment(time.startTime, FORMAT_TIME_SCHEDULE) : undefined}
+                value={
+                  time && time.endTime
+                    ? moment(time.startTime, FORMAT_TIME_SCHEDULE)
+                    : undefined
+                }
                 placeholder={t("time_placeholder")}
                 onChange={(e, timeString) =>
                   setTime({ ...time, startTime: timeString })
@@ -396,7 +377,11 @@ function EditLesson(props) {
             <Col span={5}>
               <TimePicker
                 format={FORMAT_TIME_SCHEDULE}
-                value={time && time.endTime ? moment(time.endTime, FORMAT_TIME_SCHEDULE) : undefined}
+                value={
+                  time && time.endTime
+                    ? moment(time.endTime, FORMAT_TIME_SCHEDULE)
+                    : undefined
+                }
                 placeholder={t("time_placeholder")}
                 onChange={(e, timeString) =>
                   setTime({ ...time, endTime: timeString })

@@ -162,7 +162,6 @@ const resources = {
       delete: "Xóa",
       set_monitor: "Quản lý cán sự",
       input_weekday: "Chọn thứ trong tuần",
-      unset: "Chưa xếp",
       interviewer_name: "Tên ứng viên",
       select_person_in_charge: "Chọn người phụ trách",
       //noti

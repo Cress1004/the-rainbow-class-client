@@ -3,17 +3,17 @@ import React from "react";
 import { Menu, Dropdown, Avatar, Icon } from "antd";
 // import {DownOutlined} from '@ant-design/icons';
 import axios from "axios";
-import { USER_SERVER } from "../../../Config";
 import { withRouter } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { USER_API } from "../../../../config";
 
 function RightMenu(props) {
   const { t } = useTranslation();
   const user = useSelector((state) => state.user.userData);
 
   const logoutHandler = () => {
-    axios.get(`${USER_SERVER}/logout`).then((response) => {
+    axios.get(`${USER_API}/logout`).then((response) => {
       if (response.status === 200) {
         props.history.push("/login");
       } else {

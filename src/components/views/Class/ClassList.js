@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { Button, Table, Row, Input, Icon } from "antd";
 import "./class-list.scss";
 import { Link } from "react-router-dom";
-import Axios from "axios";
 import {
   transformAddressData,
   transformStudentTypes,
@@ -15,25 +14,16 @@ import {
 import PermissionDenied from "../Error/PermissionDenied";
 import { checkStringContentSubString } from "../../common/function";
 import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
+import useFetchAllClasses from "../../../hook/Class/useFetchAllClasses";
 
 function ClassList(props) {
   const { t } = useTranslation();
-  const [classes, setClasses] = useState();
-  const [searchData, setSearchData] = useState([]);
   const [inputValue, setInputValue] = useState("");
+  const [classes, setClasses] = useState();
+  const [searchData, setSearchData] = useState();
+  const allClassData = useFetchAllClasses();
   const currentUserData = useFetchCurrentUserData();
   const userRole = currentUserData.userRole;
-  useEffect(() => {
-    Axios.post("/api/classes/get-all-classes", null).then((response) => {
-      if (response.data.success) {
-        const data = response.data.classes;
-        setClasses(transformClassData(data));
-        setSearchData(transformClassData(data));
-      } else if (!response.data.success) {
-        alert(response.data.message);
-      } 
-    });
-  }, [t]);
 
   const transformClassData = (classes) => {
     return classes?.map((item, index) => ({
@@ -49,6 +39,11 @@ function ClassList(props) {
       numberOfStudent: item.students.length,
     }));
   };
+
+  useEffect(() => {
+    setClasses(transformClassData(allClassData));
+    setSearchData(transformClassData(allClassData));
+  }, [allClassData]);
 
   const columns = [
     {

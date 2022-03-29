@@ -2,24 +2,24 @@ import React, { useEffect, useState } from "react";
 import Axios from "axios";
 import MyCalendar from "../Sessions/Calendar";
 import { useTranslation } from "react-i18next";
+import apis from "../../../../apis";
 function StudentTimesheet(props) {
   const { t } = useTranslation();
   const { userId } = props;
   const [schedule, setSchedule] = useState([]);
-  const [classData, setClassData] = useState([]);
+
+  const fetchCurrentUserClassSchedule = async () => {
+    const data = await apis.classes.getCurrentUserClassSchedule();
+    if (data.success) {
+      setSchedule(data.schedule);
+    } else if (!data.success) {
+      alert(data.message);
+    }
+  };
+  
   useEffect(() => {
-    Axios.post(`/api/classes/my-class-schedules`, { userId: userId }).then(
-      (response) => {
-        if (response.data.success) {
-          const data = response.data;
-          setSchedule(data.schedule);
-          setClassData(data.classData);
-        } else {
-          alert(t("fail_to_get_api"));
-        }
-      }
-    );
-  }, [t, userId]);
+    fetchCurrentUserClassSchedule();
+  }, []);
 
   return (
     <div className="dashboard">

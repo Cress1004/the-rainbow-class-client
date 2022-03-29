@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import Axios from "axios";
 import { Form, Input, Select, Button, TimePicker, Icon, Row, Col } from "antd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -49,6 +48,15 @@ function AddClass(props) {
     },
   ]);
 
+  const fetchAddClass = async (dataToSend) => {
+    const data = await apis.classes.addClass(dataToSend);
+    if (data.success) {
+      history.push("/classes");
+    } else if (!data.success) {
+      alert(data.message);
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -70,15 +78,7 @@ function AddClass(props) {
         else {
           valuesToSend = { ...values, address, defaultSchedule };
         }
-        Axios.post("/api/classes/add-class", valuesToSend).then((response) => {
-          if (response.data.success) {
-            history.push("/classes");
-          } else if (!response.data.success) {
-            alert(response.data.message);
-          } else {
-            alert(t("fail_to_get_api"));
-          }
-        });
+        fetchAddClass(valuesToSend);
         setSubmitting(false);
       }, 400);
     },

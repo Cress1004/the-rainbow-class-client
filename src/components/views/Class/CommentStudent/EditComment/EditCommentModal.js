@@ -2,11 +2,23 @@ import { Input, Modal, Table } from "antd";
 import Axios from "axios";
 import { useFormik } from "formik";
 import React from "react";
+import apis from "../../../../../apis";
 import { getArrayLength } from "../../../../common/transformData";
 import "../comment-student.scss";
 
 function EditCommentModal(props) {
   const { t, studentData, editing, setEditing, editingAchievement } = props;
+  const fetchSubmitCommentStudent = async (dataToSend) => {
+    const data = await apis.classes.submitCommentStudent(dataToSend);
+    if (data.success) {
+      if (data.success) {
+        window.location.reload();
+        setEditing(false);
+      } else if (!data.success) {
+        alert(data.message);
+      }
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -15,16 +27,7 @@ function EditCommentModal(props) {
     },
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
-        Axios.post("/api/classes/comment-student", values).then((response) => {
-          if (response.data.success) {
-            window.location.reload();
-            setEditing(false);
-          } else if (!response.data.success) {
-            alert(response.data.message);
-          } else {
-            alert(t("fail_to_get_api"));
-          }
-        });
+        fetchSubmitCommentStudent(values);
         setSubmitting(false);
       }, 400);
     },

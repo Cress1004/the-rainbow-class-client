@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { Row, Col, Button, Modal, Icon, Menu, Dropdown } from "antd";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router";
-import Axios from "axios";
 import {
   getArrayLength,
   transformAddressData,
@@ -20,36 +19,38 @@ import {
 } from "../../common/checkRole";
 import { SUPER_ADMIN } from "../../common/constant";
 import PermissionDenied from "../Error/PermissionDenied";
-import useFetchClassData from "../../../hook/useFetchClassData";
 import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
+import apis from "../../../apis";
+import useFetchClassData from "../../../hook/Class/useFetchClassData";
+import useFetchAllLessonByClass from "../../../hook/Lesson/useFetchAllLessonByClass";
 
 function ClassDetail(props) {
   const { t } = useTranslation();
   const history = useHistory();
   const { id } = useParams();
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const userId = localStorage.getItem("userId");
   const currentUserData = useFetchCurrentUserData();
   const userRole = currentUserData.userRole;
-
   const classData = useFetchClassData(id);
+  const lessons = useFetchAllLessonByClass(id);
 
   const openDeletePopup = () => {
     setConfirmDelete(true);
   };
 
+  const fetchDeleteClass = async (id) => {
+    const data = await apis.classes.deleteClass(id);
+    if (data.success) {
+      alert(t("delete_class_success"));
+      history.push("/classes");
+    } else {
+      alert(t("fail_to_delete_class"));
+    }
+  }
+
   const deleteClass = () => {
     setConfirmDelete(false);
-    Axios.post(`/api/classes/${id}/delete`, { classId: id }).then(
-      (response) => {
-        if (response.data.success) {
-          alert(t("delete_class_success"));
-          history.push("/classes");
-        } else {
-          alert(t("fail_to_delete_class"));
-        }
-      }
-    );
+    fetchDeleteClass(id);
   };
 
   const cancelDelete = () => {
@@ -191,7 +192,7 @@ function ClassDetail(props) {
                   </div>
                 </Row>
               )}
-              <LessonList id={id} userId={userId} />
+              <LessonList id={id} lessons={lessons} />
             </div>
           )}
         </div>

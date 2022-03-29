@@ -11,10 +11,10 @@ import {
   WEEKDAY,
 } from "../../common/constant";
 import { calcFileSize } from "../../common/function";
-import useFetchClassNameList from "../../../hook/useFetchClassNameList";
 import Axios from "axios";
 import ThanksPage from "./ThanksPage";
 import { getArrayLength } from "../../common/transformData";
+import useFetchClassNameList from "../../../hook/Class/useFetchClassNameList";
 
 const { Item } = Form;
 const { Option } = Select;

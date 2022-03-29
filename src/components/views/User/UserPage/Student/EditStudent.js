@@ -13,6 +13,7 @@ import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUse
 import useFetchLocation from "../../../../../hook/CommonData.js/useFetchLocation";
 import useFetchStudentTypes from "../../../../../hook/CommonData.js/useFetchStudentTypes";
 import apis from "../../../../../apis";
+import useFetchAllClasses from "../../../../../hook/Class/useFetchAllClasses";
 
 const { Option } = Select;
 const { Item } = Form;
@@ -22,7 +23,6 @@ function EditStudent(props) {
   const { id } = useParams();
   const history = useHistory();
   const [address, setAddress] = useState([]);
-  const [classes, setClasses] = useState([]);
   const [studentData, setStudentData] = useState({});
   const [districts, setDistricts] = useState([]);
   const [district, setDistrict] = useState({});
@@ -34,6 +34,7 @@ function EditStudent(props) {
   const userRole = userData.userRole;
   const location = useFetchLocation();
   const studentTypes = useFetchStudentTypes();
+  const classes = useFetchAllClasses();
 
   const layout = {
     labelCol: { span: 5 },
@@ -91,15 +92,6 @@ function EditStudent(props) {
   });
 
   useEffect(() => {
-    Axios.post(`/api/classes/get-all-classes`, { userId: userId }).then(
-      (response) => {
-        if (response.data.success) {
-          setClasses(response.data.classes);
-        } else {
-          alert(t("fail_to_get_api"));
-        }
-      }
-    );
     Axios.post(`/api/students/${id}`, { studentId: id }).then((response) => {
       if (response.data.success) {
         const data = response.data.studentData;
