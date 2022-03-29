@@ -19,11 +19,11 @@ import {
 import { Menu } from "antd";
 import { Dropdown } from "antd";
 import { useFormik } from "formik";
-import Axios from "axios";
 import ConfirmRejectStatus from "./Section/ConfirmRejectStatus";
 import SetInterviewTime from "./Section/SetInterviewTime";
 import FreeTimeTable from "./Section/FreeTimeTable";
 import ConfirmPassStatus from "./Section/ConfirmPassStatus";
+import apis from "../../../apis";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const { Item } = Form;
@@ -47,13 +47,23 @@ function CVDetail(props) {
   const [confirmPass, setConfirmPass] = useState(false);
   const cvStatus = CV_STATUS.find((item) => item.key === cvData?.status);
 
-  const fetchCVData = (id) => {
-    Axios.post(`/api/cv/${id}`, { cvId: id }).then((response) => {
-      const res = response.data;
-      if (res.success) {
-        setCVData(res.cvData);
-      }
-    });
+  const fetchCVData = async (id) => {
+    const data = await apis.cv.getCVData(id);
+    if (data.success) {
+      setCVData(data.cvData);
+    }
+  };
+
+  const fetchUpdateCVStatus = async (id, values) => {
+    const data = await apis.cv.updateCVStatus(values);
+    if (data.success) {
+      fetchCVData(id);
+      setConfirmReject(false);
+      setConfirmInterview(false);
+      setConfirmPass(false);
+    } else if (!data.success) {
+      alert(data.message);
+    }
   };
 
   useEffect(() => {
@@ -72,16 +82,7 @@ function CVDetail(props) {
     enableReinitialize: true,
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
-        Axios.post(`/api/cv/${id}/update-status`, values).then((response) => {
-          if (response.data.success) {
-            fetchCVData(id);
-            setConfirmReject(false);
-            setConfirmInterview(false);
-            setConfirmPass(false);
-          } else if (!response.data.success) {
-            alert(response.data.message);
-          }
-        });
+        fetchUpdateCVStatus(id, values);
         setSubmitting(false);
       }, 400);
     },
