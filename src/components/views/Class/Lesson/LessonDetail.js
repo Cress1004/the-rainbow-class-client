@@ -236,7 +236,7 @@ function LessonDetail(props) {
                 scheduleId={lessonData.scheduleId}
                 fetchLessonData={fetchLessonData}
                 lessonId={lessonId}
-                userId={userId}
+                classId={id}
               />
             ) : null}
           </>

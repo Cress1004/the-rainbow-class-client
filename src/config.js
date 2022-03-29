@@ -5,3 +5,4 @@ export const USER_API = "/api/users";
 export const UPLOAD_API = "/api/upload";
 export const COMMON_DATA_API = "/api/common-data";
 export const CLASS_API = "/api/classes";
+export const SCHEDULE_API = "/api/schedule";

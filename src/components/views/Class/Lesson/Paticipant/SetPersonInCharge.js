@@ -2,11 +2,20 @@ import React, { useState } from "react";
 import { Button, Col, Form, Icon, Row, Select } from "antd";
 import { useFormik } from "formik";
 import Axios from "axios";
+import apis from "../../../../../apis";
 
 const { Option } = Select;
 
 function SetPersonInCharge(props) {
-  const { t, participants, personInCharge, scheduleId, fetchLessonData, lessonId, userId } = props;
+  const {
+    t,
+    participants,
+    personInCharge,
+    scheduleId,
+    fetchLessonData,
+    lessonId,
+    classId
+  } = props;
   const [isEdit, setEdit] = useState(false);
   const layout = {
     labelCol: { span: 3 },
@@ -16,6 +25,16 @@ function SetPersonInCharge(props) {
   const personInchargeName =
     personInCharge && personInCharge.name ? personInCharge.name : t("unset");
 
+  const fetchUpdatePersonInCharge = async (values, classId, lessonId) => {
+    const data = await apis.schedules.updatePersonInCharge(values);
+    if (data.success) {
+      setEdit(false);
+      fetchLessonData(classId, lessonId);
+    } else if (!data.success) {
+      alert(data.message);
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       personInChargeId: personInCharge?._id,
@@ -24,18 +43,7 @@ function SetPersonInCharge(props) {
     enableReinitialize: true,
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
-        Axios.post(`/api/schedule/${scheduleId}/update-person-incharge`, {
-          values: values,
-        }).then((response) => {
-          if (response.data.success) {
-            setEdit(false);
-            fetchLessonData(lessonId, userId)
-          } else if (!response.data.success) {
-            alert(response.data.message);
-          } else {
-            alert(t("fail_to_save_avatar"));
-          }
-        });
+        fetchUpdatePersonInCharge(values, classId, lessonId);
         setSubmitting(false);
       }, 400);
     },
