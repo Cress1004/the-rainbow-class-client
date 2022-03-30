@@ -5,7 +5,7 @@ import { Row, Dropdown, Icon, Col, Menu, Button, Modal } from "antd";
 import {
   getArrayLength,
   transformAddressData,
-  transformLessonTimeToString,
+  transformScheduleTimeData,
 } from "../../../common/transformData";
 import { OFFLINE_OPTION, STUDENT } from "../../../common/constant";
 import PaticipantList from "./Paticipant/PaticipantList";
@@ -41,7 +41,7 @@ function LessonDetail(props) {
         title: data.title,
         description: data.description,
         address: transformAddressData(data.schedule.address),
-        time: transformLessonTimeToString(data.schedule.time),
+        time: transformScheduleTimeData(data.schedule.time),
         date: new Date(data.schedule.time.date),
         paticipants: data.schedule.paticipants,
         personInCharge: data.schedule.personInCharge,

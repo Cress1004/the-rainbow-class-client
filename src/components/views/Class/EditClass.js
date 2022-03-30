@@ -181,6 +181,12 @@ function EditClass(props) {
     setDefaultSchedule(newSchedule);
   };
 
+  const changeStudentType = value => {
+    const oldData = formik.values.studentTypes;
+    const newData = studentTypes.filter(item => value.includes(item._id));
+    formik.setFieldValue("studentTypes", newData)
+  }
+
   const schedule = (
     <>
       {defaultSchedule &&
@@ -371,9 +377,9 @@ function EditClass(props) {
                 width: "100%",
                 marginRight: "10px",
               }}
-              value={formik.values.studentTypes}
+              value={formik.values.studentTypes?.map(item => item._id)}
               placeholder={t("input_student_type")}
-              onChange={(value) => formik.setFieldValue("studentTypes", value)}
+              onChange={(value) => changeStudentType(value)}
             >
               {studentTypes.map((option) => (
                 <Option key={option._id} value={option._id}>

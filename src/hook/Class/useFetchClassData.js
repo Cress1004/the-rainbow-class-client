@@ -12,7 +12,7 @@ export default function useFetchClassData(classId) {
         name: classInfo.name,
         description: classInfo.description,
         address: classInfo.address,
-        studentTypes: classInfo.studentTypes?.map((type) => type._id),
+        studentTypes: classInfo.studentTypes,
         defaultSchedule: classInfo.defaultSchedule,
         volunteers: classInfo.volunteers,
         classMonitor: classInfo.classMonitor,

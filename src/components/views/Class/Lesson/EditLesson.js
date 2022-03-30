@@ -80,7 +80,7 @@ function EditLesson(props) {
   const fetchEditLesson = async (classId, lessonId, dataToSend) => {
     const data = await apis.lessons.editLesson(classId, lessonId, dataToSend);
     if (data.success) {
-      history.push(`/classes/${classId}`);
+      history.push(`/classes/${classId}/lessons/${lessonId}`);
     } else if (!data.success) {
       alert(data.message);
     }
@@ -214,8 +214,8 @@ function EditLesson(props) {
           key: generateKey(),
           date: dateString,
           dayOfWeek: key,
-          endTime: undefined,
-          startTime: undefined,
+          endTime: "00:00",
+          startTime: "00:00",
         });
   };
 

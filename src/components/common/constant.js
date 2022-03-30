@@ -1,5 +1,4 @@
 export const WEEKDAY = [
-  { key: 0, value: "all", text: "all" },
   { key: 1, value: "Sun", text: "Chủ Nhật" },
   { key: 2, value: "Mon", text: "Thứ Hai" },
   { key: 3, value: "Tue", text: "Thứ Ba" },
