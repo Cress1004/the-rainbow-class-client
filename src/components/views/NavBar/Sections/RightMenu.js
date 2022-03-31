@@ -1,12 +1,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import { Menu, Dropdown, Avatar, Icon } from "antd";
-// import {DownOutlined} from '@ant-design/icons';
 import axios from "axios";
 import { withRouter } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { USER_API } from "../../../../config";
+import { convertRole } from "../../../common/function";
+import "./right-menu.scss";
 
 function RightMenu(props) {
   const { t } = useTranslation();
@@ -43,17 +44,21 @@ function RightMenu(props) {
     );
   } else {
     return (
-      <Dropdown overlay={menu}>
+      <Dropdown overlay={menu} className="right-menu" trigger={['click']}>
         <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
           {user && (
-            <Avatar
-              className="avatar"
-              src={user.image ? user.image : "/image/default-image.jpg"}
-              style={{ width: "40px", height: "40px" }}
-            />
-          )}{" "}
-          {user && user.name}
-          <Icon type="down" />
+            <>
+              <Avatar
+                className="right-menu__avatar"
+                src={user.image ? user.image : "/image/default-image.jpg"}
+              />
+              <div className="right-menu__user-info">
+              <span className="right-menu__user-name">{user.name}</span>
+              <span className="right-menu__role">{convertRole(user.role)?.vie}</span>
+              </div>
+              <Icon type="down" className="right-menu__dropdown-icon"/>
+            </>
+          )}
         </a>
       </Dropdown>
     );

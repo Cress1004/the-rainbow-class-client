@@ -1,0 +1,25 @@
+
+.right-menu {
+    display: flex;
+    &__avatar {
+      width: 40px;
+      height: 40px;
+      background-color: #ccc;
+      margin: 10px 15px;
+    }
+    &__user-name {
+      display: block;
+      line-height: 20px;
+    }
+    &__role {
+      display: block;
+      line-height: 10px;
+      font-size: 10px;
+    }
+    &__user-info {
+        margin: 15px 0px;
+    }
+    &__dropdown-icon {
+        margin: 25px 10px;
+    }
+}

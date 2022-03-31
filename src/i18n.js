@@ -165,7 +165,7 @@ const resources = {
       interviewer_name: "Tên ứng viên",
       select_person_in_charge: "Chọn người phụ trách",
       input_lesson_name: "Nhập vào tên bài học",
-
+      input_link: "https://example.com",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",
@@ -191,6 +191,9 @@ const resources = {
       required_file_message: "Hãy tải lên file",
       required_lesson_name_message: "Hãy nhập vào tên bài học",
       required_lesson_description_message: "Hãy nhập vào mô tả nội dung bài học",
+      link_is_invalid: "Hãy nhập vào đúng định dạng của đường link",
+      required_class_name_message: "Hãy nhập vào tên lớp học",
+      required_class_description_message: "Hãy nhập vào mô tả cho lớp học",
       only_pdf_accept: "Hãy tải lên file với định dạng pdf.",
       file_size_must_be_less_than: "File phải có kích thước nhỏ hơn", 
       required_min_length_of_password_message:
