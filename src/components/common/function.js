@@ -60,7 +60,7 @@ export function convertRole(userRole) {
     else {
       if (userRole.subRole === CLASS_MONITOR)
         return { eng: "Class Monitor", vie: "Lớp trưởng" };
-      else if (userRole.subRole === CLASS_MONITOR)
+      else if (userRole.subRole === SUB_CLASS_MONITOR)
         return { eng: "Sub Class Monitor", vie: "Lớp phó" };
       else if (userRole.subRole === VOLUNTEER)
         return { eng: "Volunteer", vie: "Tình nguyện viên" };

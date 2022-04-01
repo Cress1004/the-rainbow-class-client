@@ -10,6 +10,8 @@ import {
 import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUserData";
 import useFetchVolunteers from "../../../../../hook/Volunteer/useFetchVolunteers";
 import { CLASS_MONITOR, SUB_CLASS_MONITOR } from "../../../../common/constant";
+import useFetchClassNameList from "../../../../../hook/Class/useFetchClassNameList";
+import { getArrayLength } from "../../../../common/transformData";
 
 function VolunteerList(props) {
   const { t } = useTranslation();
@@ -19,6 +21,7 @@ function VolunteerList(props) {
   const currentUser = useFetchCurrentUserData();
   const userRole = currentUser.userRole;
   const volunteersData = useFetchVolunteers();
+  const classNameList = useFetchClassNameList();
 
   const transformRoleName = (name, role) => {
     if (role === CLASS_MONITOR) {
@@ -37,7 +40,9 @@ function VolunteerList(props) {
       className: item.user.class ? item.user.class.name : t("unset"),
       phoneNumber: item.user.phoneNumber,
       role: item.role,
+      classId: item.user.class._id,
       email: item.user.email,
+      isActive: item.user.isActive,
     }));
   };
 
@@ -59,6 +64,13 @@ function VolunteerList(props) {
       dataIndex: "className",
       key: "className",
       width: 145,
+      filters: getArrayLength(classNameList)
+        ? classNameList.map((item) => ({
+            text: item.name,
+            value: item._id,
+          }))
+        : [],
+      onFilter: (value, record) => record.classId === value,
       render: (text, key) => renderData(text, key),
     },
     {
@@ -106,15 +118,25 @@ function VolunteerList(props) {
             setSearchData(filteredData);
           }}
         />
-      </Row>
-      {checkAdminAndMonitorRole(userRole) && (
-        <Row>
-          <Button type="primary" className="add-volunteer-button">
+        {checkAdminAndMonitorRole(userRole) && (
+          <Button
+            type="primary"
+            className="volunteer-list__add-volunteer-button"
+          >
+            <Icon type="plus-circle" />{" "}
             <Link to="/add-volunteer">{t("add_volunteer")}</Link>
           </Button>
-        </Row>
-      )}
-      <Table columns={columns} dataSource={searchData} />
+        )}
+      </Row>
+      <Table
+        columns={columns}
+        dataSource={searchData}
+        rowClassName={(record) =>
+          `volunteer-list__table--${
+            record.isActive ? "active" : "deactive"
+          }-row`
+        }
+      />
     </div>
   );
 }
