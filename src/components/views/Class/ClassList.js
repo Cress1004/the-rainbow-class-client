@@ -111,14 +111,12 @@ function ClassList(props) {
             setSearchData(filteredData);
           }}
         />
-      </Row>
-      {checkAdminRole(userRole) && (
-        <Row>
-          <Button type="primary" className="add-class-button">
+        {checkAdminRole(userRole) && (
+          <Button type="primary" className="class-list__add-class-button">
             <Link to="/add-class">{t("add_class")}</Link>
           </Button>
-        </Row>
-      )}
+        )}
+      </Row>
       <Table columns={columns} dataSource={searchData} />
     </div>
   );

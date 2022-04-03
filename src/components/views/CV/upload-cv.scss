@@ -11,7 +11,10 @@
     padding-top: 60px;
   }
   &__search {
-    width: 30%;
+    width: 290px;
+    > .ant-input {
+        border-radius: 15px;
+    }
     float: right;
   }
   &__status {
