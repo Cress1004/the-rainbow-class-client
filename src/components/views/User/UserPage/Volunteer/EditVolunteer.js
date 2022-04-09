@@ -286,7 +286,7 @@ function EditVolunteer(props) {
         </Item>
         <Item name="role" label={t("role")}>
           <Radio.Group
-            value={volunteerData.isAdmin ? ADMIN_ROLE : volunteerData.role}
+            value={volunteerData.isAdmin ? ADMIN_ROLE : volunteerData.role?.subRole}
             disabled={true}
           >
             <Radio value={1}>{t("volunteer")}</Radio>

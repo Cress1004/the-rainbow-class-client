@@ -65,6 +65,12 @@
         width: 200px;
         margin: 20px;
     }
+    &__action-row {
+        text-align: right;
+    }
+    &__delete-volunteer-button {
+        margin-left: 10px;
+    }
     .ant-row .ant-form-item {
         margin: 0px;
     }

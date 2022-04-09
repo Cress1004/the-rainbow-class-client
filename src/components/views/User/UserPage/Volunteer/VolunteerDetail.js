@@ -59,6 +59,7 @@ function VolunteerDetail(props) {
       return `${t("sub_class_monitor")} - ${className}`;
     return t("volunteer");
   };
+
   if (userRole.subRole === SUPER_ADMIN || !volunteerData) {
     return <PermissionDenied />;
   }
@@ -66,25 +67,24 @@ function VolunteerDetail(props) {
   return (
     <div className="volunteer-detail">
       <div className="volunteer-detail__title">{t("volunteer_detail")}</div>
-      <Row>
-        <Col span={14} />
+      <Row className="volunteer-detail__action-row">
         {checkAdminAndMonitorRole(userRole) ? (
-          <Col span={6}>
-            <Button type="primary" className="edit-volunteer-button">
-              <Link to={`/volunteers/${id}/edit`}>{t("edit_volunteer")}</Link>
-            </Button>
-          </Col>
+          <Button
+            type="primary"
+            className="volunteer-detail-volunteer-button"
+          >
+            <Link to={`/volunteers/${id}/edit`}>{t("edit_volunteer")}</Link>
+          </Button>
         ) : null}
-        {checkAdminAndMonitorRole(userRole) ? (
-          <Col span={4}>
-            <Button
-              type="danger"
-              className="delete-volunteer-button"
-              onClick={openDeletePopup}
-            >
-              {t("delete_volunteer")}
-            </Button>
-          </Col>
+        {checkAdminAndMonitorRole(userRole) &&
+        !checkAdminAndMonitorRole(volunteerData.role) ? (
+          <Button
+            type="danger"
+            className="volunteer-detail__delete-volunteer-button"
+            onClick={openDeletePopup}
+          >
+            {t("delete_volunteer")}
+          </Button>
         ) : null}
       </Row>
       {volunteerData && (
@@ -111,7 +111,7 @@ function VolunteerDetail(props) {
                 <Item label={t("role")}>
                   {transformRoleWithClass(
                     volunteerData.className,
-                    volunteerData.role
+                    volunteerData.volunteerRole
                   )}
                 </Item>
               </Form>

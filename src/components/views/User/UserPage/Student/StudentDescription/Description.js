@@ -1,9 +1,10 @@
-import { Form, Icon, Input, Button } from "antd";
+import { Form, Icon, Input, Button, Row } from "antd";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
 import { checkAdminAndMonitorRole } from "../../../../../common/function";
 import apis from "../../../../../../apis";
+import "../student.scss";
 
 const { Item } = Form;
 const { TextArea } = Input;
@@ -35,7 +36,7 @@ function Description(props) {
     enableReinitialize: true,
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
-       fetchUpdateOverview(values);
+        fetchUpdateOverview(values);
         setSubmitting(false);
       }, 400);
     },
@@ -68,11 +69,21 @@ function Description(props) {
             value={formik.values.overview}
           ></TextArea>
         </Item>
-        <Button type="primary" htmlType="submit">
-          {t("update")}
-        </Button>
-        {""}
-        <Button onClick={() => setOpenForm(false)}>{t("cancel")}</Button>
+        <Row className="student-detail__description-button">
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="student-detail__description-button--submit"
+          >
+            {t("update")}
+          </Button>
+          <Button
+            onClick={() => setOpenForm(false)}
+            className="student-detail__description-button--cancel"
+          >
+            {t("cancel")}
+          </Button>
+        </Row>
       </Form>
     </div>
   );

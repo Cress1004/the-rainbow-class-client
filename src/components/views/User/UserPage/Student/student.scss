@@ -74,8 +74,20 @@
             resize: none;
         }
     }
+    &__delete-student-button {
+        margin-left: 10px;
+    }
+    &__action-row {
+        text-align: right;
+    }
     .ant-row .ant-form-item {
         margin: 0px;
+    }
+    &__description-button {
+        text-align: right;
+        &--cancel{
+            margin-left: 10px;
+        }
     }
 }
 

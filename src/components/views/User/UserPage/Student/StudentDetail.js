@@ -92,25 +92,23 @@ function StudentDetail(props) {
   return (
     <div className="student-detail">
       <div className="student-detail__title">{t("student_detail")}</div>
-      {userRole && checkAdminAndMonitorRole(userRole) && (
-        <Row>
-          <Col span={14} />
-          <Col span={6}>
-            <Button type="primary" className="edit-student-button">
-              <Link to={`/students/${id}/edit`}>{t("edit_student")}</Link>
-            </Button>
-          </Col>
-          <Col span={4}>
-            <Button
-              type="danger"
-              className="delete-student-button"
-              onClick={openDeletePopup}
-            >
-              {t("delete_student")}
-            </Button>
-          </Col>
+      {userRole && checkAdminAndMonitorRole(userRole) ? (
+        <Row className="student-detail__action-row">
+          <Button
+            type="primary"
+            className="student-detail__edit-student-button"
+          >
+            <Link to={`/students/${id}/edit`}>{t("edit_student")}</Link>
+          </Button>
+          <Button
+            type="danger"
+            className="student-detail__delete-student-button"
+            onClick={openDeletePopup}
+          >
+            {t("delete_student")}
+          </Button>
         </Row>
-      )}
+      ) : null}
       {studentData && (
         <>
           <Row>

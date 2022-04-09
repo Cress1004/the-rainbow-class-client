@@ -16,9 +16,10 @@ export default function useFetchVolunteerData(volunteerId) {
         image: volunteer.user.image,
         address: volunteer.user.address,
         phoneNumber: volunteer.user.phoneNumber,
-        role: volunteer.role,
+        volunteerRole: volunteer.role,
         className: volunteer.user.class?.name,
         isAdmin: volunteer.isAdmin,
+        role: data.volunteerRole
       });
     }
   };
