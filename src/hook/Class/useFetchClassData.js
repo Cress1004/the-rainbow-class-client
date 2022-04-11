@@ -18,6 +18,7 @@ export default function useFetchClassData(classId) {
         classMonitor: classInfo.classMonitor,
         subClassMonitor: classInfo.subClassMonitor,
         students: classInfo.students,
+        teachingOption: classInfo.teachingOption,
       });
       setClassData((classData) => {
         return classData;

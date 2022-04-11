@@ -3,10 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Button, Table, Row, Input, Icon } from "antd";
 import "./class-list.scss";
 import { Link } from "react-router-dom";
-import {
-  transformAddressData,
-  transformStudentTypes,
-} from "../../common/transformData";
+import { getArrayLength, transformStudentTypes } from "../../common/transformData";
 import {
   checkAdminAndVolunteerRole,
   checkAdminRole,
@@ -15,6 +12,7 @@ import PermissionDenied from "../Error/PermissionDenied";
 import { checkStringContentSubString } from "../../common/function";
 import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
 import useFetchAllClasses from "../../../hook/Class/useFetchAllClasses";
+import common from "../../common";
 
 function ClassList(props) {
   const { t } = useTranslation();
@@ -24,6 +22,7 @@ function ClassList(props) {
   const allClassData = useFetchAllClasses();
   const currentUserData = useFetchCurrentUserData();
   const userRole = currentUserData.userRole;
+  const teachingOptions = common.classConstant.TEACHING_OPTIONS;
 
   const transformClassData = (classes) => {
     return classes?.map((item, index) => ({
@@ -31,12 +30,12 @@ function ClassList(props) {
       id: item._id,
       name: item.name,
       description: item.description,
-      address: transformAddressData(item.address),
       classMonitor: item.classMonitor
         ? item.classMonitor?.user.name
         : `(${t("unset")})`,
       targetStudent: transformStudentTypes(item.studentTypes),
-      numberOfStudent: item.students.length,
+      numberOfStudent: getArrayLength(item.students),
+      teachingOption: teachingOptions.find((data) => data.key === item.teachingOption)?.vie,
     }));
   };
 
@@ -51,14 +50,18 @@ function ClassList(props) {
       dataIndex: "name",
       key: "name",
       render: (text, key) => renderData(text, key),
-      width: 100,
+      width: 150,
     },
     {
-      title: t("address"),
-      dataIndex: "address",
-      key: "address",
-      width: 150,
-      render: (text, key) => renderData(text, key),
+      title: t("teaching_option"),
+      dataIndex: "teachingOption",
+      key: "teachingOption",
+      width: 100,
+      render: (text, key) =>
+        renderData(
+          text,
+          key
+        ),
     },
     {
       title: t("class_monitor"),
@@ -82,6 +85,8 @@ function ClassList(props) {
       render: (text, key) => renderData(text, key),
     },
   ];
+
+  console.log(classes?.students)
 
   const renderData = (text, key) => (
     <Link to={`classes/${key.id}`} className={"text-in-table-row"}>

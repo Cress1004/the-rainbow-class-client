@@ -53,9 +53,10 @@
     padding-bottom: $title-padding-bottom;
     float: left;
   }
-  .label-text {
-    align-content: right;
+  .ant-row {
+    margin-bottom: 0px;
   }
+  
   &__more-option {
     float: right;
     background-color: $primary-color;

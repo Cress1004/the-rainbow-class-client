@@ -1,16 +1,9 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Row, Col, Button, Modal, Icon, Menu, Dropdown } from "antd";
+import { Row, Button, Modal, Icon, Menu, Dropdown } from "antd";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router";
-import {
-  getArrayLength,
-  transformAddressData,
-  transformSchedule,
-  transformStudentTypes,
-} from "../../common/transformData";
-import LessonList from "./Lesson/LessonList";
 import { checkAdminAndMonitorRole } from "../../common/function";
 import {
   checkCurrentMonitorBelongToCurrentClass,
@@ -23,6 +16,9 @@ import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData"
 import apis from "../../../apis";
 import useFetchClassData from "../../../hook/Class/useFetchClassData";
 import useFetchAllLessonByClass from "../../../hook/Lesson/useFetchAllLessonByClass";
+import common from "../../common";
+import TeachByClassOptionDetail from "./ClassDetailSessions/TeachByClassOptionDetail";
+import OneToOneTutoringDetail from "./ClassDetailSessions/OneToOneTutoringDetail";
 
 function ClassDetail(props) {
   const { t } = useTranslation();
@@ -46,7 +42,7 @@ function ClassDetail(props) {
     } else {
       alert(t("fail_to_delete_class"));
     }
-  }
+  };
 
   const deleteClass = () => {
     setConfirmDelete(false);
@@ -77,13 +73,13 @@ function ClassDetail(props) {
         </Menu.Item>
       ) : null}
       {checkCurrentMonitorBelongToCurrentClass(currentUserData, id) ? (
-          <Menu.Item 
-            key="delete-class"
-            className="class-detail__delete-class"
-            onClick={openDeletePopup}
-          >
-            {t("delete_class")}
-          </Menu.Item>
+        <Menu.Item
+          key="delete-class"
+          className="class-detail__delete-class"
+          onClick={openDeletePopup}
+        >
+          {t("delete_class")}
+        </Menu.Item>
       ) : null}
     </Menu>
   );
@@ -111,91 +107,24 @@ function ClassDetail(props) {
               </div>
             )}
         </Row>
-        <div className="class-detail__info-area">
-          {" "}
-          {classData && (
-            <>
-              <Row>
-                <Col span={4} className="label-text">
-                  {t("class_name")}
-                </Col>
-                <Col span={16}>{classData.name}</Col>
-              </Row>
-              <Row>
-                <Col span={4} className="label-text">
-                  {t("description")}
-                </Col>
-                <Col span={16}>{classData.description}</Col>
-              </Row>
-              <Row>
-                <Col span={4} className="label-text">
-                  {t("address")}
-                </Col>
-                <Col span={16}>{transformAddressData(classData.address)}</Col>
-              </Row>
-              <Row>
-                <Col span={4} className="label-text">
-                  {t("target_student")}
-                </Col>
-                <Col span={16}>
-                  {transformStudentTypes(classData.studentTypes)}
-                </Col>
-              </Row>
-              <Row>
-                <Col span={4} className="label-text">
-                  {t("schedule_time")}
-                </Col>
-                <Col span={16}>
-                  {classData.defaultSchedule && classData.defaultSchedule.length
-                    ? classData.defaultSchedule.map((item) => {
-                        const data = transformSchedule(item);
-                        return (
-                          <Row>{`${data.dayOfWeek} ${data.startTime} - ${data.endTime}`}</Row>
-                        );
-                      })
-                    : t("not_have_default_schedule")}
-                </Col>
-              </Row>
-              <hr />
-              <Row>
-                <Col span={12}>
-                  {t("number_of_volunteers")}:{" "}
-                  {getArrayLength(classData.volunteers)}
-                </Col>
-                <Col span={12}>
-                  {t("number_of_students")}:{" "}
-                  {getArrayLength(classData.students)}
-                </Col>
-              </Row>
-              <Row>
-                <Col span={12}>
-                  {t("class_monitor")}: {classData.classMonitor?.user.name}
-                </Col>
-                <Col span={12}>
-                  {t("sub_class_monitor")}:{" "}
-                  {classData.subClassMonitor?.user.name}
-                </Col>
-              </Row>
-            </>
-          )}
-          <hr />
-          {checkCurrentUserBelongToCurrentClass(currentUserData, id) && (
-            <div>
-              {checkAdminAndMonitorRole(userRole) && (
-                <Row>
-                  <div className="class-detail__add-lesson">
-                    <Button type="primary">
-                      <Link to={`/classes/${id}/lessons/add`}>
-                        {t("add_lesson")}
-                      </Link>
-                    </Button>
-                  </div>
-                </Row>
-              )}
-              <LessonList id={id} lessons={lessons} />
-            </div>
-          )}
-        </div>
+        {classData.teachingOption ===
+        common.classConstant.ONE_2_ONE_TUTORING ? (
+          <OneToOneTutoringDetail
+            classData={classData}
+            currentUserData={currentUserData}
+            classId={id}
+            userRole={userRole}
+            lessons={lessons}
+          />
+        ) : (
+          <TeachByClassOptionDetail
+            classData={classData}
+            currentUserData={currentUserData}
+            classId={id}
+            userRole={userRole}
+            lessons={lessons}
+          />
+        )}
         <Modal
           title={t("modal_confirm_delete_class_title")}
           visible={confirmDelete}

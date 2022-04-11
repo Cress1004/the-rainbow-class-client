@@ -2,7 +2,17 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
-import { Form, Input, Select, Button, Row, Col, TimePicker, Icon } from "antd";
+import {
+  Form,
+  Input,
+  Select,
+  Button,
+  Row,
+  Col,
+  TimePicker,
+  Icon,
+  Radio,
+} from "antd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { generateKey } from "../../common/function";
@@ -15,6 +25,8 @@ import useFetchLocation from "../../../hook/CommonData.js/useFetchLocation";
 import useFetchStudentTypes from "../../../hook/CommonData.js/useFetchStudentTypes";
 import apis from "../../../apis";
 import useFetchClassData from "../../../hook/Class/useFetchClassData";
+import common from "../../common";
+import { ONE_2_ONE_TUTORING } from "../../common/classConstant";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -79,7 +91,7 @@ function EditClass(props) {
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
         let valuesToSend;
-        if (defaultSchedule.length && !defaultSchedule[0].dayOfWeek)
+        if (defaultSchedule?.length && !defaultSchedule[0].dayOfWeek)
           valuesToSend = { ...values, address };
         else {
           valuesToSend = { ...values, address, defaultSchedule };
@@ -92,18 +104,20 @@ function EditClass(props) {
 
   useEffect(() => {
     const addressData = classData.address;
-    if (addressData) {
-      setAddress(addressData);
-      setProvince(addressData.address.province);
-      setDistrict(addressData.address.district);
-      setWard(addressData.address.ward);
-      fetchDistricts(addressData.address.province.id);
-      fetchWards(
-        addressData.address.province.id,
-        addressData.address.district.id
-      );
+    if (classData.teachingOption !== ONE_2_ONE_TUTORING) {
+      if (addressData) {
+        setAddress(addressData);
+        setProvince(addressData.address.province);
+        setDistrict(addressData.address.district);
+        setWard(addressData.address.ward);
+        fetchDistricts(addressData.address.province.id);
+        fetchWards(
+          addressData.address.province.id,
+          addressData.address.district.id
+        );
+      }
+      setDefaultSchedule(classData.defaultSchedule);
     }
-    setDefaultSchedule(classData.defaultSchedule);
   }, [classData]);
 
   const handleChangeProvice = (value) => {
@@ -181,11 +195,11 @@ function EditClass(props) {
     setDefaultSchedule(newSchedule);
   };
 
-  const changeStudentType = value => {
+  const changeStudentType = (value) => {
     const oldData = formik.values.studentTypes;
-    const newData = studentTypes.filter(item => value.includes(item._id));
-    formik.setFieldValue("studentTypes", newData)
-  }
+    const newData = studentTypes.filter((item) => value.includes(item._id));
+    formik.setFieldValue("studentTypes", newData);
+  };
 
   const schedule = (
     <>
@@ -306,69 +320,17 @@ function EditClass(props) {
               </span>
             )}
           </Item>
-          <Item label={t("address")}>
-            <Select
-              showSearch
-              style={{
-                display: "inline-block",
-                width: "calc(33% - 12px)",
-                marginRight: "10px",
-              }}
-              value={province?.name}
-              placeholder={t("input_province")}
-              onChange={handleChangeProvice}
-            >
-              {location.map((option) => (
-                <Option key={option._id} value={option.id}>
-                  {option.name}
-                </Option>
-              ))}
-            </Select>
-            <Select
-              showSearch
-              style={{
-                display: "inline-block",
-                width: "calc(33% - 12px)",
-                margin: "0px 10px",
-              }}
-              value={district?.name}
-              placeholder={t("input_district")}
-              onChange={handleChangeDistrict}
-            >
-              {districts.length
-                ? districts.map((option) => (
-                    <Option key={option._id} value={option.id}>
-                      {option.name}
-                    </Option>
-                  ))
-                : null}
-            </Select>
-            <Select
-              showSearch
-              style={{
-                display: "inline-block",
-                width: "calc(33% - 12px)",
-                marginLeft: "10px",
-              }}
-              value={ward?.name}
-              placeholder={t("input_ward")}
-              onChange={handleChangeWard}
-            >
-              {wards.length
-                ? wards.map((option) => (
-                    <Option key={option._id} value={option.id}>
-                      {option.name}
-                    </Option>
-                  ))
-                : null}
-            </Select>
-            <Input
-              value={address.description}
-              placeholder={t("input_specific_address")}
-              onChange={(e) => handleChangeAddressDescription(e)}
-            />
+          <Item label={t("teachingOption")}>
+            <Radio.Group value={classData.teachingOption} disabled>
+              <Radio value={common.classConstant.TEACH_BY_CLASS}>
+                {t("teach_by_class")}
+              </Radio>
+              <Radio value={common.classConstant.ONE_2_ONE_TUTORING}>
+                {t("one_2_one_tutoring")}
+              </Radio>
+            </Radio.Group>
           </Item>
-          <Item name="studentType" label={t("student_type")}>
+          <Item name="studentType" label={t("student_type")} required>
             <Select
               mode="multiple"
               showSearch
@@ -377,7 +339,7 @@ function EditClass(props) {
                 width: "100%",
                 marginRight: "10px",
               }}
-              value={formik.values.studentTypes?.map(item => item._id)}
+              value={formik.values.studentTypes?.map((item) => item._id)}
               placeholder={t("input_student_type")}
               onChange={(value) => changeStudentType(value)}
             >
@@ -388,9 +350,75 @@ function EditClass(props) {
               ))}
             </Select>
           </Item>
-          <Item name="time" label={t("default_schedule")}>
-            {schedule}
-          </Item>
+          {classData.teachingOption !== ONE_2_ONE_TUTORING ? (
+            <>
+              <Item label={t("address")}>
+                <Select
+                  showSearch
+                  style={{
+                    display: "inline-block",
+                    width: "calc(33% - 12px)",
+                    marginRight: "10px",
+                  }}
+                  value={province?.name}
+                  placeholder={t("input_province")}
+                  onChange={handleChangeProvice}
+                >
+                  {location.map((option) => (
+                    <Option key={option._id} value={option.id}>
+                      {option.name}
+                    </Option>
+                  ))}
+                </Select>
+                <Select
+                  showSearch
+                  style={{
+                    display: "inline-block",
+                    width: "calc(33% - 12px)",
+                    margin: "0px 10px",
+                  }}
+                  value={district?.name}
+                  placeholder={t("input_district")}
+                  onChange={handleChangeDistrict}
+                >
+                  {districts.length
+                    ? districts.map((option) => (
+                        <Option key={option._id} value={option.id}>
+                          {option.name}
+                        </Option>
+                      ))
+                    : null}
+                </Select>
+                <Select
+                  showSearch
+                  style={{
+                    display: "inline-block",
+                    width: "calc(33% - 12px)",
+                    marginLeft: "10px",
+                  }}
+                  value={ward?.name}
+                  placeholder={t("input_ward")}
+                  onChange={handleChangeWard}
+                >
+                  {wards.length
+                    ? wards.map((option) => (
+                        <Option key={option._id} value={option.id}>
+                          {option.name}
+                        </Option>
+                      ))
+                    : null}
+                </Select>
+                <Input
+                  value={address.description}
+                  placeholder={t("input_specific_address")}
+                  onChange={(e) => handleChangeAddressDescription(e)}
+                />
+              </Item>
+              <Item name="time" label={t("default_schedule")}>
+                {schedule}
+              </Item>
+            </>
+          ) : null}
           <Item {...tailLayout}>
             <Button type="primary" htmlType="submit">
               {t("update")}
