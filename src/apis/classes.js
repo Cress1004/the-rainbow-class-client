@@ -150,6 +150,18 @@ const getStudentsByClass = async (classId) => {
   }
 };
 
+const getPairsByClass = async (classId) => {
+  try {
+    const response = await api({
+      method: "GET",
+      url: `${CLASS_API}/${classId}/get-pairs`,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
 export {
   addClass,
   getAllClasses,
@@ -163,4 +175,5 @@ export {
   getClassSchedules,
   getListClassWithName,
   getStudentsByClass,
+  getPairsByClass,
 };

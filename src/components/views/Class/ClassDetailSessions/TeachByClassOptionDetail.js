@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { checkCurrentUserBelongToCurrentClass } from "../../../common/checkRole";
 import { checkAdminAndMonitorRole } from "../../../common/function";
+import CommentStudent from "../CommentStudent/CommentStudent";
 import LessonList from "../Lesson/LessonList";
 import ClassBasicInfo from "./Tabs/ClassBasicInfo";
 const { TabPane } = Tabs;
@@ -35,6 +36,9 @@ function TeachByClassOptionDetail(props) {
               <LessonList classId={classId} lessons={lessons} />
             </div>
           )}
+        </TabPane>
+        <TabPane tab={t("comment_student")} key="3">
+          <CommentStudent />
         </TabPane>
       </Tabs>
     </div>

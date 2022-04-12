@@ -166,6 +166,10 @@ const resources = {
       select_person_in_charge: "Chọn người phụ trách",
       input_lesson_name: "Nhập vào tên bài học",
       input_link: "https://example.com",
+      basic_infor: "Thông tin cơ bản",
+      pair_manager: "Danh sách dạy kèm",
+      teaching_option: "Hình thức dạy học",
+      lessons: "Bài học",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",

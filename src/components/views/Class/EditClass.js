@@ -107,13 +107,13 @@ function EditClass(props) {
     if (classData.teachingOption !== ONE_2_ONE_TUTORING) {
       if (addressData) {
         setAddress(addressData);
-        setProvince(addressData.address.province);
-        setDistrict(addressData.address.district);
-        setWard(addressData.address.ward);
-        fetchDistricts(addressData.address.province.id);
+        setProvince(addressData.address?.province);
+        setDistrict(addressData.address?.district);
+        setWard(addressData.address?.ward);
+        fetchDistricts(addressData.address?.province.id);
         fetchWards(
-          addressData.address.province.id,
-          addressData.address.district.id
+          addressData.address?.province.id,
+          addressData.address?.district.id
         );
       }
       setDefaultSchedule(classData.defaultSchedule);

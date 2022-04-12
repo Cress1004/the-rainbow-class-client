@@ -7,7 +7,6 @@ import { useParams } from "react-router";
 import { checkAdminAndMonitorRole } from "../../common/function";
 import {
   checkCurrentMonitorBelongToCurrentClass,
-  checkCurrentUserBelongToCurrentClass,
   checkCurrentVolunteerBelongToCurrentClass,
 } from "../../common/checkRole";
 import { SUPER_ADMIN } from "../../common/constant";
