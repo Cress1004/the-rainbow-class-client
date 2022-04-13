@@ -60,9 +60,9 @@ function PairManager(props) {
   ];
 
   return (
-    <div className="pairs-table">
+    <div className="class-detail__pairs-table">
       <Row>
-        <div className="pair-table__title">{t("pair_table")}</div>
+        <div className="class-detail__pairs-table--title">{t("pairs_table")}</div>
       </Row>
       <Table columns={columns} dataSource={dataSource} />
     </div>

@@ -168,9 +168,11 @@ const resources = {
       input_link: "https://example.com",
       basic_infor: "Thông tin cơ bản",
       pair_manager: "Danh sách dạy kèm",
-      teaching_option: "Hình thức dạy học",
+      teaching_option: "Hình thức dạy",
       lessons: "Bài học",
       deactive_volunteer: "TNV chưa kích hoạt tài khoản",
+      pairs_table: "Danh sách dạy kèm",
+      number_of_lessons: "Số tiết học",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",

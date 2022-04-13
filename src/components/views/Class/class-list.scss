@@ -80,6 +80,15 @@
     margin: 10px;
     float: right;
   }
+  &__pairs-table {
+    &--title {
+      font-size: $title-font-size;
+      font-weight: $title-font-weight;
+      color: $primary-color;
+      padding-bottom: $title-padding-bottom;
+      float: left;
+    }
+  }
 }
 
 .edit-class {

@@ -27,24 +27,21 @@ function ClassBasicInfo(props) {
         <Item label={t("target_student")}>
           {transformStudentTypes(classData.studentTypes)}
         </Item>
+        <Item label={t("address")}>
+          {transformAddressData(classData.address)}
+        </Item>
         {classData.teachingOption !== ONE_2_ONE_TUTORING ? (
-          <>
+          <Item label={t("schedule_time")}>
             {" "}
-            <Item label={t("address")}>
-              {transformAddressData(classData.address)}
-            </Item>
-            <Item label={t("schedule_time")}>
-              {" "}
-              {classData.defaultSchedule && classData.defaultSchedule.length
-                ? classData.defaultSchedule.map((item) => {
-                    const data = transformSchedule(item);
-                    return (
-                      <Row>{`${data.dayOfWeek} ${data.startTime} - ${data.endTime}`}</Row>
-                    );
-                  })
-                : t("not_have_default_schedule")}
-            </Item>
-          </>
+            {classData.defaultSchedule && classData.defaultSchedule.length
+              ? classData.defaultSchedule.map((item) => {
+                  const data = transformSchedule(item);
+                  return (
+                    <Row>{`${data.dayOfWeek} ${data.startTime} - ${data.endTime}`}</Row>
+                  );
+                })
+              : t("not_have_default_schedule")}
+          </Item>
         ) : null}
       </Form>
       <Divider />

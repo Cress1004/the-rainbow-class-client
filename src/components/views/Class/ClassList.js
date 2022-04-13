@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Button, Table, Row, Input, Icon } from "antd";
 import "./class-list.scss";
 import { Link } from "react-router-dom";
-import { getArrayLength, transformStudentTypes } from "../../common/transformData";
+import { getArrayLength, transformAddressData, transformStudentTypes } from "../../common/transformData";
 import {
   checkAdminAndVolunteerRole,
   checkAdminRole,
@@ -36,6 +36,7 @@ function ClassList(props) {
       targetStudent: transformStudentTypes(item.studentTypes),
       numberOfStudent: getArrayLength(item.students),
       teachingOption: teachingOptions.find((data) => data.key === item.teachingOption)?.vie,
+      address: transformAddressData(item.address)
     }));
   };
 
@@ -50,13 +51,24 @@ function ClassList(props) {
       dataIndex: "name",
       key: "name",
       render: (text, key) => renderData(text, key),
-      width: 150,
+      width: 140,
     },
     {
       title: t("teaching_option"),
       dataIndex: "teachingOption",
       key: "teachingOption",
-      width: 100,
+      width: 75,
+      render: (text, key) =>
+        renderData(
+          text,
+          key
+        ),
+    },
+    {
+      title: t("address"),
+      dataIndex: "address",
+      key: "address",
+      width: 150,
       render: (text, key) =>
         renderData(
           text,
@@ -81,7 +93,7 @@ function ClassList(props) {
       title: t("number_of_student"),
       dataIndex: "numberOfStudent",
       key: "numberOfStudent",
-      width: 50,
+      width: 30,
       render: (text, key) => renderData(text, key),
     },
   ];

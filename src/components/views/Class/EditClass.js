@@ -350,74 +350,72 @@ function EditClass(props) {
               ))}
             </Select>
           </Item>
-          {classData.teachingOption !== ONE_2_ONE_TUTORING ? (
-            <>
-              <Item label={t("address")}>
-                <Select
-                  showSearch
-                  style={{
-                    display: "inline-block",
-                    width: "calc(33% - 12px)",
-                    marginRight: "10px",
-                  }}
-                  value={province?.name}
-                  placeholder={t("input_province")}
-                  onChange={handleChangeProvice}
-                >
-                  {location.map((option) => (
+          <Item label={t("address")}>
+            <Select
+              showSearch
+              style={{
+                display: "inline-block",
+                width: "calc(33% - 12px)",
+                marginRight: "10px",
+              }}
+              value={province?.name}
+              placeholder={t("input_province")}
+              onChange={handleChangeProvice}
+            >
+              {location.map((option) => (
+                <Option key={option._id} value={option.id}>
+                  {option.name}
+                </Option>
+              ))}
+            </Select>
+            <Select
+              showSearch
+              style={{
+                display: "inline-block",
+                width: "calc(33% - 12px)",
+                margin: "0px 10px",
+              }}
+              value={district?.name}
+              placeholder={t("input_district")}
+              onChange={handleChangeDistrict}
+            >
+              {districts.length
+                ? districts.map((option) => (
                     <Option key={option._id} value={option.id}>
                       {option.name}
                     </Option>
-                  ))}
-                </Select>
-                <Select
-                  showSearch
-                  style={{
-                    display: "inline-block",
-                    width: "calc(33% - 12px)",
-                    margin: "0px 10px",
-                  }}
-                  value={district?.name}
-                  placeholder={t("input_district")}
-                  onChange={handleChangeDistrict}
-                >
-                  {districts.length
-                    ? districts.map((option) => (
-                        <Option key={option._id} value={option.id}>
-                          {option.name}
-                        </Option>
-                      ))
-                    : null}
-                </Select>
-                <Select
-                  showSearch
-                  style={{
-                    display: "inline-block",
-                    width: "calc(33% - 12px)",
-                    marginLeft: "10px",
-                  }}
-                  value={ward?.name}
-                  placeholder={t("input_ward")}
-                  onChange={handleChangeWard}
-                >
-                  {wards.length
-                    ? wards.map((option) => (
-                        <Option key={option._id} value={option.id}>
-                          {option.name}
-                        </Option>
-                      ))
-                    : null}
-                </Select>
-                <Input
-                  value={address.description}
-                  placeholder={t("input_specific_address")}
-                  onChange={(e) => handleChangeAddressDescription(e)}
-                />
-              </Item>
-              <Item name="time" label={t("default_schedule")}>
-                {schedule}
-              </Item>
-            </>
+                  ))
+                : null}
+            </Select>
+            <Select
+              showSearch
+              style={{
+                display: "inline-block",
+                width: "calc(33% - 12px)",
+                marginLeft: "10px",
+              }}
+              value={ward?.name}
+              placeholder={t("input_ward")}
+              onChange={handleChangeWard}
+            >
+              {wards.length
+                ? wards.map((option) => (
+                    <Option key={option._id} value={option.id}>
+                      {option.name}
+                    </Option>
+                  ))
+                : null}
+            </Select>
+            <Input
+              value={address.description}
+              placeholder={t("input_specific_address")}
+              onChange={(e) => handleChangeAddressDescription(e)}
+            />
+          </Item>
+          {classData.teachingOption !== ONE_2_ONE_TUTORING ? (
+            <Item name="time" label={t("default_schedule")}>
+              {schedule}
+            </Item>
           ) : null}
           <Item {...tailLayout}>
             <Button type="primary" htmlType="submit">

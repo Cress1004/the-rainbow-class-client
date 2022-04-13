@@ -342,72 +342,70 @@ function AddClass(props) {
             </Radio>
           </Radio.Group>
         </Item>
-        {formik.values.teachingOption ? (
-          <div></div>
-        ) : (
-          <div>
-            {" "}
-            <Item label={t("address")}>
-              <Select
-                showSearch
-                style={{
-                  display: "inline-block",
-                  width: "calc(33% - 12px)",
-                  marginRight: "10px",
-                }}
-                placeholder={t("input_province")}
-                value={province?.name}
-                onChange={handleChangeProvice}
-              >
-                {location.map((option) => (
+        <Item label={t("address")}>
+          <Select
+            showSearch
+            style={{
+              display: "inline-block",
+              width: "calc(33% - 12px)",
+              marginRight: "10px",
+            }}
+            placeholder={t("input_province")}
+            value={province?.name}
+            onChange={handleChangeProvice}
+          >
+            {location.map((option) => (
+              <Option key={option._id} value={option.id}>
+                {option.name}
+              </Option>
+            ))}
+          </Select>
+          <Select
+            showSearch
+            style={{
+              display: "inline-block",
+              width: "calc(33% - 12px)",
+              margin: "0px 10px",
+            }}
+            placeholder={t("input_district")}
+            value={district?.name}
+            onChange={handleChangeDistrict}
+          >
+            {districts.length
+              ? districts.map((option) => (
                   <Option key={option._id} value={option.id}>
                     {option.name}
                   </Option>
-                ))}
-              </Select>
-              <Select
-                showSearch
-                style={{
-                  display: "inline-block",
-                  width: "calc(33% - 12px)",
-                  margin: "0px 10px",
-                }}
-                placeholder={t("input_district")}
-                value={district?.name}
-                onChange={handleChangeDistrict}
-              >
-                {districts.length
-                  ? districts.map((option) => (
-                      <Option key={option._id} value={option.id}>
-                        {option.name}
-                      </Option>
-                    ))
-                  : null}
-              </Select>
-              <Select
-                showSearch
-                style={{
-                  display: "inline-block",
-                  width: "calc(33% - 12px)",
-                  marginLeft: "10px",
-                }}
-                placeholder={t("input_ward")}
-                value={ward?.name}
-                onChange={handleChangeWard}
-              >
-                {wards.length
-                  ? wards.map((option) => (
-                      <Option key={option._id} value={option.id}>
-                        {option.name}
-                      </Option>
-                    ))
-                  : null}
-              </Select>
-              <Input
-                placeholder={t("input_specific_address")}
-                onChange={(e) => handleChangeAddressDescription(e)}
-              />
-            </Item>
+                ))
+              : null}
+          </Select>
+          <Select
+            showSearch
+            style={{
+              display: "inline-block",
+              width: "calc(33% - 12px)",
+              marginLeft: "10px",
+            }}
+            placeholder={t("input_ward")}
+            value={ward?.name}
+            onChange={handleChangeWard}
+          >
+            {wards.length
+              ? wards.map((option) => (
+                  <Option key={option._id} value={option.id}>
+                    {option.name}
+                  </Option>
+                ))
+              : null}
+          </Select>
+          <Input
+            placeholder={t("input_specific_address")}
+            onChange={(e) => handleChangeAddressDescription(e)}
+          />
+        </Item>
+        {formik.values.teachingOption ? null : (
+          <div>
+            {" "}
             <Item name="time" label={t("default_schedule")}>
               {schedule}
             </Item>
