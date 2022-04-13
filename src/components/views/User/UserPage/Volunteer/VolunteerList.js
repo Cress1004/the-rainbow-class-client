@@ -128,6 +128,10 @@ function VolunteerList(props) {
           </Button>
         )}
       </Row>
+      <Row className="volunteer-list__note">
+        <span className="volunteer-list__note--deactive-record-note"></span>
+        <span>{t("deactive_volunteer")}</span>
+      </Row>
       <Table
         columns={columns}
         dataSource={searchData}

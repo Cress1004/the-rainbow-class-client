@@ -170,6 +170,7 @@ const resources = {
       pair_manager: "Danh sách dạy kèm",
       teaching_option: "Hình thức dạy học",
       lessons: "Bài học",
+      deactive_volunteer: "TNV chưa kích hoạt tài khoản",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",

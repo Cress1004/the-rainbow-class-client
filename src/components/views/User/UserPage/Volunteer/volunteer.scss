@@ -31,6 +31,17 @@
             background-color: $gray-color;
         }
     }
+    &__note {
+        float: left;
+        display: flex;
+        margin-bottom: 10px;
+        &--deactive-record-note {
+            background-color: $gray-color;
+            width: 50px;
+            height: 20px;
+            margin-right: 5px;
+        }
+    }
 }
 
 .add-volunteer {
