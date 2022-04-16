@@ -173,6 +173,9 @@ const resources = {
       deactive_volunteer: "TNV chưa kích hoạt tài khoản",
       pairs_table: "Danh sách dạy kèm",
       number_of_lessons: "Số tiết học",
+      volunteer_incharge: "TNV phụ trách",
+      show_more: "xem thêm",
+      close: "đóng",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",

@@ -98,8 +98,6 @@ function ClassList(props) {
     },
   ];
 
-  console.log(classes?.students)
-
   const renderData = (text, key) => (
     <Link to={`classes/${key.id}`} className={"text-in-table-row"}>
       <span>{text}</span>
