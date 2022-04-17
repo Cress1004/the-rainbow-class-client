@@ -5,7 +5,7 @@ import { Form, Input, Select, Button } from "antd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./volunteer.scss";
-import { phoneRegExp } from "../../../../common/constant";
+import { phoneRegExp, urlRegExp } from "../../../../common/constant";
 import PermissionDenied from "../../../Error/PermissionDenied";
 import { checkAdminAndMonitorRole } from "../../../../common/function";
 import useFetchAllClasses from "../../../../../hook/Class/useFetchAllClasses";
@@ -45,6 +45,7 @@ function AddVolunteer(props) {
       email: "",
       phoneNumber: "",
       class: "",
+      linkFacebook: "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required(t("required_name_message")),
@@ -55,6 +56,7 @@ function AddVolunteer(props) {
         .matches(phoneRegExp, t("invalid_phone_number"))
         .required(t("required_phone_number_message")),
       class: Yup.string().required(t("required_class_message")),
+      linkFacebook: Yup.string().matches(urlRegExp, t("link_is_invalid")),
     }),
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
@@ -70,6 +72,7 @@ function AddVolunteer(props) {
       !formik.errors.email &&
       !formik.errors.phoneNumber &&
       !formik.errors.class &&
+      !formik.errors.linkFacebook &&
       formik.touched.name &&
       formik.touched.email &&
       formik.touched.phoneNumber
@@ -148,6 +151,20 @@ function AddVolunteer(props) {
                   {formik.errors.class}
                 </span>
               )}
+            </Form.Item>
+            <Form.Item label={t("link_facebook")}>
+              <Input
+                name="linkFacebook"
+                placeholder={t("input_link_facebook")}
+                value={formik.values.linkFacebook}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.errors.linkFacebook ? (
+                <span className="custom__error-message">
+                  {formik.errors.linkFacebook}
+                </span>
+              ) : null}
             </Form.Item>
             <Form.Item {...tailLayout}>
               <Button

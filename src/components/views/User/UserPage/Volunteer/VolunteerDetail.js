@@ -57,7 +57,7 @@ function VolunteerDetail(props) {
     if (role === CLASS_MONITOR) return `${t("class_monitor")} - ${className}`;
     if (role === SUB_CLASS_MONITOR)
       return `${t("sub_class_monitor")} - ${className}`;
-    return t("volunteer");
+    return `${t("volunteer")} - ${className}`;
   };
 
   if (userRole.subRole === SUPER_ADMIN || !volunteerData) {
@@ -69,10 +69,7 @@ function VolunteerDetail(props) {
       <div className="volunteer-detail__title">{t("volunteer_detail")}</div>
       <Row className="volunteer-detail__action-row">
         {checkAdminAndMonitorRole(userRole) ? (
-          <Button
-            type="primary"
-            className="volunteer-detail-volunteer-button"
-          >
+          <Button type="primary" className="volunteer-detail-volunteer-button">
             <Link to={`/volunteers/${id}/edit`}>{t("edit_volunteer")}</Link>
           </Button>
         ) : null}
@@ -107,6 +104,9 @@ function VolunteerDetail(props) {
                 </Item>
                 <Item label={t("phone_number")}>
                   {volunteerData.phoneNumber}
+                </Item>
+                <Item label={t("link_facebook")}>
+                  <a href={volunteerData.linkFacebook}>{volunteerData.linkFacebook}</a>
                 </Item>
                 <Item label={t("role")}>
                   {transformRoleWithClass(

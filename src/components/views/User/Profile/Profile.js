@@ -6,6 +6,7 @@ import "./profile.scss";
 import { transformAddressData } from "../../../common/transformData";
 import ChangePassword from "./ChangePassword";
 import apis from "../../../../apis";
+import { VOLUNTEER } from "../../../common/constant";
 
 const { Item } = Form;
 const layout = {
@@ -23,7 +24,7 @@ function Profile() {
   const fetchCurrentUserProfile = async () => {
     const data = await apis.users.getCurrentUserProfile();
     if (data.success) setUserData(data.userData);
-  }
+  };
 
   const fetchChangeAvatar = async (newAvtLink) => {
     const data = await apis.users.changeAvatar(newAvtLink);
@@ -31,7 +32,7 @@ function Profile() {
       setShowChangeAvatar(false);
       fetchCurrentUserProfile();
     }
-  }
+  };
 
   const fetchUploadAvatar = async (formData) => {
     const data = await apis.upload.uploadAvatar(formData);
@@ -39,11 +40,11 @@ function Profile() {
       setUserData({ ...userData, image: data.link });
       setShowChangeAvatar(true);
     }
-  }
+  };
 
   useEffect(() => {
     fetchCurrentUserProfile();
-  }, [t, userId]);
+  }, []);
 
   const handleChangeAvatar = (e) => {
     const file = e.target.files[0];
@@ -62,7 +63,7 @@ function Profile() {
 
   const hideChangePasswordPopup = () => {
     setShowChangePassword(false);
-  }
+  };
 
   //Ngay sinh, dia chi
   return (
@@ -110,6 +111,9 @@ function Profile() {
                 <Item label={t("user_name")}>{userData.name}</Item>
                 <Item label={t("email")}>{userData.email}</Item>
                 <Item label={t("phone_number")}>{userData.phoneNumber}</Item>
+                {userData.role === VOLUNTEER ? (
+                  <Item label={t("link_facebook")}>{userData.linkFacebook}</Item>
+                ) : null}
                 <Item label={t("address")}>
                   {transformAddressData(userData.address)}
                 </Item>

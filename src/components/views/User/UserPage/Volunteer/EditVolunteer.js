@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Form, Input, Select, Radio } from "antd";
 import { useHistory, useParams } from "react-router-dom";
-import { phoneRegExp } from "../../../../common/constant";
+import { phoneRegExp, urlRegExp } from "../../../../common/constant";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import PermissionDenied from "../../../Error/PermissionDenied";
@@ -11,6 +11,7 @@ import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUse
 import useFetchLocation from "../../../../../hook/CommonData.js/useFetchLocation";
 import apis from "../../../../../apis";
 import useFetchVolunteerData from "../../../../../hook/Volunteer/useFetchVolunteerData";
+import useFetchAllClasses from "../../../../../hook/Class/useFetchAllClasses";
 
 const { Option } = Select;
 const { Item } = Form;
@@ -31,6 +32,7 @@ function EditVolunteer(props) {
   const userRole = userData.userRole;
   const location = useFetchLocation();
   const volunteerData = useFetchVolunteerData(id);
+  const classes = useFetchAllClasses();
   const [districts, setDistricts] = useState([]);
   const [district, setDistrict] = useState({});
   const [wards, setWards] = useState([]);
@@ -85,6 +87,7 @@ function EditVolunteer(props) {
       phoneNumber: Yup.string()
         .matches(phoneRegExp, t("invalid_phone_number"))
         .required(t("required_phone_number_message")),
+      linkFacebook: Yup.string().matches(urlRegExp, t("link_is_invalid")),
     }),
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
@@ -155,7 +158,11 @@ function EditVolunteer(props) {
 
   const fieldError = (formik) => {
     return (
-      !formik.errors.name && !formik.errors.email && !formik.errors.phoneNumber
+      !formik.errors.name &&
+      !formik.errors.email &&
+      !formik.errors.phoneNumber &&
+      !formik.errors.linkFacebook &&
+      !formik.errors.class
     );
   };
 
@@ -204,6 +211,20 @@ function EditVolunteer(props) {
               {formik.errors.phoneNumber}
             </span>
           )}
+        </Item>
+        <Item name="linkFacebook" label={t("link_facebook")}>
+          <Input
+            name="linkFacebook"
+            placeholder={t("input_link_facebook")}
+            value={formik.values.linkFacebook}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {formik.errors.linkFacebook ? (
+            <span className="custom__error-message">
+              {formik.errors.linkFacebook}
+            </span>
+          ) : null}
         </Item>
         <Item name="gender" label={t("gender")}>
           <Radio.Group
@@ -276,17 +297,33 @@ function EditVolunteer(props) {
             placeholder={t("input_specific_address")}
           />
         </Item>
-        <Item name="class" label={t("class")}>
-          <Input
-            disabled={true}
-            value={
-              volunteerData.className ? volunteerData.className : t("unset")
-            }
-          />
+        <Item label={t("class")} required>
+          <Select
+            showSearch
+            style={{
+              display: "inline-block",
+              width: "100%",
+              marginRight: "10px",
+            }}
+            value={formik.values.className}
+            placeholder={t("input_class")}
+            onChange={(key) => formik.setFieldValue("className", key)}
+          >
+            {classes.map((option) => (
+              <Option key={option._id} value={option._id}>
+                {option.name}
+              </Option>
+            ))}
+          </Select>
+          {formik.errors.class && formik.touched.class && (
+            <span className="custom__error-message">{formik.errors.class}</span>
+          )}
         </Item>
         <Item name="role" label={t("role")}>
           <Radio.Group
-            value={volunteerData.isAdmin ? ADMIN_ROLE : volunteerData.role?.subRole}
+            value={
+              volunteerData.isAdmin ? ADMIN_ROLE : volunteerData.role?.subRole
+            }
             disabled={true}
           >
             <Radio value={1}>{t("volunteer")}</Radio>

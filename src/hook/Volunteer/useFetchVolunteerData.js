@@ -19,7 +19,8 @@ export default function useFetchVolunteerData(volunteerId) {
         volunteerRole: volunteer.role,
         className: volunteer.user.class?.name,
         isAdmin: volunteer.isAdmin,
-        role: data.volunteerRole
+        role: data.volunteerRole,
+        linkFacebook: volunteer.user.linkFacebook
       });
     }
   };

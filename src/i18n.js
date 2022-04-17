@@ -176,6 +176,8 @@ const resources = {
       volunteer_incharge: "TNV phụ trách",
       show_more: "xem thêm",
       close: "đóng",
+      link_facebook: "Link Facebook",
+      input_link_facebook: "Nhập vào link Facebook",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",

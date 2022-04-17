@@ -5,7 +5,7 @@ import { Form, Input, Button, Select } from "antd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./profile.scss";
-import { phoneRegExp } from "../../../common/constant";
+import { phoneRegExp, urlRegExp } from "../../../common/constant";
 import apis from "../../../../apis";
 import useFetchLocation from "../../../../hook/CommonData.js/useFetchLocation";
 
@@ -53,7 +53,7 @@ function EditProfile(props) {
     } else {
       alert(t("fail_to_get_api"));
     }
-  }
+  };
 
   const fetchCurrentUserProfile = async () => {
     const data = await apis.users.getCurrentUserProfile();
@@ -67,7 +67,10 @@ function EditProfile(props) {
         setDistrict(addressData.address.district);
         setWard(addressData.address.ward);
         fetchDistricts(addressData.address.province.id);
-        fetchWards(addressData.address.province.id, addressData.address.district.id);
+        fetchWards(
+          addressData.address.province.id,
+          addressData.address.district.id
+        );
       }
     }
   };
@@ -83,6 +86,7 @@ function EditProfile(props) {
       phoneNumber: Yup.string()
         .matches(phoneRegExp, t("invalid_phone_number"))
         .required(t("required_phone_number_message")),
+      linkFacebook: Yup.string().matches(urlRegExp, t("link_is_invalid")),
     }),
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
@@ -156,7 +160,10 @@ function EditProfile(props) {
 
   const fieldError = (formik) => {
     return (
-      !formik.errors.name && !formik.errors.email && !formik.errors.phoneNumber
+      !formik.errors.name &&
+      !formik.errors.email &&
+      !formik.errors.phoneNumber &&
+      !formik.errors.linkFacebook
     );
   };
 
@@ -207,6 +214,20 @@ function EditProfile(props) {
               {formik.errors.phoneNumber}
             </span>
           )}
+        </Item>
+        <Item label={t("link_facebook")} required>
+          <Input
+            name="linkFacebook"
+            value={formik.values.linkFacebook}
+            placeholder={t("input_link_facebook")}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {formik.errors.linkFacebook ? (
+            <span className="custom__error-message">
+              {formik.errors.linkFacebook}
+            </span>
+          ) : null}
         </Item>
         <Item
           name="address"
