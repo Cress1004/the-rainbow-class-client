@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Form, Input, Select, Button, Radio } from "antd";
+import { Form, Input, Select, Button, Radio, DatePicker, Col, Row } from "antd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./student.scss";
-import { phoneRegExp } from "../../../../common/constant";
+import { FORMAT_DATE, phoneRegExp } from "../../../../common/constant";
 import { checkAdminAndMonitorRole } from "../../../../common/function";
 import PermissionDenied from "../../../Error/PermissionDenied";
 import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUserData";
@@ -13,6 +13,7 @@ import useFetchLocation from "../../../../../hook/CommonData.js/useFetchLocation
 import useFetchStudentTypes from "../../../../../hook/CommonData.js/useFetchStudentTypes";
 import apis from "../../../../../apis";
 import useFetchAllClasses from "../../../../../hook/Class/useFetchAllClasses";
+import { convertDateStringToMoment } from "../../../../common/transformData";
 
 const { Option } = Select;
 const { Item } = Form;
@@ -73,6 +74,8 @@ function AddStudent(props) {
       gender: "",
       studentTypes: "",
       class: "",
+      birthday: "",
+      admissionDay: convertDateStringToMoment(new Date()),
     },
     validationSchema: Yup.object({
       name: Yup.string().required(t("required_name_message")),
@@ -84,6 +87,8 @@ function AddStudent(props) {
         .required(t("required_phone_number_message")),
       class: Yup.string().required(t("required_class_message")),
       studentTypes: Yup.array().required(t("required_studentType_message")),
+      birthday: Yup.string().required(t("required_birthday")).nullable(),
+      admissionDay: Yup.string().required(t("required_admission_day")).nullable(),
     }),
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
@@ -159,6 +164,8 @@ function AddStudent(props) {
       !formik.errors.phoneNumber &&
       !formik.errors.studentTypes &&
       !formik.errors.class &&
+      !formik.errors.birthday &&
+      !formik.errors.admissionDay &&
       formik.touched.name &&
       formik.touched.email &&
       formik.touched.phoneNumber
@@ -215,6 +222,37 @@ function AddStudent(props) {
             </span>
           )}
         </Item>
+        <Row>
+          <Col span={3}></Col>
+          <Col span={10}>
+            <Item label={t("birthday")} wrapperCol={{ span: 10 }} required>
+              <DatePicker
+                format={FORMAT_DATE}
+                name="birthday"
+                onChange={(dateString) =>
+                  formik.setFieldValue("birthday", dateString)
+                }
+                placeholder={t("date_placeholder")}
+              />
+              {formik.errors ? (
+                <span className="custom__error-message">
+                  {formik.errors.birthday}
+                </span>
+              ) : null}
+            </Item>
+          </Col>
+          <Col span={10}>
+            <Item name="gender" label={t("gender")} wrapperCol={{ span: 10 }}>
+              <Radio.Group
+                defaultValue={0}
+                onChange={(e) => formik.setFieldValue("gender", e.target.value)}
+              >
+                <Radio value={0}>{t("male")}</Radio>
+                <Radio value={1}>{t("female")}</Radio>
+              </Radio.Group>
+            </Item>
+          </Col>
+        </Row>
         <Item label={t("parent_name")}>
           <Input
             name="parentName"
@@ -223,15 +261,6 @@ function AddStudent(props) {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           />
-        </Item>
-        <Item name="gender" label={t("gender")}>
-          <Radio.Group
-            defaultValue={0}
-            onChange={(e) => formik.setFieldValue("gender", e.target.value)}
-          >
-            <Radio value={0}>{t("male")}</Radio>
-            <Radio value={1}>{t("female")}</Radio>
-          </Radio.Group>
         </Item>
         <Item
           label={t("address")}
@@ -302,29 +331,58 @@ function AddStudent(props) {
             </span>
           )}
         </Item>
-        <Item label={t("class")} required>
-          <Select
-            showSearch
-            style={{
-              display: "inline-block",
-              width: "100%",
-              marginRight: "10px",
-            }}
-            placeholder={t("input_class")}
-            onChange={(value) => formik.setFieldValue("class", value)}
-          >
-            {classes.length
-              ? classes.map((option) => (
-                  <Option key={option._id} value={option._id}>
-                    {option.name}
-                  </Option>
-                ))
-              : null}
-          </Select>
-          {formik.errors.class && formik.touched.class && (
-            <span className="custom__error-message">{formik.errors.class}</span>
-          )}
-        </Item>
+        <Row>
+          <Col span={3}></Col>
+          <Col span={10}>
+            <Item label={t("class")} required>
+              <Select
+                showSearch
+                style={{
+                  display: "inline-block",
+                  width: "100%",
+                  marginRight: "10px",
+                }}
+                placeholder={t("input_class")}
+                onChange={(value) => formik.setFieldValue("class", value)}
+              >
+                {classes.length
+                  ? classes.map((option) => (
+                      <Option key={option._id} value={option._id}>
+                        {option.name}
+                      </Option>
+                    ))
+                  : null}
+              </Select>
+              {formik.errors.class && formik.touched.class && (
+                <span className="custom__error-message">
+                  {formik.errors.class}
+                </span>
+              )}
+            </Item>
+          </Col>
+          <Col span={11}>
+            <Item
+              label={t("admission_day")}
+              wrapperCol={{ span: 17, offset: 1 }}
+              required
+            >
+              <DatePicker
+                format={FORMAT_DATE}
+                defaultValue={formik.values.admissionDay}
+                name="admissionDay"
+                onChange={(dateString) =>
+                  formik.setFieldValue("admissionDay", dateString)
+                }
+                placeholder={t("date_placeholder")}
+              />
+              {formik.errors.admissionDay ? (
+                <span className="custom__error-message">
+                  {formik.errors.admissionDay}
+                </span>
+              ) : null}
+            </Item>
+          </Col>
+        </Row>
         <Item {...tailLayout}>
           <Button
             type="primary"

@@ -123,3 +123,12 @@ export const INTERVIEW_SCHEDULE = 2;
 export const CONNECTION_PORT = "http://localhost:5000";
 
 export const NOTI_TYPE = [{ key: 0, value: "newCV", text: "newCV" }];
+
+export const STUDENT_STATUS = [
+  { key: 0, value: "studing", text: "Đang học", color: "#219e6e" },
+  { key: 1, value: "retired", text: "Thôi học", color: "#e2a534" },
+]
+export const STUDENT_STATUS_TITLE = {
+  STUDING: 0,
+  RETIRED: 1
+}

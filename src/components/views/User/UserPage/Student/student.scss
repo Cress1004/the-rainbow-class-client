@@ -89,6 +89,20 @@
             margin-left: 10px;
         }
     }
+    &__status {
+        .ant-btn {
+          text-align: center;
+          &--studing {
+            .ant-btn {
+              background-color: $waiting-color;
+              border: none;
+            }
+          }
+          &--retired {
+            background-color: $pending-color;
+          }
+        }
+    }
 }
 
 .edit-student {

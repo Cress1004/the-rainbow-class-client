@@ -178,6 +178,14 @@ const resources = {
       close: "đóng",
       link_facebook: "Link Facebook",
       input_link_facebook: "Nhập vào link Facebook",
+      required_birthday: "Hãy nhập vào ngày sinh",
+      input_parent_name: "Nhập vào tên bố/hoặc mẹ của học sinh",
+      birthday: "Ngày sinh",
+      required_admission_day: "Hãy điền vào ngày nhập học",
+      admission_day: "Ngày nhập học",
+      retirement_date: "Ngày thôi học",
+      updated_by: "Cập nhật bởi",
+      retired_date: "Ngày thôi học",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",
@@ -193,6 +201,7 @@ const resources = {
         "Xác nhận bạn muốn xóa tình nguyện viên này",
       modal_confirm_delete_lesson_title: "Xác nhận xóa bài học",
       modal_confirm_delete_lesson_content: "Xác nhận xóa bài học này",
+      modal_input_retired_date: "Nhập vào ngày thôi học",
       //validation:
       required_name_message: "Hãy nhập vào tên của bạn",
       required_phone_number_message: "Hãy nhập vào số điện thoại liên lạc của bạn",

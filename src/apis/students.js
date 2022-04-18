@@ -76,6 +76,19 @@ const updateOverview = async (valueToSend) => {
   }
 };
 
+const changeStatus = async (studentId, data) => {
+  try {
+    const response = await api({
+      method: "POST",
+      url: `${STUDENT_API}/${studentId}/change-status`,
+      data: data,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
 export {
   addStudent,
   getStudents,
@@ -83,4 +96,5 @@ export {
   editStudent,
   deleteStudent,
   updateOverview,
+  changeStatus
 };

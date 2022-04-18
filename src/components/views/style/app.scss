@@ -26,6 +26,7 @@ $label-font-weight: bolder;
     color: $danger-color;
     text-align: left;
     padding: 5px;
+    display: flex;
   }
   &__flash-message {
     position: fixed;
