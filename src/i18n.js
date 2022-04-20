@@ -138,7 +138,8 @@ const resources = {
       register_class: "Lớp học đăng kí",
       input_select_class: "Chọn lớp học",
       thanks_for_applying: "Cảm ơn bạn đã gửi CV!",
-      remind_user_check_mail: "Hãy thường xuyên check mail để nhận lịch phỏng vấn.",
+      remind_user_check_mail:
+        "Hãy thường xuyên check mail để nhận lịch phỏng vấn.",
       cv_manager: "Quản lý CV",
       status: "Trạng thái",
       list_cv: "Danh sách CV",
@@ -186,6 +187,15 @@ const resources = {
       retirement_date: "Ngày thôi học",
       updated_by: "Cập nhật bởi",
       retired_date: "Ngày thôi học",
+      subject: "Môn học",
+      add_new_subject: "Thêm mới môn học",
+      grade: "Khối lớp",
+      add_new_grade: "Thêm khối lớp",
+      semester: "Kì học",
+      semester_name: "Tên kì học",
+      start_date: "Ngày bắt đầu",
+      end_date: "Ngày kết thúc",
+      add_new_semester: "Thêm kì học mới",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",
@@ -204,19 +214,21 @@ const resources = {
       modal_input_retired_date: "Nhập vào ngày thôi học",
       //validation:
       required_name_message: "Hãy nhập vào tên của bạn",
-      required_phone_number_message: "Hãy nhập vào số điện thoại liên lạc của bạn",
+      required_phone_number_message:
+        "Hãy nhập vào số điện thoại liên lạc của bạn",
       invalid_phone_number: "Số điện thoại chưa đúng định dạng",
       invalid_email_message: "Địa chỉ email chưa đúng định dạng",
       required_email_message: "Hãy nhập vào địa chỉ email",
       required_password_message: "Hãy nhập vào mật khẩu",
       required_file_message: "Hãy tải lên file",
       required_lesson_name_message: "Hãy nhập vào tên bài học",
-      required_lesson_description_message: "Hãy nhập vào mô tả nội dung bài học",
+      required_lesson_description_message:
+        "Hãy nhập vào mô tả nội dung bài học",
       link_is_invalid: "Hãy nhập vào đúng định dạng của đường link",
       required_class_name_message: "Hãy nhập vào tên lớp học",
       required_class_description_message: "Hãy nhập vào mô tả cho lớp học",
       only_pdf_accept: "Hãy tải lên file với định dạng pdf.",
-      file_size_must_be_less_than: "File phải có kích thước nhỏ hơn", 
+      file_size_must_be_less_than: "File phải có kích thước nhỏ hơn",
       required_min_length_of_password_message:
         "Độ dài của mật khẩu cần lớn hơn 8 kí tự",
       required_confirm_password_message: "Hãy nhập lại mật khẩu để xác nhận",
@@ -226,8 +238,9 @@ const resources = {
       error_email_or_password_message:
         "Email hoặc mật khẩu bạn nhập vào là không đúng, hãy kiểm tra lại",
       fail_to_login: "Check out your Account or Password again",
-      reset_email_was_sent: "Email cấp lại mật khẩu đã được gửi. Hãy kiểm tra hòm thư!",
-      some_thing_went_wrong: "Lỗi hệ thống!"
+      reset_email_was_sent:
+        "Email cấp lại mật khẩu đã được gửi. Hãy kiểm tra hòm thư!",
+      some_thing_went_wrong: "Lỗi hệ thống!",
     },
   },
 };
