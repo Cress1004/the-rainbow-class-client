@@ -184,6 +184,7 @@ function PairManager(props) {
         <RegisterPairForNewStudent
           pairsTeaching={classData.pairsTeaching}
           setAddNewStudent={setAddNewStudent}
+          classData={classData}
         />
       ) : (
         <div>

@@ -162,6 +162,19 @@ const getPairsByClass = async (classId) => {
   }
 };
 
+const addNewPairTeaching = async (classId, value) => {
+  try {
+    const response = await api({
+      method: "POST",
+      url: `${CLASS_API}/${classId}/pairs/new`,
+      data: value,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
 export {
   addClass,
   getAllClasses,
@@ -176,4 +189,5 @@ export {
   getListClassWithName,
   getStudentsByClass,
   getPairsByClass,
+  addNewPairTeaching
 };

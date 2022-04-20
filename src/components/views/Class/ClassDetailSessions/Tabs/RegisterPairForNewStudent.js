@@ -1,4 +1,4 @@
-import { Button, Form, Input, Radio, Select } from "antd";
+import { Button, Form, Input, InputNumber, Radio, Select } from "antd";
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -7,9 +7,12 @@ import { getArrayLength } from "../../../../common/transformData";
 import { OFFLINE_OPTION, ONLINE_OPTION } from "../../../../common/constant";
 import apis from "../../../../../apis";
 import useFetchLocation from "../../../../../hook/CommonData.js/useFetchLocation";
+import useFetchSubjects from "../../../../../hook/CommonData.js/useFetchSubjects";
+import useFetchGrades from "../../../../../hook/CommonData.js/useFetchGrade";
 
 const { Item } = Form;
 const { Option } = Select;
+const { TextArea } = Input;
 
 function RegisterPairForNewStudent(props) {
   const { t } = useTranslation();
@@ -21,6 +24,8 @@ function RegisterPairForNewStudent(props) {
   const [province, setProvince] = useState({});
   const [teachOption, setTeachOption] = useState(OFFLINE_OPTION);
   const location = useFetchLocation();
+  const subjects = useFetchSubjects();
+  const grades = useFetchGrades();
 
   const fetchDistricts = async (provinceId) => {
     const data = await apis.commonData.getDistricts(provinceId);
@@ -102,13 +107,25 @@ function RegisterPairForNewStudent(props) {
     wrapperCol: { offset: 18, span: 4 },
   };
 
-  const { pairsTeaching, setAddNewStudent } = props;
+  const fetchAddNewPair = async (classId, values) => {
+    const data = await apis.classes.addNewPairTeaching(classId, values);
+    if (data.success) {
+      setAddNewStudent(false);
+    }
+  };
+
+  const { pairsTeaching, setAddNewStudent, classData } = props;
   const unRegisterStudents = pairsTeaching?.filter((item) => !item.status);
   const formik = useFormik({
     initialValues: {
+      classId: classData._id,
       student: getArrayLength(unRegisterStudents)
         ? unRegisterStudents[0].student._id
         : "",
+      subjects: [],
+      numberOfLessonsPerWeek: undefined,
+      grade: undefined,
+      note: undefined,
     },
     validationSchema: Yup.object({
       //   studentId: Yup.string().required(t("required_lesson_name_message")),
@@ -120,7 +137,7 @@ function RegisterPairForNewStudent(props) {
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
         const valuesToSend = { ...values, address, teachOption };
-        alert(JSON.stringify(valuesToSend));
+        fetchAddNewPair(classData._id, valuesToSend);
         setSubmitting(false);
         setAddNewStudent(false);
       }, 400);
@@ -132,6 +149,7 @@ function RegisterPairForNewStudent(props) {
       <Form {...layout} name="control-hooks" onSubmit={formik.handleSubmit}>
         <Item label={t("student_name")} required>
           <Select
+            name="student"
             showSearch
             placeholder={t("select_student")}
             onChange={(key) => formik.setFieldValue("student", key)}
@@ -148,14 +166,53 @@ function RegisterPairForNewStudent(props) {
             ))}
           </Select>
         </Item>
-        <Item label={t("target_student")} required>
-          <Input />
-        </Item>
         <Item label={t("grade")} required>
-          <Input />
+          <Select
+            showSearch
+            style={{
+              display: "inline-block",
+              width: "100%",
+              marginRight: "10px",
+            }}
+            placeholder={t("input_student_type")}
+            onChange={(value) => formik.setFieldValue("grade", value)}
+            name="grade"
+          >
+            {grades.map((option) => (
+              <Option key={option._id} value={option._id}>
+                {option.title}
+              </Option>
+            ))}
+          </Select>
         </Item>
-        <Item label={t("subject")} required></Item>
-        <Item label={t("number_of_lesson_per_week")}></Item>
+        <Item label={t("subject")} required>
+          <Select
+            mode="multiple"
+            showSearch
+            style={{
+              display: "inline-block",
+              width: "100%",
+              marginRight: "10px",
+            }}
+            placeholder={t("input_student_type")}
+            onChange={(value) => formik.setFieldValue("subjects", value)}
+          >
+            {subjects.map((option) => (
+              <Option key={option._id} value={option._id}>
+                {option.title}
+              </Option>
+            ))}
+          </Select>
+        </Item>
+        <Item label={t("number_of_lesson_per_week")}>
+          <InputNumber
+            min={0}
+            onChange={(value) =>
+              formik.setFieldValue("numberOfLessonsPerWeek", value)
+            }
+          />
+          {t("per_week")}
+        </Item>
         <Item name="teachOption" label={t("teach_option")}>
           <Radio.Group
             value={teachOption}
@@ -167,7 +224,6 @@ function RegisterPairForNewStudent(props) {
         </Item>
         {teachOption === OFFLINE_OPTION ? (
           <div>
-            {" "}
             <Item
               label={t("address")}
               className="add-student__input-address-select-form"
@@ -218,10 +274,13 @@ function RegisterPairForNewStudent(props) {
                 placeholder={t("input_specific_address")}
               />
             </Item>
-            <Item label="note"></Item>
           </div>
         ) : null}
+        <Item label="note">
+          <TextArea name="note" onChange={formik.handleChange}></TextArea>
+        </Item>
         <Item {...tailLayout}>
+          <Button onClick={() => setAddNewStudent(false)}>{t("cancel")}</Button>
           <Button type="primary" htmlType="submit">
             {t("register")}
           </Button>
