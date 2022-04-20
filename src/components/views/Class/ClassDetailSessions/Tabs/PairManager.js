@@ -2,6 +2,7 @@ import { Button, Col, Divider, Icon, Row, Select, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getArrayLength } from "../../../../common/transformData";
+import RegisterPairForNewStudent from "./RegisterPairForNewStudent";
 
 const { Option } = Select;
 
@@ -10,6 +11,7 @@ function PairManager(props) {
   const currentClassVolunteer = classData.volunteers;
   const { t } = useTranslation();
   const [editting, setEditting] = useState([]);
+  const [addNewStudent, setAddNewStudent] = useState(false);
 
   const dataSource = classData.pairsTeaching
     ? classData.pairsTeaching.map((item, index) => ({
@@ -115,7 +117,7 @@ function PairManager(props) {
               //     })
               //   )
               // }
-              style={{width: "100%"}}
+              style={{ width: "100%" }}
             >
               {currentClassVolunteer?.map((option) => (
                 <Option key={option.key} value={option.key}>
@@ -123,7 +125,9 @@ function PairManager(props) {
                 </Option>
               ))}
             </Select>
-          ) :  t("unset")}
+          ) : (
+            t("unset")
+          )}
         </span>
       ),
       width: 150,
@@ -165,11 +169,31 @@ function PairManager(props) {
   return (
     <div className="class-detail__pairs-table">
       <Row>
-        <div className="class-detail__pairs-table--title">
+        <Col span={12} className="class-detail__pairs-table--title">
           {t("pairs_table")}
-        </div>
+        </Col>
+        <Col span={12} className="class-detail__pairs-table--option-button">
+          {addNewStudent ? null : (
+            <Button onClick={() => setAddNewStudent(true)} type="primary">
+              {t("register_pairs_for_student")}
+            </Button>
+          )}
+        </Col>
       </Row>
-      <Table columns={columns} dataSource={dataSource} />
+      {addNewStudent ? (
+        <RegisterPairForNewStudent
+          pairsTeaching={classData.pairsTeaching}
+          setAddNewStudent={setAddNewStudent}
+        />
+      ) : (
+        <div>
+          <Row>
+            <Col></Col>
+            <Col></Col>
+          </Row>
+          <Table columns={columns} dataSource={dataSource} />
+        </div>
+      )}
     </div>
   );
 }

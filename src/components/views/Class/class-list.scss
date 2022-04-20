@@ -82,6 +82,16 @@
   }
   &__pairs-table {
     margin-top: 20px;
+    &--title {
+      font-size: $title-font-size;
+      font-weight: $title-font-weight;
+      color: $primary-color;
+      padding-bottom: $title-padding-bottom;
+      float: left;
+    }
+    &--option-button {
+      text-align: right;
+    }
   }
   &__pairs-label {
     font-weight: $title-font-weight;
