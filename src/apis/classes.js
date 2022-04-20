@@ -175,6 +175,19 @@ const addNewPairTeaching = async (classId, value) => {
   }
 };
 
+const setPairVolunteer = async (classId, data) => {
+  try {
+    const response = await api({
+      method: "POST",
+      url: `${CLASS_API}/${classId}/pairs/${data.pairId}/set-volunteer`,
+      data: data,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
 export {
   addClass,
   getAllClasses,
@@ -189,5 +202,6 @@ export {
   getListClassWithName,
   getStudentsByClass,
   getPairsByClass,
-  addNewPairTeaching
+  addNewPairTeaching,
+  setPairVolunteer,
 };

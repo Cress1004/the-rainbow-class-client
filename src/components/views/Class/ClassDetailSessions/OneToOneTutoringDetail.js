@@ -9,7 +9,7 @@ import PairManager from "./Tabs/PairManager";
 const { TabPane } = Tabs;
 
 function OneToOneTutoringDetail(props) {
-  const { classData } = props;
+  const { classData, fetchClassData } = props;
   const { t } = useTranslation();
   const unpairedPairs = getUnpairedPairs(classData.pairsTeaching);
   return (
@@ -22,7 +22,7 @@ function OneToOneTutoringDetail(props) {
           tab={`${t("pair_manager")} ${getArrayLength(unpairedPairs)} `}
           key="2"
         >
-          <PairManager classData={classData} />
+          <PairManager classData={classData} fetchClassData={fetchClassData} />
         </TabPane>
       </Tabs>
     </div>

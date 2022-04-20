@@ -1,17 +1,52 @@
 import { Button, Col, Divider, Icon, Row, Select, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getArrayLength } from "../../../../common/transformData";
+import apis from "../../../../../apis";
+import { ONLINE_OPTION } from "../../../../common/constant";
+import {
+  getArrayLength,
+  transformSubjects,
+} from "../../../../common/transformData";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import RegisterPairForNewStudent from "./RegisterPairForNewStudent";
 
 const { Option } = Select;
 
 function PairManager(props) {
-  const { classData } = props;
+  const { classData, fetchClassData } = props;
   const currentClassVolunteer = classData.volunteers;
   const { t } = useTranslation();
   const [editting, setEditting] = useState([]);
   const [addNewStudent, setAddNewStudent] = useState(false);
+
+  const fetchSetPairVolunteer = async (classData, dataToSend) => {
+    await apis.classes.setPairVolunteer(classData._id, dataToSend);
+  };
+
+  const resetEditting = (classData) => {
+    classData.pairsTeaching.map((item, index) =>
+      setEditting((editting) => [...editting, (editting[index] = false)])
+    );
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      pairId: "",
+      volunteer: "",
+    },
+    validationSchema: Yup.object({
+      volunteer: Yup.string().required(t("required_volunteer")),
+    }),
+    onSubmit: (values, { setSubmitting }) => {
+      setTimeout(() => {
+        fetchSetPairVolunteer(classData, values);
+        fetchClassData(classData._id);
+        setEditting([]);
+        setSubmitting(false);
+      }, 400);
+    },
+  });
 
   const dataSource = classData.pairsTeaching
     ? classData.pairsTeaching.map((item, index) => ({
@@ -19,18 +54,21 @@ function PairManager(props) {
         id: item._id,
         studentName: item.student.user.name,
         volunteerName: item.volunteer?.user.name,
+        teachOption:
+          item.teachOption === ONLINE_OPTION ? t("online") : t("offline"),
+        grade: item.grade.title,
+        subjects: transformSubjects(item.subjects),
       }))
     : [];
 
   useEffect(() => {
     if (getArrayLength(classData.pairsTeaching)) {
-      classData.pairsTeaching.map((item, index) =>
-        setEditting((editting) => [...editting, (editting[index] = false)])
-      );
+      resetEditting(classData);
     }
   }, [classData]);
 
   const changeEditting = (item) => {
+    formik.setFieldValue("pairId", item.id);
     const edittingRecords = editting.map((edittingRecord, index) => {
       if (index == item.key) return !editting[index];
       else return editting[index];
@@ -38,61 +76,20 @@ function PairManager(props) {
     setEditting(edittingRecords);
   };
 
-  // const renderPairs = () => {
-  //   return dataSource?.map((item) => (
-  //     <div>
-  //       <Row className="class-detail__pair-record">
-  //         <Col span={1}></Col>
-  //         <Col span={4}>{item.studentName}</Col>
-  //         <Col span={4}>{item.volunteerName}</Col>
-  //         <Col span={4}>{item.numberOfLesson || 0}</Col>
-  //         <Col span={6}>{t("teach_option")}</Col>
-  //         <Col span={2}>
-  //           {getArrayLength(showMoreIcon) && showMoreIcon[item.key] ? (
-  //             <Button
-  //               onClick={() => changeShowMoreStatus(item)}
-  //               className="class-detail__pair-record--show-button"
-  //             >
-  //               {t("close")}
-  //               <Icon type="caret-down" />
-  //             </Button>
-  //           ) : (
-  //             <Button
-  //               onClick={() => changeShowMoreStatus(item)}
-  //               className="class-detail__pair-record--show-button"
-  //             >
-  //               {t("show_more")}
-  //               <Icon type="caret-right" />
-  //             </Button>
-  //           )}
-  //         </Col>
-  //         <Table />
-  //       </Row>
-  //       <hr />
-  //     </div>
-  //   ));
-  // };
+  const unRegisterStudents = classData?.pairsTeaching?.filter(
+    (item) => item.status === 0
+  );
+  const waittingStudent = classData?.pairsTeaching?.filter(
+    (item) => item.status === 1
+  );
 
-  // return (
-  //   <div className="class-detail__pairs-table">
-  //     <Row className="class-detail__pairs-label">
-  //       <Col span={1}></Col>
-  //       <Col span={4}>{t("student_name")}</Col>
-  //       <Col span={4}>{t("volunteer_incharge")}</Col>
-  //       <Col span={4}>{t("number_of_lessons")}</Col>
-  //       <Col span={6}>{t("teach_option")}</Col>
-  //     </Row>
-  //     <hr />
-  //     {renderPairs()}
-  //   </div>
-  // );
   const columns = [
     {
       title: t("student_name"),
       dataIndex: "studentName",
       key: "studentName",
       render: (text) => <span>{text}</span>,
-      width: 150,
+      width: 165,
     },
     {
       title: t("volunteer_incharge"),
@@ -101,50 +98,66 @@ function PairManager(props) {
       render: (text, item) => (
         <span>
           {editting[item.key] ? (
-            <Select
-              // value={item.dayOfWeek}
-              showSearch
-              placeholder={t("input_volunteer_incharge")}
-              // onChange={(value) =>
-              //   setDefaultSchedule(
-              //     [...defaultSchedule].map((object) => {
-              //       if (object.key === item.key) {
-              //         return {
-              //           ...object,
-              //           dayOfWeek: value,
-              //         };
-              //       } else return object;
-              //     })
-              //   )
-              // }
-              style={{ width: "100%" }}
-            >
-              {currentClassVolunteer?.map((option) => (
-                <Option key={option.key} value={option.key}>
-                  {option.user.name}
-                </Option>
-              ))}
-            </Select>
+            <div>
+              <Select
+                value={
+                  item.id === formik.values.pairId
+                    ? formik.values.volunteer
+                    : item.volunteer?.user.name
+                }
+                placeholder={t("input_volunteer_incharge")}
+                onChange={(value) => formik.setFieldValue("volunteer", value)}
+                style={{ width: "100%" }}
+              >
+                {currentClassVolunteer?.map((option) => (
+                  <Option key={option.key} value={option._id}>
+                    {option.user.name}
+                  </Option>
+                ))}
+              </Select>
+              {formik.errors.volunteer ? (
+                <span className="custom__error-message">
+                  {formik.errors.name}
+                </span>
+              ) : null}
+            </div>
           ) : (
-            t("unset")
+            <div>
+              <span>{text ? text : t("unset")}</span>{" "}
+              <Icon type="edit" onClick={() => changeEditting(item)} />
+            </div>
           )}
         </span>
       ),
-      width: 150,
+      width: 165,
     },
     {
       title: t("teach_option"),
       dataIndex: "teachOption",
       key: "teachOption",
       render: (text, item) => <span>{text}</span>,
-      width: 300,
+      width: 150,
+    },
+    {
+      title: t("grade"),
+      dataIndex: "grade",
+      key: "grade",
+      render: (text, item) => <span>{text}</span>,
+      width: 100,
+    },
+    {
+      title: t("subjects"),
+      dataIndex: "subjects",
+      key: "subjects",
+      render: (text, item) => <span>{text}</span>,
+      width: 200,
     },
     {
       title: t("number_of_lessons"),
       dataIndex: "numberOfLessons",
       key: "numberOfLessons",
       render: (text) => <span>{text || 0}</span>,
-      width: 150,
+      width: 100,
     },
     {
       title: t("action"),
@@ -153,11 +166,13 @@ function PairManager(props) {
       render: (text, item) => (
         <span>
           {!editting[item.key] ? (
-            <Button onClick={() => changeEditting(item)}>{t("edit")}</Button>
+            <Button>{t("view")}</Button>
           ) : (
             <>
-              <Button>{t("submit")}</Button>
-              <Button>{t("cancel")}</Button>
+              <Button onClick={formik.handleSubmit}>{t("submit")}</Button>
+              <Button onClick={() => changeEditting(item)}>
+                {t("cancel")}
+              </Button>
             </>
           )}
         </span>
@@ -189,8 +204,14 @@ function PairManager(props) {
       ) : (
         <div>
           <Row>
-            <Col></Col>
-            <Col></Col>
+            <Col>
+              {t("number_of_unregister_student")}:{" "}
+              {getArrayLength(unRegisterStudents)}
+            </Col>
+            <Col>
+              {t("number_of_waiting_student")}:{" "}
+              {getArrayLength(waittingStudent)}
+            </Col>
           </Row>
           <Table columns={columns} dataSource={dataSource} />
         </div>

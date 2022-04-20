@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Row, Button, Modal, Icon, Menu, Dropdown } from "antd";
@@ -13,7 +13,6 @@ import { SUPER_ADMIN } from "../../common/constant";
 import PermissionDenied from "../Error/PermissionDenied";
 import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
 import apis from "../../../apis";
-import useFetchClassData from "../../../hook/Class/useFetchClassData";
 import useFetchAllLessonByClass from "../../../hook/Lesson/useFetchAllLessonByClass";
 import common from "../../common";
 import TeachByClassOptionDetail from "./ClassDetailSessions/TeachByClassOptionDetail";
@@ -26,7 +25,7 @@ function ClassDetail(props) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const currentUserData = useFetchCurrentUserData();
   const userRole = currentUserData.userRole;
-  const classData = useFetchClassData(id);
+  const [classData, setClassData] = useState({});
   const lessons = useFetchAllLessonByClass(id);
 
   const openDeletePopup = () => {
@@ -43,6 +42,29 @@ function ClassDetail(props) {
     }
   };
 
+  const fetchClassData = async (id) => {
+    const data = await apis.classes.getClassData(id);
+    if (data.success) {
+      const classInfo = data.classData;
+      setClassData({
+        _id: classInfo._id,
+        name: classInfo.name,
+        description: classInfo.description,
+        address: classInfo.address,
+        studentTypes: classInfo.studentTypes,
+        defaultSchedule: classInfo.defaultSchedule,
+        volunteers: classInfo.volunteers,
+        classMonitor: classInfo.classMonitor,
+        subClassMonitor: classInfo.subClassMonitor,
+        students: classInfo.students,
+        teachingOption: classInfo.teachingOption,
+        pairsTeaching: classInfo.pairsTeaching,
+      });
+    } else {
+      alert(t("fail_to_delete_class"));
+    }
+  };
+
   const deleteClass = () => {
     setConfirmDelete(false);
     fetchDeleteClass(id);
@@ -51,6 +73,10 @@ function ClassDetail(props) {
   const cancelDelete = () => {
     setConfirmDelete(false);
   };
+
+  useEffect(() => {
+    fetchClassData(id);
+  }, []);
 
   const menu = (
     <Menu>
@@ -114,6 +140,7 @@ function ClassDetail(props) {
             classId={id}
             userRole={userRole}
             lessons={lessons}
+            fetchClassData={fetchClassData}
           />
         ) : (
           <TeachByClassOptionDetail

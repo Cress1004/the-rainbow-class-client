@@ -17,6 +17,10 @@ export function transformStudentTypes(data) {
   return data ? data.map((item) => item.title).join(", ") : "";
 }
 
+export function transformSubjects(data) {
+  return data ? data.map((item) => item.title).join(", ") : "";
+}
+
 export function getArrayLength(data) {
   return data ? data.length : 0;
 }
