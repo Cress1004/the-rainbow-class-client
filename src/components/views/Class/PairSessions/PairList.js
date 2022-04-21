@@ -1,19 +1,19 @@
 import { Button, Col, Divider, Icon, Row, Select, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import apis from "../../../../../apis";
-import { ONLINE_OPTION } from "../../../../common/constant";
+import apis from "../../../../apis";
+import { ONLINE_OPTION } from "../../../common/constant";
 import {
   getArrayLength,
   transformSubjects,
-} from "../../../../common/transformData";
+} from "../../../common/transformData";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import RegisterPairForNewStudent from "./RegisterPairForNewStudent";
+import RegisterPairForNewStudent from "../ClassDetailSessions/Tabs/RegisterPairForNewStudent";
 
 const { Option } = Select;
 
-function PairManager(props) {
+function PairList(props) {
   const { classData, fetchClassData } = props;
   const currentClassVolunteer = classData.volunteers;
   const { t } = useTranslation();
@@ -224,4 +224,4 @@ function PairManager(props) {
   );
 }
 
-export default PairManager;
+export default PairList;

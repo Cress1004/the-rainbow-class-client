@@ -63,10 +63,23 @@ const deleteVolunteer = async (volunteerId) => {
   }
 };
 
+const getCurrentVolunteer = async () => {
+  try {
+    const response = await api({
+      method: "GET",
+      url: `${VOLUNTEER_API}/get-current-volunteer`,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
 export {
   addVolunteer,
   getVolunteers,
   getVolunteerData,
   editVolunteer,
   deleteVolunteer,
+  getCurrentVolunteer,
 };

@@ -138,7 +138,6 @@ function ClassDetail(props) {
             classData={classData}
             currentUserData={currentUserData}
             classId={id}
-            userRole={userRole}
             lessons={lessons}
             fetchClassData={fetchClassData}
           />

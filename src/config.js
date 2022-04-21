@@ -9,3 +9,4 @@ export const SCHEDULE_API = "/api/schedule";
 export const CV_API = "/api/cv";
 export const VOLUNTEER_API = "/api/volunteers";
 export const STUDENT_API = "/api/students";
+export const PAIR_API = "/api/pairs";

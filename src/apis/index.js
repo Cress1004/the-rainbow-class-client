@@ -7,6 +7,7 @@ import * as schedules from "./schedules";
 import * as cv from "./cv";
 import * as volunteer from "./volunteers";
 import * as student from "./students";
+import * as pairs from "./pairs";
 
 export default {
   users,
@@ -17,5 +18,6 @@ export default {
   schedules,
   cv,
   volunteer,
-  student
+  student,
+  pairs,
 };

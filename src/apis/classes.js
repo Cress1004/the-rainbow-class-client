@@ -188,6 +188,19 @@ const setPairVolunteer = async (classId, data) => {
   }
 };
 
+const getPairByVolunteer = async (classId, volunteerId) => {
+  try {
+    const response = await api({
+      method: "POST",
+      url: `${CLASS_API}/${classId}/pairs/get-pair-data`,
+      data: { volunteerId: volunteerId },
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
 export {
   addClass,
   getAllClasses,
@@ -204,4 +217,5 @@ export {
   getPairsByClass,
   addNewPairTeaching,
   setPairVolunteer,
+  getPairByVolunteer,
 };

@@ -23,13 +23,12 @@ import {
   urlRegExp,
 } from "../../../common/constant";
 import { generateKey } from "../../../common/function";
-import PermissionDenied from "../../Error/PermissionDenied";
-import { checkCurrentMonitorBelongToCurrentClass } from "../../../common/checkRole";
 import moment from "moment";
 import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
 import useFetchLocation from "../../../../hook/CommonData.js/useFetchLocation";
 import apis from "../../../../apis";
 import useFetchClassData from "../../../../hook/Class/useFetchClassData";
+import { ONE_2_ONE_TUTORING } from "../../../common/classConstant";
 
 const { Item } = Form;
 const { TextArea } = Input;
@@ -52,6 +51,7 @@ function AddLesson(props) {
   const currentUser = useFetchCurrentUserData();
   const location = useFetchLocation();
   const classData = useFetchClassData(id);
+  const { setAddLesson, fetchLessonsByPair, pairId,  setLessons} = props;
 
   const layout = {
     labelCol: { span: 5 },
@@ -82,7 +82,7 @@ function AddLesson(props) {
     } else if (!data.success) {
       alert(data.message);
     } else {
-      alert("Fail to get api")
+      alert("Fail to get api");
     }
   };
 
@@ -105,35 +105,43 @@ function AddLesson(props) {
       setTimeout(() => {
         let valuesToSend;
         if (teachOption === ONLINE_OPTION) {
-          valuesToSend = { ...values, teachOption, address, time };
+          valuesToSend = { ...values, teachOption, address, time, pairId };
         }
         if (teachOption === OFFLINE_OPTION) {
-          valuesToSend = { ...values, teachOption, address, time };
+          valuesToSend = { ...values, teachOption, address, time, pairId };
         }
-        fetchAddLesson(id, valuesToSend);
+        if (classData.teachingOption === ONE_2_ONE_TUTORING) {
+          fetchAddLesson(id, valuesToSend);
+          fetchLessonsByPair(pairId);
+          setAddLesson(false);
+        } else fetchAddLesson(id, valuesToSend);
         setSubmitting(false);
       }, 400);
     },
   });
 
-  useEffect(() => {
-    const addressData = classData.address;
-    if (addressData) {
-      setAddress({
-        address: addressData.address,
-        description: addressData.description,
-      });
-      setLessonData({ ...lessonData, address: addressData });
-      setProvince(addressData.address.province);
-      setDistrict(addressData.address.district);
-      setWard(addressData.address.ward);
-      fetchDistricts(addressData.address.province.id);
-      fetchWards(
-        addressData.address.province.id,
-        addressData.address.district.id
-      );
-    }
-  }, [classData]);
+  // useEffect(() => {
+ 
+    // const addressData = classData.address;
+    // if (addressData) {
+    //   setAddress({
+    //     address: addressData.address,
+    //     description: addressData.description,
+    //   });
+    //   setLessonData({ ...lessonData, address: addressData });
+    //   setProvince(addressData.address.province);
+    //   setDistrict(addressData.address.district);
+    //   setWard(addressData.address.ward);
+    //   fetchDistricts(addressData.address.province.id);
+    //   fetchWards(
+    //     addressData.address.province.id,
+    //     addressData.address.district.id
+    //   );
+    // }
+    // return () =>{
+    //   setAddLesson(true);
+    // }
+  // }, []);
 
   const handleChangeProvice = (value) => {
     const currentProvince = location.find((item) => value === item.id);
@@ -196,7 +204,7 @@ function AddLesson(props) {
   const onChangeDate = (e, dateString) => {
     const dayOfWeek = e._d.toString().split(" ")[0];
     const key = WEEKDAY.find((item) => item.value === dayOfWeek).key;
-    const time = classData.defaultSchedule.find(
+    const time = classData.defaultSchedule?.find(
       (item) => item.dayOfWeek === key
     );
     setDefaultSchedule(time);
@@ -282,10 +290,6 @@ function AddLesson(props) {
       />
     </Item>
   );
-
-  if (!checkCurrentMonitorBelongToCurrentClass(currentUser, id)) {
-    return <PermissionDenied />;
-  }
 
   return (
     <div className="add-lesson">
