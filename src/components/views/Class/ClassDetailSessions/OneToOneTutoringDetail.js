@@ -19,7 +19,7 @@ function OneToOneTutoringDetail(props) {
           <ClassBasicInfo classData={classData} />
         </TabPane>
         <TabPane
-          tab={`${t("pair_manager")} ${getArrayLength(unpairedPairs)} `}
+          tab={`${t("pair_manager")} (${getArrayLength(unpairedPairs)}) `}
           key="2"
         >
           <PairManager classData={classData} fetchClassData={fetchClassData} />

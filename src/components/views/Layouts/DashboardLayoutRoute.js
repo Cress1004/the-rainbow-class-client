@@ -36,7 +36,7 @@ const DashboardLayout = ({ children, ...rest }) => {
           <a href="/">{t("Lớp học Cầu Vồng - The Rainbow Class")}</a>
         </Title>
         <div className="login-menu">
-          <Notification socket={rest.socket}/>
+          <Notification socket={rest.socket} />
           <RightMenu />
         </div>
       </Header>
@@ -86,16 +86,10 @@ const DashboardLayout = ({ children, ...rest }) => {
               )}
               {userRole.isAdmin && (
                 <Menu defaultSelectedKeys={["1"]} mode="inline">
-                  <Menu.Item key="my_schedule">
-                    <Link to="/dashboard">
-                      <Icon type="home" />
-                      <span>{t("dashboard")}</span>
-                    </Link>
-                  </Menu.Item>
                   <Menu.Item key="schedule">
                     <Link to="/schedules">
-                      <Icon type="calendar" />
-                      <span>{t("schedule_manager")}</span>
+                      <Icon type="home" />
+                      <span>{t("dashboard")}</span>
                     </Link>
                   </Menu.Item>
                   <SubMenu
@@ -119,7 +113,7 @@ const DashboardLayout = ({ children, ...rest }) => {
                       <Link to="/students"></Link>
                     </Menu.Item>
                   </SubMenu>
-                  <SubMenu
+                  <Menu.Item
                     key="class_manager"
                     title={
                       <span>
@@ -128,15 +122,8 @@ const DashboardLayout = ({ children, ...rest }) => {
                       </span>
                     }
                   >
-                    <Menu.Item key="class_manager">
-                      <Link to="/classes">{t("class_list")}</Link>
-                    </Menu.Item>
-                    <Menu.Item key="my_class">
-                      <Link to={`/classes/${userData.userClassId}`}>
-                        {t("my_class")}
-                      </Link>
-                    </Menu.Item>
-                  </SubMenu>
+                    <Link to="/classes">{t("class_list")}</Link>
+                  </Menu.Item>
                   <Menu.Item key="cv_manager">
                     <Link to="/cv">
                       <Icon type="idcard" />
@@ -162,12 +149,14 @@ const DashboardLayout = ({ children, ...rest }) => {
                         <span>{t("dashboard")}</span>
                       </Link>
                     </Menu.Item>
-                    <Menu.Item key="schedule">
-                      <Link to="/schedules">
-                        <Icon type="calendar" />
-                        <span>{t("schedule_manager")}</span>
-                      </Link>
-                    </Menu.Item>
+                    {userRole.subRole !== VOLUNTEER ? (
+                      <Menu.Item key="schedule">
+                        <Link to="/schedules">
+                          <Icon type="calendar" />
+                          <span>{t("schedule_manager")}</span>
+                        </Link>
+                      </Menu.Item>
+                    ) : null}
                     <SubMenu
                       key="user_manager"
                       title={
@@ -189,8 +178,8 @@ const DashboardLayout = ({ children, ...rest }) => {
                         <Link to="/students"></Link>
                       </Menu.Item>
                     </SubMenu>
-                    <SubMenu
-                      key="class_manager"
+                    <Menu.Item
+                      key="my_class"
                       title={
                         <span>
                           <Icon type="book" />
@@ -198,15 +187,10 @@ const DashboardLayout = ({ children, ...rest }) => {
                         </span>
                       }
                     >
-                      <Menu.Item key="classes">
-                        <Link to="/classes">{t("class_list")}</Link>
-                      </Menu.Item>
-                      <Menu.Item key="my_class">
-                        <Link to={`/classes/${userData.userClassId}`}>
-                          {t("my_class")}
-                        </Link>
-                      </Menu.Item>
-                    </SubMenu>
+                      <Link to={`/classes/${userData.userClassId}`}>
+                        {t("class_manager")}
+                      </Link>
+                    </Menu.Item>
                     {userRole.subRole !== VOLUNTEER && (
                       <Menu.Item key="cv_manager">
                         <Link to="/cv">

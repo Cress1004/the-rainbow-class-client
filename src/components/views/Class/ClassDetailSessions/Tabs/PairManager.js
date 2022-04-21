@@ -48,19 +48,6 @@ function PairManager(props) {
     },
   });
 
-  const dataSource = classData.pairsTeaching
-    ? classData.pairsTeaching.map((item, index) => ({
-        key: index,
-        id: item._id,
-        studentName: item.student.user.name,
-        volunteerName: item.volunteer?.user.name,
-        teachOption:
-          item.teachOption === ONLINE_OPTION ? t("online") : t("offline"),
-        grade: item.grade.title,
-        subjects: transformSubjects(item.subjects),
-      }))
-    : [];
-
   useEffect(() => {
     if (getArrayLength(classData.pairsTeaching)) {
       resetEditting(classData);
@@ -76,12 +63,27 @@ function PairManager(props) {
     setEditting(edittingRecords);
   };
 
-  const unRegisterStudents = classData?.pairsTeaching?.filter(
-    (item) => item.status === 0
+  const pairsTeaching = classData?.pairsTeaching;
+  const unRegisterStudents = pairsTeaching?.filter((item) => item.status === 0);
+
+  const waittingStudent = pairsTeaching?.filter((item) => item.status === 1);
+
+  const tableOrgData = pairsTeaching?.filter(
+    (item) => !unRegisterStudents.includes(item)
   );
-  const waittingStudent = classData?.pairsTeaching?.filter(
-    (item) => item.status === 1
-  );
+
+  const dataSource = tableOrgData
+    ? tableOrgData.map((item, index) => ({
+        key: index,
+        id: item._id,
+        studentName: item.student.user.name,
+        volunteerName: item.volunteer?.user.name,
+        teachOption:
+          item.teachOption === ONLINE_OPTION ? t("online") : t("offline"),
+        grade: item.grade?.title,
+        subjects: transformSubjects(item.subjects),
+      }))
+    : [];
 
   const columns = [
     {
@@ -190,7 +192,8 @@ function PairManager(props) {
         <Col span={12} className="class-detail__pairs-table--option-button">
           {addNewStudent ? null : (
             <Button onClick={() => setAddNewStudent(true)} type="primary">
-              {t("register_pairs_for_student")}
+              {t("register_pairs_for_student")} (
+              {getArrayLength(unRegisterStudents)})
             </Button>
           )}
         </Col>
@@ -200,6 +203,7 @@ function PairManager(props) {
           pairsTeaching={classData.pairsTeaching}
           setAddNewStudent={setAddNewStudent}
           classData={classData}
+          fetchClassData={fetchClassData}
         />
       ) : (
         <div>

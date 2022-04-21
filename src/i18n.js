@@ -67,7 +67,7 @@ const resources = {
       back: "Quay lại",
       add_new_student_type: "Thêm mới đối tượng học sinh",
       dashboard: "Trang chủ",
-      schedule_manager: "Quản lý lịch trình",
+      schedule_manager: "Quản lý lịch lớp",
       user_manager: "Quản lý người dùng",
       admin: "Quản trị viên",
       student: "Học sinh",

@@ -114,7 +114,7 @@ function RegisterPairForNewStudent(props) {
     }
   };
 
-  const { pairsTeaching, setAddNewStudent, classData } = props;
+  const { pairsTeaching, setAddNewStudent, classData, fetchClassData } = props;
   const unRegisterStudents = pairsTeaching?.filter((item) => !item.status);
   const formik = useFormik({
     initialValues: {
@@ -140,6 +140,7 @@ function RegisterPairForNewStudent(props) {
         fetchAddNewPair(classData._id, valuesToSend);
         setSubmitting(false);
         setAddNewStudent(false);
+        fetchClassData(classData._id);
       }, 400);
     },
   });
