@@ -197,6 +197,12 @@ const resources = {
       start_date: "Ngày bắt đầu",
       end_date: "Ngày kết thúc",
       add_new_semester: "Thêm kì học mới",
+      number_of_lessons_per_week: "Số buổi",
+      lessons_per_week: "buổi/tuần",
+      note: "Ghi chú",
+      number_of_unregister_student: "Số học sinh chưa được đăng kí",
+      number_of_waiting_student: "Số học sinh đang đợi xếp TNV",
+      register_pair_for_student: "Đăng kí xếp TNV cho học sinh",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",

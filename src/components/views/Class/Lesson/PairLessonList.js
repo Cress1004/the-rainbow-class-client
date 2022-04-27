@@ -59,20 +59,11 @@ function PairLessonList(props) {
     },
   ];
 
-  const renderData = (text, key) => (
-    <Link
-      //   to={`/classes/${id}/lessons/${key.id}`}
-      className={"text-in-table-row"}
-    >
-      <span>{text}</span>
-    </Link>
-  );
+  const renderData = (text, key) => <span>{text}</span>;
   return (
     <div className="lesson-list">
       <Row>
-        <div className="lesson-list__title">
-          {t("lesson_list")}
-        </div>
+        <div className="lesson-list__title">{t("lesson_list")}</div>
       </Row>
       <Table columns={columns} dataSource={data} />
     </div>

@@ -29,8 +29,11 @@ function PairDetail(props) {
         <Col span={12}>
           {" "}
           <Item label={t("student_name")}>{pairData.student?.user.name}</Item>
+          <Item label={t("volunteer_incharge")}>
+            {pairData.volunteer?.user.name}
+          </Item>
           <Item label={t("grade")}>{pairData.grade?.title}</Item>
-          <Item label={t("subjects")}>
+          <Item label={t("subject")}>
             {transformSubjects(pairData.subjects)}
           </Item>
         </Col>
@@ -38,7 +41,7 @@ function PairDetail(props) {
           <Item label={t("number_of_lessons_per_week")}>
             {pairData.numberOfLessonsPerWeek} {t("lessons_per_week")}
           </Item>
-          <Item label={t("teachOption")}>
+          <Item label={t("teach_option")}>
             {pairData.teachOption === OFFLINE_OPTION
               ? t("offline")
               : t("online")}
@@ -48,8 +51,10 @@ function PairDetail(props) {
               {transformAddressData(pairData.address)}
             </Item>
           ) : null}
+          <Item label="note">{pairData.note}</Item>
         </Col>
       </Form>
+      <Divider />
     </div>
   );
 }
