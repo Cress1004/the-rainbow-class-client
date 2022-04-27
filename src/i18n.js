@@ -203,6 +203,10 @@ const resources = {
       number_of_unregister_student: "Số học sinh chưa được đăng kí",
       number_of_waiting_student: "Số học sinh đang đợi xếp TNV",
       register_pair_for_student: "Đăng kí xếp TNV cho học sinh",
+      report: "Báo cáo",
+      add_report: "Viết báo cáo",
+      new_report: "Thêm báo cáo",
+      input_point: "Đánh giá điểm",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",
