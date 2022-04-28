@@ -14,4 +14,17 @@ const addNewReport = async (dataToSend) => {
   }
 };
 
-export { addNewReport };
+const getReportByPairAndMonth = async (pairId, month) => {
+  try {
+    const response = await api({
+      method: "POST",
+      url: `${REPORT_API}/get-reports-by-pair`,
+      data: { pairId: pairId, month: month },
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
+export { addNewReport, getReportByPairAndMonth };

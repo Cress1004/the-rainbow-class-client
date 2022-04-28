@@ -17,7 +17,7 @@ import _function from "../../../common/function";
 const { TabPane } = Tabs;
 
 function OneToOneTutoringDetail(props) {
-  const { classData, fetchClassData, currentUserData } = props;
+  const { classData, fetchClassData, currentUserData, defaultTab } = props;
   const { t } = useTranslation();
   const [pairData, setPairData] = useState({});
   const [currentVolunteerData, setCurrentVolunteerData] = useState({});
@@ -76,9 +76,14 @@ function OneToOneTutoringDetail(props) {
       currentVolunteerData?._id
     );
 
+  const handleChangeTab = (key) => {
+    localStorage.setItem("defaultTab", key);
+    console.log(key);
+  }
+
   return (
     <div className="class-detail__info-area">
-      <Tabs defaultActiveKey="basic-info">
+      <Tabs defaultActiveKey={defaultTab} onChange={(key) => handleChangeTab(key)}>
         <TabPane tab={t("basic_infor")} key="basic-info">
           <ClassBasicInfo classData={classData} />
         </TabPane>

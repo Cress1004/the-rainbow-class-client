@@ -27,6 +27,7 @@ function ClassDetail(props) {
   const userRole = currentUserData.userRole;
   const [classData, setClassData] = useState({});
   const lessons = useFetchAllLessonByClass(id);
+  const [defaultTab, setDefaultTab] = useState(localStorage.getItem("defaultTab"));
 
   const openDeletePopup = () => {
     setConfirmDelete(true);
@@ -76,6 +77,8 @@ function ClassDetail(props) {
 
   useEffect(() => {
     fetchClassData(id);
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("tab")) setDefaultTab(params.get("tab"));
   }, []);
 
   const menu = (
@@ -140,6 +143,8 @@ function ClassDetail(props) {
             classId={id}
             lessons={lessons}
             fetchClassData={fetchClassData}
+            defaultTab={defaultTab}
+            setDefaultTab={setDefaultTab}
           />
         ) : (
           <TeachByClassOptionDetail
@@ -148,6 +153,8 @@ function ClassDetail(props) {
             classId={id}
             userRole={userRole}
             lessons={lessons}
+            defaultTab={defaultTab}
+            setDefaultTab={setDefaultTab}
           />
         )}
         <Modal

@@ -3,3 +3,10 @@
         resize: none;
     }
 }
+
+.report-list {
+    display: inline;
+    &__month-picker {
+        float: right;
+    }
+}

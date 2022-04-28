@@ -64,6 +64,12 @@ function MyCalendar(props) {
           >
             {t("detail")}
           </Link>
+          <Link
+            to={`/classes/${event.classId}?tab=report`}
+            className="redirect-to-report"
+          >
+            {t("add_report")}
+          </Link>
         </>
       );
   };

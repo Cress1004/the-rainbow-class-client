@@ -207,6 +207,10 @@ const resources = {
       add_report: "Viết báo cáo",
       new_report: "Thêm báo cáo",
       input_point: "Đánh giá điểm",
+      select_month: "Chọn tháng",
+      created_time: "Thời gian tạo",
+      point: "Điểm",
+      comment: "Nhận xét",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",

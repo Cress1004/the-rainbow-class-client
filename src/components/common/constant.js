@@ -34,6 +34,7 @@ export const NOON_TIME = [
 
 export const FORMAT_TIME_SCHEDULE = "HH:mm";
 export const FORMAT_DATE = "YYYY/MM/DD";
+export const FORMAT_MONTH_STRING = "YYYY-MM"
 
 export const OFFLINE_OPTION = 1;
 export const ONLINE_OPTION = 0;
