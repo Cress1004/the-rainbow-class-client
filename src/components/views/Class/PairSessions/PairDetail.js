@@ -1,5 +1,6 @@
 import { Col, Divider, Form } from "antd";
 import React from "react";
+import { checkAdminRole } from "../../../common/checkRole";
 import { OFFLINE_OPTION } from "../../../common/constant";
 import {
   transformAddressData,
@@ -9,9 +10,9 @@ import {
 const { Item } = Form;
 
 function PairDetail(props) {
-  const { pairData, t } = props;
+  const { pairData, t, currentUserData } = props;
 
-  if (!pairData) {
+  if (!pairData && !checkAdminRole(currentUserData?.userRole)) {
     return (
       <div>
         Bạn chưa được ghép cặp với học sinh, hãy liên hệ với Cán sự lớp và Quản

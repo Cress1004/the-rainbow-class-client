@@ -1,3 +1,5 @@
+@import "../../style/app.scss";
+
 .add-report {
     &__note-description {
         resize: none;
@@ -5,8 +7,35 @@
 }
 
 .report-list {
-    display: inline;
+    &__title {
+        font-size: $title-font-size;
+        font-weight: $title-font-weight;
+        color: $primary-color;
+        padding-bottom: $title-padding-bottom;
+    }
+    &__header {
+        display: inline;
+    }
     &__month-picker {
         float: right;
+    }
+    &__add-report-button {
+        border-radius: 15px;
+        padding: px 10px;
+        // margin-left: 900px;
+        float: right;
+        margin-right: 10px;
+        a {
+            color: $white-color;
+        }    
+    }
+    &__all-achievement-table {
+        .ant-table-thead > tr > th {
+            text-align: center;
+            background-color: #aba;
+        }
+        .ant-table-tbody > tr > td {
+            text-align: center;
+        }
     }
 }

@@ -1,25 +1,54 @@
 import { Button, Row, Tabs } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import apis from "../../../../apis";
 import { checkCurrentUserBelongToCurrentClass } from "../../../common/checkRole";
 import { checkAdminAndMonitorRole } from "../../../common/function";
-import CommentStudent from "../CommentStudent/CommentStudent";
 import LessonList from "../Lesson/LessonList";
+import TeachByClassReportList from "../Report/TeachByClassReportList";
 import ClassBasicInfo from "./Tabs/ClassBasicInfo";
 const { TabPane } = Tabs;
 
 function TeachByClassOptionDetail(props) {
-  const { classData, currentUserData, userRole, classId, lessons } = props;
+  const {
+    classData,
+    currentUserData,
+    userRole,
+    classId,
+    lessons,
+    defaultTab,
+    setDefaultTab,
+  } = props;
+  const [currentVolunteerData, setCurrentVolunteerData] = useState({});
+
+  const fetchCurrentVolunteerData = async () => {
+    const data = await apis.volunteer.getCurrentVolunteer();
+    if (data.success) {
+      setCurrentVolunteerData(data.volunteerData);
+    } else {
+      alert(t("fail_to_get_class"));
+    }
+  };
+  useEffect(() => {
+    fetchCurrentVolunteerData();
+  }, []);
+
   const { t } = useTranslation();
+  const handleChangeTab = (key) => {
+    localStorage.setItem("defaultTab", key);
+  };
 
   return (
     <div className="class-detail__info-area">
-      <Tabs defaultActiveKey="1">
-        <TabPane tab={t("basic_infor")} key="1">
+      <Tabs
+        defaultActiveKey={defaultTab}
+        onChange={(key) => handleChangeTab(key)}
+      >
+        <TabPane tab={t("basic_infor")} key="basic-infor">
           <ClassBasicInfo classData={classData} />
         </TabPane>
-        <TabPane tab={t("lessons")} key="2">
+        <TabPane tab={t("lessons")} key="lessons">
           {checkCurrentUserBelongToCurrentClass(currentUserData, classId) && (
             <div>
               {checkAdminAndMonitorRole(userRole) && (
@@ -37,8 +66,14 @@ function TeachByClassOptionDetail(props) {
             </div>
           )}
         </TabPane>
-        <TabPane tab={t("comment_student")} key="3">
-          <CommentStudent />
+        <TabPane tab={t("report")} key="report">
+          <TeachByClassReportList
+            classData={classData}
+            currentUserData={currentUserData}
+            t={t}
+            lessons={lessons}
+            currentVolunteerData={currentVolunteerData}
+          />
         </TabPane>
       </Tabs>
     </div>

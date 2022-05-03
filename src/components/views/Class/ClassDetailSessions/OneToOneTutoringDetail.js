@@ -13,6 +13,7 @@ import { checkAdminAndMonitorRole } from "../../../common/function";
 import ReportList from "../Report/ReportList";
 import apis from "../../../../apis";
 import _function from "../../../common/function";
+import { checkAdminRole } from "../../../common/checkRole";
 
 const { TabPane } = Tabs;
 
@@ -67,7 +68,7 @@ function OneToOneTutoringDetail(props) {
   }, [classData, currentVolunteerData]);
 
   useEffect(() => {
-    fetchLessonsByPair(pairData._id);
+    fetchLessonsByPair(pairData?._id);
   }, [pairData]);
 
   const isCurrentVolunteerBelongCurrentPair =
@@ -78,7 +79,6 @@ function OneToOneTutoringDetail(props) {
 
   const handleChangeTab = (key) => {
     localStorage.setItem("defaultTab", key);
-    console.log(key);
   }
 
   return (
@@ -88,7 +88,7 @@ function OneToOneTutoringDetail(props) {
           <ClassBasicInfo classData={classData} />
         </TabPane>
         {checkAdminAndMonitorRole(currentUserData.userRole) &&
-        isCurrentVolunteerBelongCurrentPair ? (
+        !isCurrentVolunteerBelongCurrentPair ? (
           <TabPane
             tab={`${t("pair_manager_list")} (${getArrayLength(
               unpairedPairs

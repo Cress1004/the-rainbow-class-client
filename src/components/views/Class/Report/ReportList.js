@@ -16,6 +16,7 @@ const { MonthPicker } = DatePicker;
 function ReportList(props) {
   const {
     currentVolunteerData,
+    currentUserData,
     classData,
     pairData,
     lessons,
@@ -120,7 +121,7 @@ function ReportList(props) {
         />
       ) : (
         <div className="report-list">
-          <PairDetail pairData={pairData} t={t} />
+          <PairDetail pairData={pairData} t={t} currentUserData={currentUserData}/>
           {isCurrentVolunteerBelongCurrentPair ? (
             <Button
               type="primary"

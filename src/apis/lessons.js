@@ -89,6 +89,19 @@ const getLessons = async (classId) => {
   }
 };
 
+const getLessonByClassAndMonth = async (classId, month) => {
+  try {
+    const response = await api({
+      method: "POST",
+      url: `${CLASS_API}/${classId}/get-lessons-achievement-by-class-and-month`,
+      data: { classId: classId, month: month },
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
 export {
   addLesson,
   getLessonData,
@@ -96,5 +109,6 @@ export {
   deleteLesson,
   assignSchedule,
   unassignSchedule,
-  getLessons
+  getLessons,
+  getLessonByClassAndMonth
 };

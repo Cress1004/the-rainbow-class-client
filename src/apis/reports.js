@@ -27,4 +27,49 @@ const getReportByPairAndMonth = async (pairId, month) => {
   }
 };
 
-export { addNewReport, getReportByPairAndMonth };
+const addTeachByClassReport = async (dataToSend) => {
+  try {
+    const response = await api({
+      method: "POST",
+      url: `${REPORT_API}/teach-by-class-new-report`,
+      data: dataToSend,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
+const getReportByVolunteerAndMonth = async (volunteerId, month) => {
+  try {
+    const response = await api({
+      method: "POST",
+      url: `${REPORT_API}/get-reports-by-volunteer`,
+      data: { volunteerId: volunteerId, month: month },
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
+const getReportByClassAndMonth = async (classId, month) => {
+  try {
+    const response = await api({
+      method: "POST",
+      url: `${REPORT_API}/get-reports-by-class`,
+      data: { classId: classId, month: month },
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
+export {
+  addNewReport,
+  getReportByPairAndMonth,
+  addTeachByClassReport,
+  getReportByVolunteerAndMonth,
+  getReportByClassAndMonth
+};
