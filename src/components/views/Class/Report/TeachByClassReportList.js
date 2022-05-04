@@ -2,7 +2,7 @@ import {
   Button,
   Col,
   DatePicker,
-  Divider,
+  Form,
   Icon,
   message,
   Popover,
@@ -23,21 +23,32 @@ import {
   transformScheduleTimeData,
 } from "../../../common/transformData";
 const { MonthPicker } = DatePicker;
+const layout = {
+  labelCol: { span: 5 },
+  wrapperCol: { span: 15 },
+};
 
 function TeachByClassReportList(props) {
   const { t, currentUserData, classData, currentVolunteerData, lessons } =
     props;
   const currentMonth = moment(new Date()).format(FORMAT_MONTH_STRING);
 
-  const [myReport, setMyReport] = useState(true);
+  const [myReport, setMyReport] = useState(false);
   const [myReports, setMyReports] = useState([]);
   const [allReports, setAllReports] = useState([]);
   const [addReport, setAddReport] = useState(false);
   const [lessonAndAchievement, setLessonAndAchievement] = useState([]);
-  const [month, setMonth] = useState(currentMonth);
+  const [month, setMonth] = useState(
+    localStorage.getItem("report-current-month")
+      ? localStorage.getItem("report-current-month")
+      : currentMonth
+  );
+
   const changeMonth = (month) => {
     setMonth(moment(month).format(FORMAT_MONTH_STRING));
-    if (myReport) fetchReportsByVolunteer(currentVolunteerData?._id, month);
+    localStorage.setItem("report-current-month", month);
+    if (myReport && !checkAdminRole(currentUserData.userRole))
+      fetchReportsByVolunteer(currentVolunteerData?._id, month);
     else {
       fetchReportsByClass(classData?._id, month);
       fetchLessonsAndAchievement(classData?._id, month);
@@ -76,10 +87,10 @@ function TeachByClassReportList(props) {
   const handleChangeReportStatus = () => {
     setMyReport(!myReport);
     setMyReport((myReport) => {
+      localStorage.setItem("report-current-month", month);
       if (myReport) {
         fetchReportsByVolunteer(currentVolunteerData?._id, month);
       } else {
-        console.log(month)
         fetchReportsByClass(classData?._id, month);
         fetchLessonsAndAchievement(classData?._id, month);
       }
@@ -87,14 +98,17 @@ function TeachByClassReportList(props) {
     });
   };
 
+  const isAdmin = checkAdminRole(currentUserData?.userRole);
+
   useEffect(() => {
-    if (myReport) {
-      fetchReportsByVolunteer(currentVolunteerData?._id, month);
-    } else {
-      fetchLessonsAndAchievement(classData?._id, month);
-      fetchReportsByClass(classData?._id, month);
+    if (!localStorage.getItem("report-current-month")) {
+      localStorage.setItem("report-current-month", currentMonth);
     }
-  }, [currentVolunteerData, classData]);
+    setMyReport(isAdmin ? false : true);
+    fetchReportsByVolunteer(currentVolunteerData?._id, month)
+    fetchLessonsAndAchievement(classData?._id, month);
+    fetchReportsByClass(classData?._id, month);
+  }, [currentVolunteerData, classData, isAdmin]);
 
   const dataSourceMyReports = myReports?.map((item, index) => ({
     key: index,
@@ -129,14 +143,35 @@ function TeachByClassReportList(props) {
     </div>
   );
 
+  const showCommentDetail = (currentLesson) => (
+    <Form {...layout} name="control-hooks">
+      <Form.Item label={t("created_by")}>
+        {currentLesson?.createdBy.user.name}
+      </Form.Item>
+      <Form.Item label={t("created_time")}>
+        {transformDate(currentLesson.created_at)}
+      </Form.Item>
+      <Form.Item label={t("lesson_description")}>
+        {currentLesson?.lessonDescription}
+      </Form.Item>
+      <Form.Item label={t("comment")}>
+        {currentLesson?.achievement?.comment}
+      </Form.Item>
+    </Form>
+  );
+
   if (getArrayLength(lessonAndAchievement)) {
     lessonAndAchievement.map((lesson) => {
       fixedColumns.push({
         title: (
           <Popover content={transfromLessonDetail(lesson.lesson)}>
             {transformDate(lesson.lesson.schedule.time.date)}
-            <br />
-            <Icon type="plus" />
+            {/* <br />
+            <div className="report-list__show-comment-button">
+              <Button onClick={() => handleShowComment(lesson.lesson)}>
+                <Icon type="plus-circle" />
+              </Button>
+            </div> */}
           </Popover>
         ),
         dataIndex: `achievement`,
@@ -148,7 +183,31 @@ function TeachByClassReportList(props) {
             (item) => item?.achievement?.lesson?._id === lesson.lesson._id
           );
           return (
-            <span>{currentLesson ? currentLesson.achievement.point : "-"}</span>
+            <div>
+              {currentLesson ? (
+                <div>
+                  <span>
+                    {currentLesson ? currentLesson.achievement.point : "-"}
+                  </span>
+                  <Popover
+                    content={showCommentDetail(currentLesson)}
+                    title={t("report_detail")}
+                    trigger="[click]"
+                    // className="report-list__report-detail"
+                    overlayStyle={{
+                      width: "700px",
+                    }}
+                  >
+                    {" "}
+                    <Icon type="snippets" />
+                  </Popover>
+                </div>
+              ) : (
+                <span>
+                  {currentLesson ? currentLesson.achievement.point : "-"}
+                </span>
+              )}
+            </div>
           );
         },
       });
@@ -161,6 +220,7 @@ function TeachByClassReportList(props) {
       key: `${item?._id}`,
       name: item?.student?.user?.name,
       achievement: item?.achievement,
+      comment: item?.comment,
     }));
   }
 
@@ -227,18 +287,19 @@ function TeachByClassReportList(props) {
           <>
             <Row>
               <Col span={12}>
-                {" "}
-                <Switch
-                  checkedChildren={t("my_report")}
-                  unCheckedChildren={t("class_report")}
-                  defaultChecked
-                  onClick={handleChangeReportStatus}
-                  style={{
-                    marginLeft: "300px",
-                    marginBottom: "10px",
-                    width: "150px",
-                  }}
-                />
+                {currentUserData.userRole.isAdmin ? null : (
+                  <Switch
+                    checkedChildren={t("my_report")}
+                    unCheckedChildren={t("class_report")}
+                    defaultChecked
+                    onClick={handleChangeReportStatus}
+                    style={{
+                      marginLeft: "300px",
+                      marginBottom: "10px",
+                      width: "150px",
+                    }}
+                  />
+                )}
               </Col>
               <Col span={12}>
                 <div>
@@ -247,7 +308,7 @@ function TeachByClassReportList(props) {
                   </span>
                   <MonthPicker
                     onChange={(date, dateString) => changeMonth(dateString)}
-                    defaultValue={moment(new Date(), FORMAT_MONTH_STRING)}
+                    defaultValue={moment(month, FORMAT_MONTH_STRING)}
                     format={FORMAT_MONTH_STRING}
                   />
                 </div>
@@ -265,26 +326,38 @@ function TeachByClassReportList(props) {
                 </Button>
               )}
             </Row>
-
-            {myReport ? (
+            {checkAdminRole(currentUserData.userRole) ? (
               <>
-                {" "}
-                <Table columns={columns} dataSource={dataSourceMyReports} />
-              </>
-            ) : (
-              <>
-                {" "}
                 <Table
                   className="report-list__all-achievement-table"
-                  columns={fixedColumns}
+                  columns={getArrayLength(fixedData) > 0  ? fixedColumns : []}
                   dataSource={fixedData}
                   pagination={false}
                   scroll={{ x: 1000, y: 500 }}
                   bordered
                 />
               </>
+            ) : (
+              <>
+                {myReport ? (
+                  <>
+                    {" "}
+                    <Table columns={columns} dataSource={dataSourceMyReports} />
+                  </>
+                ) : (
+                  <>
+                    <Table
+                      className="report-list__all-achievement-table"
+                      columns={getArrayLength(fixedColumns) > 1 ? fixedColumns : []}
+                      dataSource={getArrayLength(fixedColumns) > 1 ? fixedData : []}
+                      pagination={false}
+                      scroll={{ x: 1000, y: 500 }}
+                      bordered
+                    />
+                  </>
+                )}
+              </>
             )}
-            <Divider />
           </>
         )}
       </div>

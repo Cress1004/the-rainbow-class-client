@@ -38,4 +38,24 @@
             text-align: center;
         }
     }
+    &__my-report {
+        .ant-table-thead > tr > th {
+            background-color: #aba;
+        }
+    }
+    &__show-comment-button {
+        button,
+        button:disabled,
+        button:active,
+        button[disabled] {
+            background-color: #aba;
+            border: none;
+        }
+        button:hover, button[disabled]:hover,         
+        button:focus {
+            background-color: #aba;
+            border: none;
+            color: rgb(56, 150, 35);
+        }
+    }
 }

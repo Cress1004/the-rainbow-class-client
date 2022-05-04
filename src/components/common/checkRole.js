@@ -6,7 +6,7 @@ import {
 } from "./constant";
 
 export function checkAdminRole(userRole) {
-  return userRole?.isAdmin;
+  return userRole?.isAdmin || false;
 }
 
 export function checkAdminAndVolunteerRole(userRole) {

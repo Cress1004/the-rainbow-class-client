@@ -211,6 +211,10 @@ const resources = {
       created_time: "Thời gian tạo",
       point: "Điểm",
       comment: "Nhận xét",
+      report_detail: "Chi tiết báo cáo",
+      created_by: "Người tạo",
+      lesson_description: "Mô tả bài học",
+      title: "Tiêu đề",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",

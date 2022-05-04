@@ -121,7 +121,11 @@ function ReportList(props) {
         />
       ) : (
         <div className="report-list">
-          <PairDetail pairData={pairData} t={t} currentUserData={currentUserData}/>
+          <PairDetail
+            pairData={pairData}
+            t={t}
+            currentUserData={currentUserData}
+          />
           {isCurrentVolunteerBelongCurrentPair ? (
             <Button
               type="primary"
@@ -140,7 +144,11 @@ function ReportList(props) {
             />
           </div>
           <Divider />
-          <Table columns={columns} dataSource={dataSource} />
+          <Table
+            className="report-list__my-report"
+            columns={columns}
+            dataSource={dataSource}
+          />
         </div>
       )}
     </div>
