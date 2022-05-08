@@ -1,4 +1,4 @@
-import { Button, Divider, message, DatePicker, Table } from "antd";
+import { Button, Divider, message, DatePicker, Table, Row, Col } from "antd";
 import React, { useEffect, useState } from "react";
 import apis from "../../../../apis";
 import { FORMAT_MONTH_STRING } from "../../../common/constant";
@@ -10,6 +10,8 @@ import {
   transformScheduleTimeData,
 } from "../../../common/transformData";
 import "./report.scss";
+import { checkAdminRole } from "../../../common/checkRole";
+import AllReportOneToOneTeaching from "./AllReportOneToOneTeaching";
 
 const { MonthPicker } = DatePicker;
 
@@ -22,6 +24,8 @@ function ReportList(props) {
     lessons,
     isCurrentVolunteerBelongCurrentPair,
     t,
+    isAdmin,
+    fetchPairDataByVolunteer,
   } = props;
 
   const layout = {
@@ -31,6 +35,13 @@ function ReportList(props) {
   const currentMonth = moment(new Date()).format(FORMAT_MONTH_STRING);
   const [reports, setReports] = useState([]);
   const [addReport, setAddReport] = useState(false);
+  const [month, setMonth] = useState(
+    localStorage.getItem("report-current-month")
+      ? localStorage.getItem("report-current-month")
+      : currentMonth
+  );
+  const [reportsByVolunteer, setReportsByVolunteer] = useState([]);
+  const [icons, setIcons] = useState([]);
 
   const fetchReportsByPair = async (pairId, month) => {
     const data = await apis.reports.getReportByPairAndMonth(pairId, month);
@@ -42,11 +53,48 @@ function ReportList(props) {
   };
 
   useEffect(() => {
-    fetchReportsByPair(pairData?._id, currentMonth);
+    let iconsList = [];
+    let reportList = [];
+
+    classData.volunteers.map((volunteer) => {
+      iconsList.push({
+        key: volunteer._id,
+        volunteer: volunteer,
+        showDetail: false,
+      });
+      reportList.push({ key: volunteer._id });
+    });
+    setIcons(iconsList);
+    setReportsByVolunteer(reportList);
+  }, [classData]);
+
+  useEffect(() => {
+    if (!localStorage.getItem("report-current-month")) {
+      localStorage.setItem("report-current-month", currentMonth);
+    }
+    if (isAdmin) {
+    } else {
+      fetchReportsByPair(pairData?._id, currentMonth);
+    }
   }, [pairData]);
 
   const changeMonth = (month) => {
-    fetchReportsByPair(pairData._id, month);
+    localStorage.setItem("report-current-month", month);
+    let iconsList = [];
+    let reportList = [];
+
+    classData.volunteers.map((volunteer) => {
+      iconsList.push({
+        key: volunteer._id,
+        volunteer: volunteer,
+        showDetail: false,
+      });
+      reportList.push({ key: volunteer._id });
+    });
+    setIcons(iconsList);
+    setReportsByVolunteer(reportList);
+    
+    if (!isAdmin) fetchReportsByPair(pairData._id, month);
   };
 
   const dataSource = reports?.map((item, index) => ({
@@ -110,6 +158,9 @@ function ReportList(props) {
 
   return (
     <div>
+      <div className="report-list__title">
+        {`${t("report")} - ${classData?.name}`}
+      </div>
       {addReport ? (
         <AddReport
           classData={classData}
@@ -121,11 +172,11 @@ function ReportList(props) {
         />
       ) : (
         <div className="report-list">
-          <PairDetail
+          {/* <PairDetail
             pairData={pairData}
             t={t}
             currentUserData={currentUserData}
-          />
+          /> */}
           {isCurrentVolunteerBelongCurrentPair ? (
             <Button
               type="primary"
@@ -135,20 +186,39 @@ function ReportList(props) {
               {t("add_report")}
             </Button>
           ) : null}
-          <div className="report-list__month-picker">
-            <span style={{ marginRight: "10px" }}>{t("select_month")}</span>
-            <MonthPicker
-              onChange={(date, dateString) => changeMonth(dateString)}
-              defaultValue={moment(new Date(), FORMAT_MONTH_STRING)}
-              format={FORMAT_MONTH_STRING}
-            />
-          </div>
-          <Divider />
-          <Table
-            className="report-list__my-report"
-            columns={columns}
-            dataSource={dataSource}
-          />
+          <Row>
+            <Col span={18}></Col>
+            <Col span={6}>
+              {" "}
+              <span style={{ marginRight: "10px" }}>{t("select_month")}</span>
+              <MonthPicker
+                onChange={(date, dateString) => changeMonth(dateString)}
+                defaultValue={moment(month, FORMAT_MONTH_STRING)}
+                format={FORMAT_MONTH_STRING}
+              />
+            </Col>
+          </Row>
+          <Row>
+            {isAdmin ? (
+              <AllReportOneToOneTeaching
+                fetchPairDataByVolunteer={fetchPairDataByVolunteer}
+                fetchReportsByPair={fetchReportsByPair}
+                month={month}
+                classData={classData}
+                reportsByVolunteer={reportsByVolunteer}
+                setReportsByVolunteer={setReportsByVolunteer}
+                t={t}
+                icons={icons}
+                setIcons={setIcons}
+              />
+            ) : (
+              <Table
+                className="report-list__my-report"
+                columns={columns}
+                dataSource={dataSource}
+              />
+            )}
+          </Row>
         </div>
       )}
     </div>

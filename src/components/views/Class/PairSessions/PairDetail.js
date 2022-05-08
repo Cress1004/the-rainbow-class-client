@@ -29,18 +29,18 @@ function PairDetail(props) {
       <Form {...layout} className="class-detail">
         <Col span={12}>
           {" "}
-          <Item label={t("student_name")}>{pairData.student?.user.name}</Item>
+          <Item label={t("student_name")}>{pairData?.student?.user.name}</Item>
           <Item label={t("volunteer_incharge")}>
-            {pairData.volunteer?.user.name}
+            {pairData?.volunteer?.user.name}
           </Item>
-          <Item label={t("grade")}>{pairData.grade?.title}</Item>
+          <Item label={t("grade")}>{pairData?.grade?.title}</Item>
           <Item label={t("subject")}>
-            {transformSubjects(pairData.subjects)}
+            {transformSubjects(pairData?.subjects)}
           </Item>
         </Col>
         <Col span={12}>
           <Item label={t("number_of_lessons_per_week")}>
-            {pairData.numberOfLessonsPerWeek} {t("lessons_per_week")}
+            {pairData?.numberOfLessonsPerWeek} {t("lessons_per_week")}
           </Item>
           <Item label={t("teach_option")}>
             {pairData.teachOption === OFFLINE_OPTION

@@ -24,6 +24,7 @@ function OneToOneTutoringDetail(props) {
   const [currentVolunteerData, setCurrentVolunteerData] = useState({});
   const [lessons, setLessons] = useState([]);
   const unpairedPairs = getUnpairedPairs(classData.pairsTeaching);
+  const isAdmin = checkAdminRole(currentUserData?.userRole);
 
   const fetchCurrentVolunteerData = async () => {
     const data = await apis.volunteer.getCurrentVolunteer();
@@ -61,10 +62,12 @@ function OneToOneTutoringDetail(props) {
   }, []);
 
   useEffect(() => {
-    fetchPairDataByVolunteer(classData._id, currentVolunteerData._id);
-    return () => {
-      setLessons([]);
-    };
+    if (!isAdmin) {
+      fetchPairDataByVolunteer(classData._id, currentVolunteerData._id);
+      return () => {
+        setLessons([]);
+      };
+    }
   }, [classData, currentVolunteerData]);
 
   useEffect(() => {
@@ -79,11 +82,14 @@ function OneToOneTutoringDetail(props) {
 
   const handleChangeTab = (key) => {
     localStorage.setItem("defaultTab", key);
-  }
+  };
 
   return (
     <div className="class-detail__info-area">
-      <Tabs defaultActiveKey={defaultTab} onChange={(key) => handleChangeTab(key)}>
+      <Tabs
+        defaultActiveKey={defaultTab}
+        onChange={(key) => handleChangeTab(key)}
+      >
         <TabPane tab={t("basic_infor")} key="basic-info">
           <ClassBasicInfo classData={classData} />
         </TabPane>
@@ -120,6 +126,8 @@ function OneToOneTutoringDetail(props) {
             t={t}
             pairData={pairData}
             lessons={lessons}
+            isAdmin={isAdmin}
+            fetchPairDataByVolunteer={fetchPairDataByVolunteer}
           />
         </TabPane>
       </Tabs>
