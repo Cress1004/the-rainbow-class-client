@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import "../../master-setting.scss";
 import apis from "../../../../../apis";
+import { getArrayLength } from "../../../../common/transformData";
+import TableNodata from "../../../NoData/TableNodata";
 
 function Grade() {
   const { t } = useTranslation();
@@ -119,7 +121,11 @@ function Grade() {
           >
             {t("add_new_grade")}
           </Button>
-          <Table columns={columns} dataSource={data} />
+          {getArrayLength(data) ? (
+            <Table columns={columns} dataSource={data} />
+          ) : (
+            <TableNodata />
+          )}
         </div>
       )}
     </div>

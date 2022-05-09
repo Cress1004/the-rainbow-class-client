@@ -12,6 +12,7 @@ import useFetchVolunteers from "../../../../../hook/Volunteer/useFetchVolunteers
 import { CLASS_MONITOR, SUB_CLASS_MONITOR } from "../../../../common/constant";
 import useFetchClassNameList from "../../../../../hook/Class/useFetchClassNameList";
 import { getArrayLength } from "../../../../common/transformData";
+import TableNodata from "../../../NoData/TableNodata";
 
 function VolunteerList(props) {
   const { t } = useTranslation();
@@ -40,7 +41,7 @@ function VolunteerList(props) {
       className: item.user.class ? item.user.class.name : t("unset"),
       phoneNumber: item.user.phoneNumber,
       role: item.role,
-      classId: item.user.class._id,
+      classId: item.user.class?._id,
       email: item.user.email,
       isActive: item.user.isActive,
     }));
@@ -132,15 +133,19 @@ function VolunteerList(props) {
         <span className="volunteer-list__note--deactive-record-note"></span>
         <span>{t("deactive_volunteer")}</span>
       </Row>
-      <Table
-        columns={columns}
-        dataSource={searchData}
-        rowClassName={(record) =>
-          `volunteer-list__table--${
-            record.isActive ? "active" : "deactive"
-          }-row`
-        }
-      />
+      {getArrayLength(searchData) ? (
+        <Table
+          columns={columns}
+          dataSource={searchData}
+          rowClassName={(record) =>
+            `volunteer-list__table--${
+              record.isActive ? "active" : "deactive"
+            }-row`
+          }
+        />
+      ) : (
+        <TableNodata />
+      )}
     </div>
   );
 }

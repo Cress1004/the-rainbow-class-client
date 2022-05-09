@@ -6,12 +6,14 @@ import PairDetail from "../PairSessions/PairDetail";
 import AddReport from "./AddReport";
 import moment from "moment";
 import {
+  getArrayLength,
   transformDate,
   transformScheduleTimeData,
 } from "../../../common/transformData";
 import "./report.scss";
 import { checkAdminRole } from "../../../common/checkRole";
 import AllReportOneToOneTeaching from "./AllReportOneToOneTeaching";
+import TableNodata from "../../NoData/TableNodata";
 
 const { MonthPicker } = DatePicker;
 
@@ -93,7 +95,7 @@ function ReportList(props) {
     });
     setIcons(iconsList);
     setReportsByVolunteer(reportList);
-    
+
     if (!isAdmin) fetchReportsByPair(pairData._id, month);
   };
 
@@ -212,11 +214,17 @@ function ReportList(props) {
                 setIcons={setIcons}
               />
             ) : (
-              <Table
-                className="report-list__my-report"
-                columns={columns}
-                dataSource={dataSource}
-              />
+              <>
+                {getArrayLength(columns) ? (
+                  <Table
+                    className="report-list__my-report"
+                    columns={columns}
+                    dataSource={dataSource}
+                  />
+                ) : (
+                  <TableNodata />
+                )}
+              </>
             )}
           </Row>
         </div>

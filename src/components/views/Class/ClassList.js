@@ -3,7 +3,11 @@ import { useTranslation } from "react-i18next";
 import { Button, Table, Row, Input, Icon } from "antd";
 import "./class-list.scss";
 import { Link } from "react-router-dom";
-import { getArrayLength, transformAddressData, transformStudentTypes } from "../../common/transformData";
+import {
+  getArrayLength,
+  transformAddressData,
+  transformStudentTypes,
+} from "../../common/transformData";
 import {
   checkAdminAndVolunteerRole,
   checkAdminRole,
@@ -13,6 +17,7 @@ import { checkStringContentSubString } from "../../common/function";
 import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
 import useFetchAllClasses from "../../../hook/Class/useFetchAllClasses";
 import common from "../../common";
+import TableNodata from "../NoData/TableNodata";
 
 function ClassList(props) {
   const { t } = useTranslation();
@@ -35,8 +40,10 @@ function ClassList(props) {
         : `(${t("unset")})`,
       targetStudent: transformStudentTypes(item.studentTypes),
       numberOfStudent: getArrayLength(item.students),
-      teachingOption: teachingOptions.find((data) => data.key === item.teachingOption)?.vie,
-      address: transformAddressData(item.address)
+      teachingOption: teachingOptions.find(
+        (data) => data.key === item.teachingOption
+      )?.vie,
+      address: transformAddressData(item.address),
     }));
   };
 
@@ -58,22 +65,14 @@ function ClassList(props) {
       dataIndex: "teachingOption",
       key: "teachingOption",
       width: 75,
-      render: (text, key) =>
-        renderData(
-          text,
-          key
-        ),
+      render: (text, key) => renderData(text, key),
     },
     {
       title: t("address"),
       dataIndex: "address",
       key: "address",
       width: 150,
-      render: (text, key) =>
-        renderData(
-          text,
-          key
-        ),
+      render: (text, key) => renderData(text, key),
     },
     {
       title: t("class_monitor"),
@@ -132,7 +131,11 @@ function ClassList(props) {
           </Button>
         )}
       </Row>
-      <Table columns={columns} dataSource={searchData} />
+      {getArrayLength(searchData) ? (
+        <Table columns={columns} dataSource={searchData} />
+      ) : (
+        <TableNodata />
+      )}
     </div>
   );
 }

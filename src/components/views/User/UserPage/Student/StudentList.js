@@ -17,6 +17,7 @@ import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUse
 import useFetchStudents from "../../../../../hook/Student/useFetchStudents";
 import useFetchClassNameList from "../../../../../hook/Class/useFetchClassNameList";
 import useFetchStudentTypes from "../../../../../hook/CommonData.js/useFetchStudentTypes";
+import TableNodata from "../../../NoData/TableNodata";
 
 function StudentList(props) {
   const { t } = useTranslation();
@@ -138,7 +139,11 @@ function StudentList(props) {
             </Button>
           )}
         </Row>
-        <Table columns={columns} dataSource={searchData} />
+        {getArrayLength(searchData) ? (
+          <Table columns={columns} dataSource={searchData} />
+        ) : (
+          <TableNodata />
+        )}
       </div>
     </div>
   );

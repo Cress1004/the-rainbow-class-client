@@ -10,6 +10,7 @@ import {
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import RegisterPairForNewStudent from "../ClassDetailSessions/Tabs/RegisterPairForNewStudent";
+import TableNodata from "../../NoData/TableNodata";
 
 const { Option } = Select;
 
@@ -217,7 +218,11 @@ function PairList(props) {
               {getArrayLength(waittingStudent)}
             </Col>
           </Row>
-          <Table columns={columns} dataSource={dataSource} />
+          {getArrayLength(dataSource) ? (
+            <Table columns={columns} dataSource={dataSource} />
+          ) : (
+            <TableNodata />
+          )}
         </div>
       )}
     </div>

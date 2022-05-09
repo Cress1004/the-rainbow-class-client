@@ -2,11 +2,20 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Table } from "antd";
 import SetPersonInCharge from "./SetPersonInCharge";
+import { getArrayLength } from "../../../../common/transformData";
+import TableNodata from "../../../NoData/TableNodata";
 
 function PaticipantList(props) {
   const { t } = useTranslation();
-  const { participants, checkAdminAndMonitorRole, personInCharge, scheduleId, fetchLessonData, lessonId, userId } =
-    props;
+  const {
+    participants,
+    checkAdminAndMonitorRole,
+    personInCharge,
+    scheduleId,
+    fetchLessonData,
+    lessonId,
+    userId,
+  } = props;
   const data = participants
     ? participants.map((item, index) => ({
         key: index,
@@ -46,7 +55,11 @@ function PaticipantList(props) {
           userId={userId}
         />
       )}
-      <Table columns={columns} dataSource={data} />
+      {getArrayLength(data) ? (
+        <Table columns={columns} dataSource={data} />
+      ) : (
+        <TableNodata />
+      )}
     </div>
   );
 }

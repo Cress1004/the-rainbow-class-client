@@ -94,17 +94,28 @@ function AllReportOneToOneTeaching(props) {
   ];
 
   const transformDataSource = (reports) => {
-    return reports?.map((report) => ({
-      lessonName: report?.achievement?.lesson?.title,
-      studentName: report?.achievement?.student?.user?.name,
-      scheduleTime: transformScheduleTimeData(
-        report?.achievement?.lesson?.schedule?.time
-      ),
-      createdTime: transformDate(report.created_at),
-      subjectName: report?.subject?.title,
-      point: report?.achievement?.point,
-      comment: report?.achievement?.comment,
-    }));
+    let sum = 0;
+    if (getArrayLength(reports)) {
+      const result = reports.map((report) => {
+        sum += report.achievement.point;
+        return {
+          lessonName: report.achievement.lesson.title,
+          studentName: report.achievement.student.user.name,
+          scheduleTime: transformScheduleTimeData(
+            report.achievement.lesson.schedule.time
+          ),
+          createdTime: transformDate(report.created_at),
+          subjectName: report.subject.title,
+          point: report.achievement.point,
+          comment: report.achievement.comment,
+        };
+      });
+      result.push({
+        lessonName: t("average"),
+        point: sum / getArrayLength(reports),
+      });
+      return result;
+    }
   };
 
   const renderVolunteer = () => (
@@ -121,11 +132,16 @@ function AllReportOneToOneTeaching(props) {
             <Icon
               type={icon?.showDetail ? "down-circle" : "right-circle"}
               onClick={() => onChangeIcon(icon.key)}
-              style={{marginLeft: "10px"}}
+              style={{ marginLeft: "10px" }}
             />
             {icon?.showDetail &&
             getArrayLength(currentVolunteerReport?.reports) ? (
               <Table
+                rowClassName={(record, index) =>
+                  index === getArrayLength(currentVolunteerReport?.reports)
+                    ? "report-list__avg-row"
+                    : ""
+                }
                 className="report-list__my-report"
                 columns={columns}
                 dataSource={transformDataSource(

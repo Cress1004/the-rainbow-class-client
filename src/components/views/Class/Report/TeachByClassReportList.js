@@ -22,6 +22,7 @@ import {
   transformDate,
   transformScheduleTimeData,
 } from "../../../common/transformData";
+import TableNodata from "../../NoData/TableNodata";
 const { MonthPicker } = DatePicker;
 const layout = {
   labelCol: { span: 5 },
@@ -105,23 +106,36 @@ function TeachByClassReportList(props) {
       localStorage.setItem("report-current-month", currentMonth);
     }
     setMyReport(isAdmin ? false : true);
-    fetchReportsByVolunteer(currentVolunteerData?._id, month)
+    fetchReportsByVolunteer(currentVolunteerData?._id, month);
     fetchLessonsAndAchievement(classData?._id, month);
     fetchReportsByClass(classData?._id, month);
   }, [currentVolunteerData, classData, isAdmin]);
 
-  const dataSourceMyReports = myReports?.map((item, index) => ({
-    key: index,
-    id: item._id,
-    lessonName: item?.achievement?.lesson?.title,
-    scheduleTime: transformScheduleTimeData(
-      item?.achievement?.lesson?.schedule?.time
-    ),
-    studentName: item?.achievement?.student?.user?.name,
-    createdTime: transformDate(item.created_at),
-    point: item?.achievement?.point,
-    comment: item?.achievement?.comment,
-  }));
+  const transformDataSourceMyReports = (myReports) => {
+    let sum = 0;
+    if (getArrayLength(myReports)) {
+      const result = myReports.map((item, index) => {
+        sum += item.achievement.point;
+        return {
+          key: index,
+          id: item._id,
+          lessonName: item?.achievement?.lesson?.title,
+          scheduleTime: transformScheduleTimeData(
+            item?.achievement?.lesson?.schedule?.time
+          ),
+          studentName: item?.achievement?.student?.user?.name,
+          createdTime: transformDate(item.created_at),
+          point: item?.achievement?.point,
+          comment: item?.achievement?.comment,
+        };
+      });
+      result.push({
+        lessonName: t("average"),
+        point: sum / getArrayLength(myReports),
+      });
+      return result;
+    }
+  };
 
   const fixedColumns = [
     {
@@ -129,6 +143,12 @@ function TeachByClassReportList(props) {
       dataIndex: "name",
       fixed: true,
       width: 250,
+    },
+    {
+      title: t("average"),
+      dataIndex: "average",
+      fixed: true,
+      width: 100,
     },
   ];
 
@@ -214,6 +234,15 @@ function TeachByClassReportList(props) {
     });
   }
 
+  const avgScore = (achievementArray) => {
+    let sum = 0;
+    console.log(achievementArray);
+    achievementArray.forEach((item) => {
+      sum += item.achievement.point;
+    });
+    return sum / getArrayLength(achievementArray).toFixed(2);
+  };
+
   let fixedData = [];
   if (getArrayLength(allReports)) {
     fixedData = allReports?.map((item) => ({
@@ -221,6 +250,9 @@ function TeachByClassReportList(props) {
       name: item?.student?.user?.name,
       achievement: item?.achievement,
       comment: item?.comment,
+      average: getArrayLength(item?.achievement)
+        ? avgScore(item.achievement)
+        : "-",
     }));
   }
 
@@ -328,32 +360,55 @@ function TeachByClassReportList(props) {
             </Row>
             {checkAdminRole(currentUserData.userRole) ? (
               <>
-                <Table
-                  className="report-list__all-achievement-table"
-                  columns={getArrayLength(fixedData) > 0  ? fixedColumns : []}
-                  dataSource={fixedData}
-                  pagination={false}
-                  scroll={{ x: 1000, y: 500 }}
-                  bordered
-                />
+                {getArrayLength(fixedData) ? (
+                  <Table
+                    className="report-list__all-achievement-table"
+                    columns={getArrayLength(fixedData) > 0 ? fixedColumns : []}
+                    dataSource={fixedData}
+                    pagination={false}
+                    scroll={{ x: 1000, y: 500 }}
+                    bordered
+                  />
+                ) : (
+                  <TableNodata />
+                )}
               </>
             ) : (
               <>
                 {myReport ? (
                   <>
-                    {" "}
-                    <Table columns={columns} dataSource={dataSourceMyReports} />
+                    {getArrayLength(myReports) ? (
+                      <Table
+                        columns={columns}
+                        dataSource={transformDataSourceMyReports(myReports)}
+                        rowClassName={(record, index) =>
+                          index === getArrayLength(myReports)
+                            ? "report-list__avg-row"
+                            : ""
+                        }
+                      />
+                    ) : (
+                      <TableNodata />
+                    )}
                   </>
                 ) : (
                   <>
-                    <Table
-                      className="report-list__all-achievement-table"
-                      columns={getArrayLength(fixedColumns) > 1 ? fixedColumns : []}
-                      dataSource={getArrayLength(fixedColumns) > 1 ? fixedData : []}
-                      pagination={false}
-                      scroll={{ x: 1000, y: 500 }}
-                      bordered
-                    />
+                    {getArrayLength(fixedColumns) ? (
+                      <Table
+                        className="report-list__all-achievement-table"
+                        columns={
+                          getArrayLength(fixedColumns) > 1 ? fixedColumns : []
+                        }
+                        dataSource={
+                          getArrayLength(fixedColumns) > 1 ? fixedData : []
+                        }
+                        pagination={false}
+                        scroll={{ x: 1000, y: 500 }}
+                        bordered
+                      />
+                    ) : (
+                      <TableNodata />
+                    )}
                   </>
                 )}
               </>

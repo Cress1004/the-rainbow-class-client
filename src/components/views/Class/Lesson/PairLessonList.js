@@ -2,8 +2,12 @@ import React from "react";
 import { Table, Row } from "antd";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { transformScheduleTimeData } from "../../../common/transformData";
+import {
+  getArrayLength,
+  transformScheduleTimeData,
+} from "../../../common/transformData";
 import { OFFLINE_OPTION } from "../../../common/constant";
+import TableNodata from "../../NoData/TableNodata";
 
 function PairLessonList(props) {
   const { t } = useTranslation();
@@ -65,7 +69,11 @@ function PairLessonList(props) {
       <Row>
         <div className="lesson-list__title">{t("lesson_list")}</div>
       </Row>
-      <Table columns={columns} dataSource={data} />
+      {getArrayLength(data) ? (
+        <Table columns={columns} dataSource={data} />
+      ) : (
+        <TableNodata />
+      )}
     </div>
   );
 }

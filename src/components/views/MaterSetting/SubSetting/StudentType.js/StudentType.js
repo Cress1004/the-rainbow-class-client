@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import "../../master-setting.scss";
 import apis from "../../../../../apis";
+import { getArrayLength } from "../../../../common/transformData";
+import TableNodata from "../../../NoData/TableNodata";
 
 function StudentType() {
   const { t } = useTranslation();
@@ -125,7 +127,11 @@ function StudentType() {
           >
             {t("add_new_student_type")}
           </Button>
-          <Table columns={columns} dataSource={data} />
+          {getArrayLength(data) ? (
+            <Table columns={columns} dataSource={data} />
+          ) : (
+            <TableNodata />
+          )}
         </div>
       )}
     </div>

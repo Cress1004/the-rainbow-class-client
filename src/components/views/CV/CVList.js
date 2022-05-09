@@ -13,6 +13,7 @@ import "./upload-cv.scss";
 import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
 import PermissionDenied from "../Error/PermissionDenied";
 import useFetchClassNameList from "../../../hook/Class/useFetchClassNameList";
+import TableNodata from "../NoData/TableNodata";
 
 function CVList(props) {
   const { t } = useTranslation();
@@ -121,7 +122,11 @@ function CVList(props) {
           setSearchData(filteredData);
         }}
       />
-      <Table columns={columns} dataSource={searchData} />
+      {getArrayLength(searchData) ? (
+        <Table columns={columns} dataSource={searchData} />
+      ) : (
+        <TableNodata />
+      )}
     </div>
   );
 }

@@ -4,6 +4,8 @@ import { Icon, Input, Table } from "antd";
 import Axios from "axios";
 import "./admin.scss";
 import { checkStringContentSubString } from "../../../../common/function";
+import { getArrayLength } from "../../../../common/transformData";
+import TableNodata from "../../../NoData/TableNodata";
 
 function AdminList(props) {
   const { t } = useTranslation();
@@ -19,7 +21,7 @@ function AdminList(props) {
         setSearchData(transformAdminData(result.admin));
       } else if (!result.success) {
         alert(result.message);
-      } 
+      }
     });
   }, [t]);
 
@@ -78,13 +80,17 @@ function AdminList(props) {
             const filteredData = admin.filter(
               (entry) =>
                 checkStringContentSubString(entry.userName, currValue) ||
-                checkStringContentSubString(entry.phoneNumber, currValue) || 
+                checkStringContentSubString(entry.phoneNumber, currValue) ||
                 checkStringContentSubString(entry.email, currValue)
             );
             setSearchData(filteredData);
           }}
         />
-        <Table columns={columns} dataSource={searchData} />
+        {getArrayLength(searchData) ? (
+          <Table columns={columns} dataSource={searchData} />
+        ) : (
+          <TableNodata />
+        )}
       </div>
     </div>
   );
