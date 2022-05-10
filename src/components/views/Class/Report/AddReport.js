@@ -26,7 +26,15 @@ function AddReport(props) {
     wrapperCol: { offset: 16, span: 8 },
   };
 
-  const { t, pairData, lessons, currentVolunteerData, setAddReport } = props;
+  const {
+    t,
+    pairData,
+    lessons,
+    currentVolunteerData,
+    setAddReport,
+    fetchReportsByPair,
+    month
+  } = props;
   const subjects = useFetchSubjects();
 
   const fetchAddReport = async (dataToSend) => {
@@ -50,6 +58,7 @@ function AddReport(props) {
       point: null,
       volunteer: currentVolunteerData?._id,
       pair: pairData?._id,
+      createdBy: currentVolunteerData?._id,
     },
     validationSchema: Yup.object({
       lesson: Yup.string().required(t("required_lesson_message")),
@@ -61,8 +70,9 @@ function AddReport(props) {
       point: Yup.number().required("required_point_message"),
     }),
     onSubmit: (values, { setSubmitting }) => {
-      setTimeout(() => {
-        fetchAddReport(values);
+      setTimeout(async () => {
+        await fetchAddReport(values);
+        await fetchReportsByPair(pairData._id, month)
         setAddReport(false);
         setSubmitting(false);
       }, 400);

@@ -102,7 +102,7 @@ function AddLesson(props) {
       linkOnline: Yup.string().matches(urlRegExp, t("link_is_invalid")),
     }),
     onSubmit: (values, { setSubmitting }) => {
-      setTimeout(() => {
+      setTimeout(async () => {
         let valuesToSend;
         if (teachOption === ONLINE_OPTION) {
           valuesToSend = { ...values, teachOption, address, time, pairId };
@@ -111,8 +111,8 @@ function AddLesson(props) {
           valuesToSend = { ...values, teachOption, address, time, pairId };
         }
         if (classData.teachingOption === ONE_2_ONE_TUTORING) {
-          fetchAddLesson(id, valuesToSend);
-          fetchLessonsByPair(pairId);
+          await fetchAddLesson(id, valuesToSend);
+          await fetchLessonsByPair(pairId);
           setAddLesson(false);
         } else fetchAddLesson(id, valuesToSend);
         setSubmitting(false);

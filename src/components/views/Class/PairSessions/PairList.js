@@ -20,6 +20,7 @@ function PairList(props) {
   const { t } = useTranslation();
   const [editting, setEditting] = useState([]);
   const [addNewStudent, setAddNewStudent] = useState(false);
+  const [pairsTeaching, setPairTeaching] = useState([]);
 
   const fetchSetPairVolunteer = async (classData, dataToSend) => {
     await apis.classes.setPairVolunteer(classData._id, dataToSend);
@@ -53,6 +54,7 @@ function PairList(props) {
     if (getArrayLength(classData.pairsTeaching)) {
       resetEditting(classData);
     }
+    setPairTeaching(classData.pairsTeaching);
   }, [classData]);
 
   const changeEditting = (item) => {
@@ -64,7 +66,6 @@ function PairList(props) {
     setEditting(edittingRecords);
   };
 
-  const pairsTeaching = classData?.pairsTeaching;
   const unRegisterStudents = pairsTeaching?.filter((item) => item.status === 0);
 
   const waittingStudent = pairsTeaching?.filter((item) => item.status === 1);

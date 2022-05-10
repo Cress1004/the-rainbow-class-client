@@ -38,6 +38,7 @@ import UploadCV from "./views/CV/UploadCV";
 import CVList from "./views/CV/CVList";
 import CVDetail from "./views/CV/CVDetail";
 import { CONNECTION_PORT } from "./common/constant";
+// import Report from "./views/Statistic/Statistic";
 
 function App(props) {
   let socket = io(CONNECTION_PORT, {});
@@ -209,6 +210,12 @@ function App(props) {
           component={Auth(CVDetail, true)}
           socket={socket}
         />
+        {/* <DashboardLayoutRoute
+          path="/reports"
+          exact={true}
+          component={Auth(Report, true)}
+          socket={socket}
+        /> */}
         <LoginLayoutRoute
           exact
           path="/login"

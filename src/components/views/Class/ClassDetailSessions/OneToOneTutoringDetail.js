@@ -1,4 +1,4 @@
-import { Tabs } from "antd";
+import { message, Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -10,10 +10,11 @@ import ClassBasicInfo from "./Tabs/ClassBasicInfo";
 import PairList from "../PairSessions/PairList";
 import PairByVolunteer from "../PairSessions/PairByVolunteer";
 import { checkAdminAndMonitorRole } from "../../../common/function";
-import ReportList from "../Report/ReportList";
 import apis from "../../../../apis";
 import _function from "../../../common/function";
 import { checkAdminRole } from "../../../common/checkRole";
+import AllReportOneToOneTeaching from "../Report/AllReportOneToOneTeaching";
+import MyReportOneToOneTeaching from "../Report/MyReportOneToOneTeaching";
 
 const { TabPane } = Tabs;
 
@@ -93,8 +94,7 @@ function OneToOneTutoringDetail(props) {
         <TabPane tab={t("basic_infor")} key="basic-info">
           <ClassBasicInfo classData={classData} />
         </TabPane>
-        {checkAdminAndMonitorRole(currentUserData.userRole) &&
-        !isCurrentVolunteerBelongCurrentPair ? (
+        {checkAdminAndMonitorRole(currentUserData.userRole) ? (
           <TabPane
             tab={`${t("pair_manager_list")} (${getArrayLength(
               unpairedPairs
@@ -116,20 +116,30 @@ function OneToOneTutoringDetail(props) {
             />
           </TabPane>
         )}
-        <TabPane tab={t("report")} key="report">
-          <ReportList
-            classData={classData}
-            currentUserData={currentUserData}
-            isCurrentVolunteerBelongCurrentPair={
-              isCurrentVolunteerBelongCurrentPair
-            }
-            t={t}
-            pairData={pairData}
-            lessons={lessons}
-            isAdmin={isAdmin}
-            fetchPairDataByVolunteer={fetchPairDataByVolunteer}
-          />
-        </TabPane>
+        {isAdmin ? (
+          <TabPane tab={t("report")} key="all-report-one-to-one-teaching">
+            <AllReportOneToOneTeaching
+              fetchPairDataByVolunteer={fetchPairDataByVolunteer}
+              classData={classData}
+              t={t}
+            />
+          </TabPane>
+        ) : null}
+        {isCurrentVolunteerBelongCurrentPair ? (
+          <TabPane tab={t("report")} key="my-report-one-to-one-teaching">
+            <MyReportOneToOneTeaching
+              classData={classData}
+              currentUserData={currentUserData}
+              isCurrentVolunteerBelongCurrentPair={
+                isCurrentVolunteerBelongCurrentPair
+              }
+              t={t}
+              pairData={pairData}
+              lessons={lessons}
+              currentVolunteerData={currentVolunteerData}
+            />
+          </TabPane>
+        ) : null}
       </Tabs>
     </div>
   );

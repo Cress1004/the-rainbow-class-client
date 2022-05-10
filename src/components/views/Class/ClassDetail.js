@@ -27,7 +27,9 @@ function ClassDetail(props) {
   const userRole = currentUserData.userRole;
   const [classData, setClassData] = useState({});
   const lessons = useFetchAllLessonByClass(id);
-  const [defaultTab, setDefaultTab] = useState(localStorage.getItem("defaultTab"));
+  const [defaultTab, setDefaultTab] = useState(
+    localStorage.getItem("defaultTab") || "basic-info"
+  );
 
   const openDeletePopup = () => {
     setConfirmDelete(true);
@@ -140,11 +142,8 @@ function ClassDetail(props) {
           <OneToOneTutoringDetail
             classData={classData}
             currentUserData={currentUserData}
-            classId={id}
-            lessons={lessons}
             fetchClassData={fetchClassData}
             defaultTab={defaultTab}
-            setDefaultTab={setDefaultTab}
           />
         ) : (
           <TeachByClassOptionDetail
