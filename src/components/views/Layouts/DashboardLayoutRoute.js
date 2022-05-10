@@ -113,9 +113,7 @@ const DashboardLayout = ({ children, ...rest }) => {
                       <Link to="/students"></Link>
                     </Menu.Item>
                   </SubMenu>
-                  <Menu.Item
-                    key="class_manager"
-                  >
+                  <Menu.Item key="class_manager">
                     <Link to="/classes">
                       <Icon type="read" />
                       <span>{t("class_list")}</span>
@@ -125,12 +123,6 @@ const DashboardLayout = ({ children, ...rest }) => {
                     <Link to="/cv">
                       <Icon type="idcard" />
                       <span>{t("cv_manager")}</span>
-                    </Link>
-                  </Menu.Item>
-                  <Menu.Item key="report">
-                    <Link to="/reports">
-                      <Icon type="book" />
-                      <span>{t("report")}</span>
                     </Link>
                   </Menu.Item>
                   <Menu.Item key="master_setting">
@@ -181,35 +173,19 @@ const DashboardLayout = ({ children, ...rest }) => {
                         <Link to="/students"></Link>
                       </Menu.Item>
                     </SubMenu>
-                    <Menu.Item
-                      key="my_class"
-                      // title={
-                      //   <span>
-                      //     <Icon type="read" />
-                      //     <span>{t("class_manager")}</span>
-                      //   </span>
-                      // }
-                    >
+                    <Menu.Item key="my_class">
                       <Link to={`/classes/${userData.userClassId}`}>
                         <Icon type="read" />
                         <span>{t("class_manager")}</span>
                       </Link>
                     </Menu.Item>
                     {userRole.subRole !== VOLUNTEER && (
-                      <>
-                        <Menu.Item key="report">
-                          <Link to="/reports">
-                            <Icon type="book" />
-                            <span>{t("report")}</span>
-                          </Link>
-                          <Menu.Item key="cv_manager">
-                            <Link to="/cv">
-                              <Icon type="idcard" />
-                              <span>{t("cv_manager")}</span>
-                            </Link>
-                          </Menu.Item>
-                        </Menu.Item>
-                      </>
+                      <Menu.Item key="cv_manager">
+                        <Link to="/cv">
+                          <Icon type="idcard" />
+                          <span>{t("cv_manager")}</span>
+                        </Link>
+                      </Menu.Item>
                     )}
                   </Menu>
                 )}

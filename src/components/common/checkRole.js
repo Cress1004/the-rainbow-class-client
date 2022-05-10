@@ -27,7 +27,7 @@ export function checkCurrentMonitorBelongToCurrentClass(userData, classId) {
   if (userRole.isAdmin) return true;
   else if (
     userRole.subRole === SUB_CLASS_MONITOR ||
-    userRole === CLASS_MONITOR
+    userRole.subRole === CLASS_MONITOR
   ) {
     return userData.userClassId === classId;
   } else return false;

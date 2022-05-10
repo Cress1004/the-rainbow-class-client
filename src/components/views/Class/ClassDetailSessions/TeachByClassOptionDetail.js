@@ -3,23 +3,21 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import apis from "../../../../apis";
-import { checkCurrentUserBelongToCurrentClass } from "../../../common/checkRole";
+import {
+  checkAdminRole,
+  checkCurrentMonitorBelongToCurrentClass,
+  checkCurrentUserBelongToCurrentClass,
+} from "../../../common/checkRole";
 import { checkAdminAndMonitorRole } from "../../../common/function";
 import LessonList from "../Lesson/LessonList";
+import TeachByClassMyReportList from "../Report/TeachByClassMyReportList";
 import TeachByClassReportList from "../Report/TeachByClassReportList";
 import ClassBasicInfo from "./Tabs/ClassBasicInfo";
 const { TabPane } = Tabs;
 
 function TeachByClassOptionDetail(props) {
-  const {
-    classData,
-    currentUserData,
-    userRole,
-    classId,
-    lessons,
-    defaultTab,
-    setDefaultTab,
-  } = props;
+  const { classData, currentUserData, userRole, classId, lessons, defaultTab } =
+    props;
   const [currentVolunteerData, setCurrentVolunteerData] = useState({});
 
   const fetchCurrentVolunteerData = async () => {
@@ -66,15 +64,24 @@ function TeachByClassOptionDetail(props) {
             </div>
           )}
         </TabPane>
-        <TabPane tab={t("report")} key="report">
-          <TeachByClassReportList
-            classData={classData}
-            currentUserData={currentUserData}
-            t={t}
-            lessons={lessons}
-            currentVolunteerData={currentVolunteerData}
-          />
-        </TabPane>
+        {checkAdminRole(currentUserData.userRole) ? null : (
+          <TabPane tab={t("my_report")} key="my-report-list">
+            <TeachByClassMyReportList
+              classData={classData}
+              t={t}
+              lessons={lessons}
+              currentVolunteerData={currentVolunteerData}
+            />
+          </TabPane>
+        )}
+        {checkCurrentMonitorBelongToCurrentClass(
+          currentUserData,
+          classData?._id
+        ) ? (
+          <TabPane tab={t("class_report_list")} key="class-report-list">
+            <TeachByClassReportList classData={classData} t={t} />
+          </TabPane>
+        ) : null}
       </Tabs>
     </div>
   );

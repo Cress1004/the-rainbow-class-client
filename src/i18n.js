@@ -216,6 +216,8 @@ const resources = {
       lesson_description: "Mô tả bài học",
       title: "Tiêu đề",
       average: "Trung bình",
+      my_report: "Báo cáo cá nhân",
+      class_reoprt_list: "Thành tích lớp học",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",

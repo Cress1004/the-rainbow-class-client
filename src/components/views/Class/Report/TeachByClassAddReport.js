@@ -17,7 +17,15 @@ import { getArrayLength } from "../../../common/transformData";
 const { Option } = Select;
 
 function TeachByClassAddReport(props) {
-  const { t, currentVolunteerData, lessons, classData, setAddReport } = props;
+  const {
+    t,
+    currentVolunteerData,
+    lessons,
+    classData,
+    setAddReport,
+    fetchReportsByVolunteer,
+    month,
+  } = props;
   const tailLayout = {
     wrapperCol: { offset: 16, span: 8 },
   };
@@ -63,8 +71,9 @@ function TeachByClassAddReport(props) {
     }
   };
 
-  const handleSubmit = () => {
-    fetchAddReport(reports);
+  const handleSubmit = async () => {
+    await fetchAddReport(reports);
+    await fetchReportsByVolunteer(currentVolunteerData._id, month);
     setAddReport(false);
   };
 
