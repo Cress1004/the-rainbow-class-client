@@ -217,7 +217,9 @@ const resources = {
       title: "Tiêu đề",
       average: "Trung bình",
       my_report: "Báo cáo cá nhân",
-      class_reoprt_list: "Thành tích lớp học",
+      class_report_list: "Thành tích lớp học",
+      volunteers_list: "Danh_sach_TNV",
+      export_volunteers_data_to_excel: "Xuất danh sách TNV",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",

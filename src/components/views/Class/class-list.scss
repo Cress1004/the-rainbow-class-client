@@ -53,6 +53,14 @@
     padding-bottom: $title-padding-bottom;
     float: left;
   }
+  &__subtitle {
+    font-size: $sub-title-font-size;
+    font-weight: $title-font-weight;
+    color: $primary-color;
+  }
+  &__show-icon {
+    margin-left: 5px;
+  }
   .ant-row {
     margin-bottom: 0px;
   }

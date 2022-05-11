@@ -68,3 +68,13 @@ export function convertRole(userRole) {
     }
   } else return null;
 }
+
+export function convertRoleName(roleId) {
+  if (roleId === CLASS_MONITOR)
+    return { eng: "Class Monitor", vie: "Lớp trưởng" };
+  else if (roleId === SUB_CLASS_MONITOR)
+    return { eng: "Sub Class Monitor", vie: "Lớp phó" };
+  else if (roleId === VOLUNTEER)
+    return { eng: "Volunteer", vie: "Tình nguyện viên" };
+  else return null;
+}
