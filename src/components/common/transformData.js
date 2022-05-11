@@ -9,7 +9,9 @@ import {
 
 export function transformAddressData(data) {
   return data && data.address
-    ? `${data.description ? `${data.description},` : ''} ${data.address.ward.name}, ${data.address.district.name}, ${data.address.province.name}`
+    ? `${data.description ? `${data.description},` : ""} ${
+        data.address.ward.name
+      }, ${data.address.district.name}, ${data.address.province.name}`
     : "";
 }
 
@@ -115,6 +117,7 @@ export function transformScheduleTimeData(time) {
   return `${time.date} ${time.startTime} - ${time.endTime}`;
 }
 
-export function transformDate (date) {
- return moment(new Date(date)).format(FORMAT_DATE);
+export function transformDate(date) {
+  if (date) return moment(new Date(date)).format(FORMAT_DATE);
+  else return ''
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Table, Row, Input, Icon, Button } from "antd";
+import { Table, Row, Input, Icon, Button, Col } from "antd";
 import "./student.scss";
 import { Link } from "react-router-dom";
 import {
@@ -10,6 +10,7 @@ import {
 import { checkStringContentSubString } from "../../../../common/function";
 import useFetchStudentTypes from "../../../../../hook/CommonData.js/useFetchStudentTypes";
 import { Excel } from "antd-table-saveas-excel";
+import ExportStudentDataToExcel from "../../../../../export/ExportStudentDataToExcel";
 
 function StudentListByClass(props) {
   const { studentsData } = props;
@@ -90,27 +91,38 @@ function StudentListByClass(props) {
         {getArrayLength(searchData) ? (
           <>
             <Row>
-              <Input
-                className="student-list__search"
-                prefix={<Icon type="search" />}
-                placeholder={t("search_by_name_phone")}
-                value={inputValue}
-                onChange={(e) => {
-                  const currValue = e.target.value;
-                  setInputValue(currValue);
-                  const filteredData = students.filter(
-                    (entry) =>
-                      checkStringContentSubString(entry.userName, currValue) ||
-                      checkStringContentSubString(
-                        entry.phoneNumber,
-                        currValue
-                      ) ||
-                      checkStringContentSubString(entry.email, currValue)
-                  );
-                  setSearchData(filteredData);
-                }}
-              />
-              <Button onClick={handleClickExport}>Export</Button>
+              <Col span={15}></Col>
+              <Col span={5}>
+                <Input
+                  className="student-list__search"
+                  prefix={<Icon type="search" />}
+                  placeholder={t("search_by_name_phone")}
+                  value={inputValue}
+                  onChange={(e) => {
+                    const currValue = e.target.value;
+                    setInputValue(currValue);
+                    const filteredData = students.filter(
+                      (entry) =>
+                        checkStringContentSubString(
+                          entry.userName,
+                          currValue
+                        ) ||
+                        checkStringContentSubString(
+                          entry.phoneNumber,
+                          currValue
+                        ) ||
+                        checkStringContentSubString(entry.email, currValue)
+                    );
+                    setSearchData(filteredData);
+                  }}
+                />
+              </Col>
+              <Col span={4}>
+                <ExportStudentDataToExcel
+                  t={t}
+                  studentsData={studentsData}
+                />
+              </Col>
             </Row>
             <Table columns={columns} dataSource={searchData} />
           </>
