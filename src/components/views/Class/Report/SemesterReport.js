@@ -1,12 +1,11 @@
-import { message, Popover, Table } from "antd";
+import { message, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import apis from "../../../../apis";
 import { getMonthRangeBetweenTwoDate } from "../../../common/function/checkTime";
-import { getArrayLength, transformDate } from "../../../common/transformData";
+import { getArrayLength } from "../../../common/transformData";
 
 function SemesterReport(props) {
-  const { t, semester, classData, transfromLessonDetail } = props;
-  const [monthReports, setMonthReports] = useState([]);
+  const { t, semester, classData } = props;
   const [allAchievement, setAllAchievement] = useState([]);
   const [monthList, setMonthList] = useState(null);
 
@@ -16,7 +15,6 @@ function SemesterReport(props) {
       month
     );
     if (data.success) {
-      setMonthReports(data.lessonsWithReport);
       setAllAchievement(data.allAchievement);
     } else {
       message.error("Error!");
@@ -46,55 +44,28 @@ function SemesterReport(props) {
     },
   ];
 
-  if (getArrayLength(monthReports)) {
-    monthReports.map((lesson) => {
+  if (getArrayLength(monthList)) {
+    monthList.map((month) => {
       fixedColumns.push({
-        title: (
-          <Popover content={transfromLessonDetail(lesson.lesson)}>
-            {transformDate(lesson.lesson.schedule.time.date)}
-            {/* <br />
-            <div className="report-list__show-comment-button">
-              <Button onClick={() => handleShowComment(lesson.lesson)}>
-                <Icon type="plus-circle" />
-              </Button>
-            </div> */}
-          </Popover>
-        ),
-        dataIndex: `achievement`,
-        key: lesson.lesson._id,
+        title: month,
+        dataIndex: `monthAverage`,
+        key: month,
         minWidth: 30,
-        maxWidth: 70,
+        maxWidth: 50,
         render: (record) => {
-          var currentLesson = record?.find(
-            (item) => item?.achievement?.lesson?._id === lesson.lesson._id
-          );
-          return (
-            <div>
-              {currentLesson ? (
-                <div>
-                  <span>
-                    {currentLesson ? currentLesson.achievement.point : "-"}
-                  </span>
-                </div>
-              ) : (
-                <span>
-                  {currentLesson ? currentLesson.achievement.point : "-"}
-                </span>
-              )}
-            </div>
-          );
+          var currentMonthAcv = record?.find((item) => item.month === month);
+          return <div>{!isNaN(currentMonthAcv.avgMonth) ? currentMonthAcv.avgMonth.toFixed(2) : "-"}</div>;
         },
       });
     });
   }
 
-  const avgScoreByMonth = allAchievement?.map((item) => {
-    const currentStudent = item.student;
-    const achievement = item.achievement;
+  const avgByMonthAndStudent = (achievement) => {
     let sumData = [];
     monthList.map((month) => {
-      const monthAcv = achievement.find(
-        (acv) => acv.lesson?.schedule.time.date.slice(0, 7) === month
+      const monthAcv = achievement.filter(
+        (acv) =>
+          acv.achievement.lesson?.schedule.time.date.slice(0, 7) === month
       );
       var sumMonth = 0;
       if (getArrayLength(monthAcv)) {
@@ -104,33 +75,34 @@ function SemesterReport(props) {
       }
       sumData.push({
         month: month,
-        avgMonth: sumMonth / getArrayLength(monthAcv),
+        avgMonth: (sumMonth / getArrayLength(monthAcv)),
       });
     });
     return sumData;
-  });
+  };
 
-  console.log(avgScoreByMonth);
-
-  const avgScore = (achievementArray) => {
+  const avgScore = (avgByMonth) => {
     let sum = 0;
-    achievementArray.forEach((item) => {
-      sum += item.achievement.point;
+    avgByMonth.forEach((item) => {
+      if (!isNaN(item.avgMonth)) sum += item.avgMonth;
     });
-    return (sum / getArrayLength(achievementArray)).toFixed(2);
+    console.log(sum)
+    return (sum / getArrayLength(monthList)).toFixed(2);
   };
 
   let fixedData = [];
   if (getArrayLength(allAchievement)) {
-    fixedData = allAchievement?.map((item) => ({
-      key: `${item?._id}`,
-      name: item?.student?.user?.name,
-      achievement: item?.achievement,
-      comment: item?.comment,
-      average: getArrayLength(item?.achievement)
-        ? avgScore(item.achievement)
-        : "-",
-    }));
+    fixedData = allAchievement?.map((item) => {
+      const avgByMonth = avgByMonthAndStudent(item.achievement);
+      return {
+        key: `${item?._id}`,
+        name: item?.student?.user?.name,
+        achievement: item?.achievement,
+        comment: item?.comment,
+        average: avgScore(avgByMonth),
+        monthAverage: avgByMonth,
+      };
+    });
   }
 
   useEffect(() => {
