@@ -220,6 +220,9 @@ const resources = {
       class_report_list: "Thành tích lớp học",
       volunteers_list: "Danh_sach_TNV",
       export_volunteers_data_to_excel: "Xuất danh sách TNV",
+      export_students_data_to_excel: "Xuất danh sách học sinh",
+      monthly_report: "Thành tích tháng",
+      semester_report: "Thành tích kỳ học",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",

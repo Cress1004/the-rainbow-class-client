@@ -11,6 +11,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import RegisterPairForNewStudent from "../ClassDetailSessions/Tabs/RegisterPairForNewStudent";
 import TableNodata from "../../NoData/TableNodata";
+import "../class-list.scss";
 
 const { Option } = Select;
 
@@ -220,7 +221,15 @@ function PairList(props) {
             </Col>
           </Row>
           {getArrayLength(dataSource) ? (
-            <Table columns={columns} dataSource={dataSource} />
+            <Table
+              columns={columns}
+              dataSource={dataSource}
+              rowClassName={(record) =>
+                `pair-list__table--${
+                  record.volunteerName ? "active" : "deactive"
+                }-row`
+              }
+            />
           ) : (
             <TableNodata />
           )}

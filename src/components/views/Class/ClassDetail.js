@@ -121,7 +121,9 @@ function ClassDetail(props) {
     <div>
       <div className="class-detail">
         <Row>
-          <div className="class-detail__title">{t("class_detail")}</div>
+          <div className="class-detail__title">{`${t("class_detail")}${
+            classData?.name ? ` - ${classData.name}` : ""
+          }`}</div>
           {currentUserData &&
             checkAdminAndMonitorRole(currentUserData.userRole) && (
               <div className="class-detail__more-option">

@@ -91,8 +91,8 @@ function StudentListByClass(props) {
         {getArrayLength(searchData) ? (
           <>
             <Row>
-              <Col span={15}></Col>
-              <Col span={5}>
+              <Col span={14}></Col>
+              <Col span={6}>
                 <Input
                   className="student-list__search"
                   prefix={<Icon type="search" />}

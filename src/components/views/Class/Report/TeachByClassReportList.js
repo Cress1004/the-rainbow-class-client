@@ -6,6 +6,8 @@ import {
   message,
   Popover,
   Row,
+  Select,
+  Switch,
   Table,
 } from "antd";
 import React, { useEffect, useState } from "react";
@@ -19,15 +21,21 @@ import {
   transformScheduleTimeData,
 } from "../../../common/transformData";
 import TableNodata from "../../NoData/TableNodata";
+import _function from "../../../common/function";
+import {
+  checkNowOverSemesterTime,
+} from "../../../common/function/checkTime";
+import SemesterReport from "./SemesterReport";
 const { MonthPicker } = DatePicker;
 const layout = {
   labelCol: { span: 5 },
   wrapperCol: { span: 15 },
 };
 
+const { Option } = Select;
+
 function TeachByClassReportList(props) {
-  const { t, classData } =
-    props;
+  const { t, classData } = props;
   const currentMonth = moment(new Date()).format(FORMAT_MONTH_STRING);
 
   const [allReports, setAllReports] = useState([]);
@@ -37,12 +45,25 @@ function TeachByClassReportList(props) {
       ? localStorage.getItem("report-current-month")
       : currentMonth
   );
+  const [monthly, setMonthly] = useState(true);
+  const [semesters, setSemesters] = useState([]);
+  const [semester, setSemester] = useState(null);
 
   const changeMonth = (month) => {
     setMonth(moment(month).format(FORMAT_MONTH_STRING));
     localStorage.setItem("report-current-month", month);
     fetchReportsByClass(classData?._id, month);
     fetchLessonsAndAchievement(classData?._id, month);
+  };
+
+  const handleChangeMonthly = () => {
+    if (monthly) {
+      fetchSemesters();
+      // fetchLessonAndAchievementBySemester(classData._id, semester)
+    } else {
+      fetchLessonsAndAchievement(classData._id, month);
+    }
+    setMonthly(!monthly);
   };
 
   const fetchReportsByClass = async (classId, month) => {
@@ -62,6 +83,18 @@ function TeachByClassReportList(props) {
     }
   };
 
+  const fetchSemesters = async () => {
+    const data = await apis.commonData.getSemesters();
+    if (data.success) {
+      setSemesters(data.semesters);
+    }
+  };
+
+  const handleChangeSemester = (value) => {
+    const currentSemester = semesters.find((item) => item._id === value);
+    setSemester(currentSemester);
+  };
+
   useEffect(() => {
     if (!localStorage.getItem("report-current-month")) {
       localStorage.setItem("report-current-month", currentMonth);
@@ -69,6 +102,15 @@ function TeachByClassReportList(props) {
     fetchLessonsAndAchievement(classData?._id, month);
     fetchReportsByClass(classData?._id, month);
   }, [classData]);
+
+  useEffect(() => {
+    if (semesters.length) {
+      const currentSem = semesters.find((item) =>
+        checkNowOverSemesterTime(item.startDate, item.endDate)
+      );
+      setSemester(currentSem);
+    }
+  }, [semesters]);
 
   const fixedColumns = [
     {
@@ -169,7 +211,6 @@ function TeachByClassReportList(props) {
 
   const avgScore = (achievementArray) => {
     let sum = 0;
-    console.log(achievementArray);
     achievementArray.forEach((item) => {
       sum += item.achievement.point;
     });
@@ -192,29 +233,71 @@ function TeachByClassReportList(props) {
   return (
     <div className="report-list__header">
       <Row>
-        <Col span={18}></Col>
+        <Col span={14}></Col>
+        <Col span={4}>
+          <Switch
+            style={{ width: "150px", marginTop: "5px" }}
+            checkedChildren={t("monthly_report")}
+            unCheckedChildren={t("semester_report")}
+            defaultChecked
+            onChange={() => handleChangeMonthly()}
+          />
+        </Col>
         <Col span={6}>
-          <div>
-            <span style={{ marginRight: "10px" }}>{t("select_month")}</span>
-            <MonthPicker
-              onChange={(date, dateString) => changeMonth(dateString)}
-              defaultValue={moment(month, FORMAT_MONTH_STRING)}
-              format={FORMAT_MONTH_STRING}
-            />
-          </div>
+          {monthly ? (
+            <div>
+              <span style={{ marginRight: "10px" }}>{t("select_month")}</span>
+              <MonthPicker
+                onChange={(date, dateString) => changeMonth(dateString)}
+                defaultValue={moment(month, FORMAT_MONTH_STRING)}
+                format={FORMAT_MONTH_STRING}
+              />
+            </div>
+          ) : (
+            <div>
+              <span style={{ marginRight: "10px" }}>
+                {t("select_semester")}
+              </span>
+              <Select
+                style={{ width: "200px" }}
+                placeholder={t("select_semester")}
+                value={semester?.title}
+                onChange={handleChangeSemester}
+              >
+                {semesters.map((option) => (
+                  <Option key={option._id} value={option._id}>
+                    {option.title}
+                  </Option>
+                ))}
+              </Select>
+            </div>
+          )}
         </Col>
       </Row>
-      {getArrayLength(lessonAndAchievement) ? (
-        <Table
-          className="report-list__all-achievement-table"
-          columns={getArrayLength(fixedData) > 0 ? fixedColumns : []}
-          dataSource={fixedData}
-          pagination={false}
-          scroll={{ x: 1000, y: 500 }}
-          bordered
-        />
+      {monthly ? (
+        <>
+          {" "}
+          {getArrayLength(lessonAndAchievement) ? (
+            <Table
+              className="report-list__all-achievement-table"
+              columns={getArrayLength(fixedData) > 0 ? fixedColumns : []}
+              dataSource={fixedData}
+              pagination={false}
+              scroll={{ x: 1000, y: 500 }}
+              bordered
+            />
+          ) : (
+            <TableNodata />
+          )}
+        </>
       ) : (
-        <TableNodata />
+        <SemesterReport
+          t={t}
+          semester={semester}
+          fetchLessonsAndAchievement={fetchLessonsAndAchievement}
+          classData={classData}
+          transfromLessonDetail={transfromLessonDetail}
+        />
       )}
     </div>
   );

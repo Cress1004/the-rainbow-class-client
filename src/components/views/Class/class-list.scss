@@ -125,3 +125,11 @@
 .text-in-table-row {
   color: #000;
 }
+
+.pair-list {
+  &__table {
+    &--deactive-row {
+        background-color: $gray-color;
+    }
+  }
+}
