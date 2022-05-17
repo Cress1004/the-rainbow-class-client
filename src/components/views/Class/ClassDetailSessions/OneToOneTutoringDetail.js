@@ -119,7 +119,6 @@ function OneToOneTutoringDetail(props) {
         {isAdmin ? (
           <TabPane tab={t("report")} key="all-report-one-to-one-teaching">
             <AllReportOneToOneTeaching
-              fetchPairDataByVolunteer={fetchPairDataByVolunteer}
               classData={classData}
               t={t}
             />

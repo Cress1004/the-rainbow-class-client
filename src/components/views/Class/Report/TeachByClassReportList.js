@@ -296,7 +296,6 @@ function TeachByClassReportList(props) {
           semester={semester}
           fetchLessonsAndAchievement={fetchLessonsAndAchievement}
           classData={classData}
-          transfromLessonDetail={transfromLessonDetail}
         />
       )}
     </div>

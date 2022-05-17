@@ -8,12 +8,14 @@ import {
 } from "../../../common/transformData";
 
 function VolunteerReportTableRender(props) {
-  const { volunteer, t, month } = props;
+  const { volunteer, t, month, classData } = props;
   const [reportsByVolunteer, setReportsByVolunteer] = useState([]);
   const [icon, setIcon] = useState(false);
+  const [pairData, setPairData] = useState({});
 
   useEffect(() => {
     fetchReportsByVolunteerAndMonth(volunteer?._id, month);
+    fetchPairDataByVolunteer(classData?._id, volunteer?._id);
   }, [month]);
 
   const fetchReportsByVolunteerAndMonth = async (volunteerId, month) => {
@@ -25,6 +27,15 @@ function VolunteerReportTableRender(props) {
       setReportsByVolunteer(data.reports);
     } else {
       message.error("Error!");
+    }
+  };
+
+  const fetchPairDataByVolunteer = async (classId, volunteerId) => {
+    const data = await apis.classes.getPairByVolunteer(classId, volunteerId);
+    if (data.success) {
+      setPairData(data.pairData);
+    } else {
+      alert(t("fail_to_get_class"));
     }
   };
 
@@ -115,6 +126,11 @@ function VolunteerReportTableRender(props) {
         onClick={() => onChangeIcon(volunteer._id)}
         style={{ marginLeft: "10px" }}
       />
+      <div style={{ textAlign: "right" }}>{`${
+        pairData?.student
+          ? `${t("student_name")}: ${pairData?.student?.user?.name}`
+          : ""
+      }`}</div>
       {icon && getArrayLength(reportsByVolunteer) ? (
         <Table
           rowClassName={(record, index) =>
