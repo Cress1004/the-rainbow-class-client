@@ -189,3 +189,38 @@
     margin-bottom: 0px;
   }
 }
+
+.cv-question {
+  &__title {
+    font-size: $title-font-size;
+    font-weight: $title-font-weight;
+    color: $primary-color;
+    padding-bottom: $title-padding-bottom;
+  }
+  &__add-cv-question {
+    border-radius: 15px;
+    padding: 0px 10px;
+    margin-left: 10px;
+    a {
+        color: $white-color;
+    }
+  }
+  &__add-question-form{
+    margin-right: 50px;
+    textarea {
+      resize: none;
+      height: 150px !important;
+    }
+  }
+  &__question-detail {
+    margin: 50px;
+    &--subtitle {
+      font-size: $sub-title-font-size;
+      font-weight: $title-font-weight;
+      color: $primary-color;
+    }
+    &--action {
+      text-align: right;
+    }
+  }
+}

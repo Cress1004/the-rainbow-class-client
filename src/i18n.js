@@ -223,6 +223,13 @@ const resources = {
       export_students_data_to_excel: "Xuất danh sách học sinh",
       monthly_report: "Thành tích tháng",
       semester_report: "Thành tích kỳ học",
+      cv_question: "Câu hỏi phỏng vấn",
+      add_question: "Thêm câu hỏi",
+      add_new_question: "Thêm câu hỏi",
+      question_content: "Nội dung câu hỏi",
+      is_required: "Bắt buộc",
+      question_number: "Câu hỏi",
+      note_required: "(Bắt buộc)",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",

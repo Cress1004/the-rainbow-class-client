@@ -119,12 +119,29 @@ const DashboardLayout = ({ children, ...rest }) => {
                       <span>{t("class_list")}</span>
                     </Link>
                   </Menu.Item>
-                  <Menu.Item key="cv_manager">
+                  {/* <Menu.Item key="cv_manager">
                     <Link to="/cv">
                       <Icon type="idcard" />
                       <span>{t("cv_manager")}</span>
                     </Link>
-                  </Menu.Item>
+                  </Menu.Item> */}
+                   <SubMenu
+                    key="cv_manager"
+                    title={
+                      <span>
+                        <Icon type="idcard" />
+                        <span>{t("cv_manager")}</span>
+                      </span>
+                    }
+                  >
+                    <Menu.Item key="cv_list">
+                      <Link to="/cv">{t("list_cv")}</Link>
+                    </Menu.Item>
+                    <Menu.Item key="cv_question">
+                      {t("cv_question")}
+                      <Link to="/cv/questions"></Link>
+                    </Menu.Item>
+                  </SubMenu>
                   <Menu.Item key="master_setting">
                     <Link to="/master-setting">
                       <Icon type="setting" />
