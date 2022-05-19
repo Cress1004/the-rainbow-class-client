@@ -34,7 +34,7 @@ export const NOON_TIME = [
 
 export const FORMAT_TIME_SCHEDULE = "HH:mm";
 export const FORMAT_DATE = "YYYY/MM/DD";
-export const FORMAT_MONTH_STRING = "YYYY-MM"
+export const FORMAT_MONTH_STRING = "YYYY-MM";
 
 export const OFFLINE_OPTION = 1;
 export const ONLINE_OPTION = 0;
@@ -128,8 +128,34 @@ export const NOTI_TYPE = [{ key: 0, value: "newCV", text: "newCV" }];
 export const STUDENT_STATUS = [
   { key: 0, value: "studing", text: "Đang học", color: "#219e6e" },
   { key: 1, value: "retired", text: "Thôi học", color: "#e2a534" },
-]
+];
 export const STUDENT_STATUS_TITLE = {
   STUDING: 0,
-  RETIRED: 1
-}
+  RETIRED: 1,
+};
+
+export const ACHIEVEMENT_SELECT_OPTION = [
+  { key: 0, value: "by-month", text: "Theo tháng" },
+  { key: 1, value: "by-semester", text: "Theo kỳ học" },
+];
+
+export const ACHIEVEMENT_SELECT_TITLE = {
+  BY_MONTH: 0,
+  BY_SEMESTER: 1,
+};
+
+export const COMPARE_SELECT_OPTION = [
+  { key: 0, value: "equal", text: "Bằng" },
+  { key: 1, value: "greater", text: "Lớn hơn" },
+  { key: -1, value: "less-than", text: "Nhỏ hơn" },
+  { key: 2, value: "goe", text: "Lớn hơn hoặc bằng" },
+  { key: -2, value: "loe", text: "Nhỏ hơn hoặc bằng" },
+];
+
+export const COMPARE_SELECT_TITLE = {
+  EQUAL: 0,
+  GREATER: 1,
+  LESS_THAN: -1,
+  GOE: 2,
+  LOE: -2,
+};

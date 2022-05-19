@@ -34,7 +34,7 @@ function Footer() {
             textAlign: "right",
           }}
         >
-          Phản hồi về hệ thống
+          <a href="https://forms.gle/6LHENFLi5t7fpumC9">Phản hồi về hệ thống</a>
         </Col>
       </Row>
     </div>

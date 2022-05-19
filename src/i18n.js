@@ -230,6 +230,8 @@ const resources = {
       is_required: "Bắt buộc",
       question_number: "Câu hỏi",
       note_required: "(Bắt buộc)",
+      achievement: "Thành tích",
+      select_semester: "Kỳ học",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",

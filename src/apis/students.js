@@ -89,6 +89,19 @@ const changeStatus = async (studentId, data) => {
   }
 };
 
+const studentFilter = async (data) => {
+  try {
+    const response = await api({
+      method: "POST",
+      url: `${STUDENT_API}/filter`,
+      data: data,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
 export {
   addStudent,
   getStudents,
@@ -96,5 +109,6 @@ export {
   editStudent,
   deleteStudent,
   updateOverview,
-  changeStatus
+  changeStatus,
+  studentFilter
 };

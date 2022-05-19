@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import apis from "../../apis";
 
 export default function useFetchClassNameList() {
-  const [classes, setClasses] = useState({});
+  const [classes, setClasses] = useState([]);
   const { t } = useTranslation();
 
   const fetchListClassName = async () => {
