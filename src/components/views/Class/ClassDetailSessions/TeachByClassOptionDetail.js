@@ -60,7 +60,7 @@ function TeachByClassOptionDetail(props) {
                   </div>
                 </Row>
               )}
-              <LessonList classId={classId} lessons={lessons} />
+              <LessonList classId={classId} lessons={lessons} classData={classData}/>
             </div>
           )}
         </TabPane>

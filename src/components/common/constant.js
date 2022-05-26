@@ -123,7 +123,16 @@ export const INTERVIEW_SCHEDULE = 2;
 
 export const CONNECTION_PORT = "http://localhost:5000";
 
-export const NOTI_TYPE = [{ key: 0, value: "newCV", text: "newCV" }];
+export const NOTI_TYPE = [
+  { key: 0, value: "newCV", text: "Có CV mới!" },
+  { key: 1, value: "assignLesson", text: "Bạn được gán vào lesson mới" },
+  { key: 2, value: "assignInterview", text: "Bạn có lịch phỏng vấn TNV mới" },
+];
+export const NOTI_TYPE_TITLE = {
+  NEW_CV: 0,
+  ASSIGN_LESSON: 1,
+  ASSIGN_INTERVIEW: 2,
+};
 
 export const STUDENT_STATUS = [
   { key: 0, value: "studing", text: "Đang học", color: "#219e6e" },

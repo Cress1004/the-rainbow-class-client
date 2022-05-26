@@ -92,13 +92,13 @@ function EditLesson(props) {
     const addressData = lessonData.address;
     if (addressData) {
       setAddress(addressData);
-      setProvince(addressData.address.province);
-      setDistrict(addressData.address.district);
-      setWard(addressData.address.ward);
-      fetchDistricts(addressData.address.province.id);
+      setProvince(addressData.address?.province);
+      setDistrict(addressData.address?.district);
+      setWard(addressData.address?.ward);
+      fetchDistricts(addressData.address?.province.id);
       fetchWards(
-        addressData.address.province.id,
-        addressData.address.district.id
+        addressData.address?.province.id,
+        addressData.address?.district.id
       );
     }
   }, [lessonData]);

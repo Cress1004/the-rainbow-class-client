@@ -11,7 +11,7 @@ import TableNodata from "../../NoData/TableNodata";
 
 function LessonList(props) {
   const { t } = useTranslation();
-  const { id, lessons } = props;
+  const { id, lessons, classData } = props;
   const data = lessons
     ? lessons.map((item, index) => ({
         key: index,
@@ -67,7 +67,7 @@ function LessonList(props) {
 
   const renderData = (text, key) => (
     <Link
-      to={`/classes/${id}/lessons/${key.id}`}
+      to={`/classes/${classData._id}/lessons/${key.id}`}
       className={"text-in-table-row"}
     >
       <span>{text}</span>
