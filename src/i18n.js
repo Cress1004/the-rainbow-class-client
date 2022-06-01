@@ -230,6 +230,7 @@ const resources = {
       is_required: "Bắt buộc",
       question_number: "Câu hỏi",
       note_required: "(Bắt buộc)",
+      note_not_required: "(Không bắt buộc)",
       achievement: "Thành tích",
       select_semester: "Kỳ học",
       //noti

@@ -44,10 +44,10 @@ function QuestionDetail(props) {
   };
 
   const fetchDeleteQuestion = async (questionId) => {
-    const data = await apis.cvQuestion.deleteQuestion(questionId)
+    const data = await apis.cvQuestion.deleteQuestion(questionId);
     if (data.success) {
-        setConfirmDelete(false);
-        message.success("delete question success");
+      setConfirmDelete(false);
+      message.success("delete question success");
     } else if (!data.success) {
       message.error(data.message);
     } else {
@@ -85,9 +85,19 @@ function QuestionDetail(props) {
   return (
     <div>
       <Row>
-        <Col span={4} className="cv-question__question-detail--subtitle">
-          {`${t("question_number")} ${index + 1} ${
-            !question.isRequired || editting ? "" : t("note_required")
+        <Col
+          span={question.isRequired ? 4 : 5}
+          className="cv-question__question-detail--subtitle"
+        >
+          {`${t("question_number")} ${index + 1} 
+          ${
+            editting
+              ? ""
+              : `${
+                  !question.isRequired
+                    ? t("note_not_required")
+                    : t("note_required")
+                }`
           }`}
         </Col>
         {editting ? (
