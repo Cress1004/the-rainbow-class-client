@@ -10,6 +10,7 @@ import * as student from "./students";
 import * as pairs from "./pairs";
 import * as reports from "./reports";
 import * as cvQuestion from "./cv-question";
+import * as cvAnswer from "./cv-answer";
 
 export default {
   users,
@@ -23,5 +24,6 @@ export default {
   student,
   pairs,
   reports,
-  cvQuestion
+  cvQuestion,
+  cvAnswer
 };

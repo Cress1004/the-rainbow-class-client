@@ -1,4 +1,4 @@
-import { Col, Row, Form, Button, Icon } from "antd";
+import { Col, Row, Form, Button, Icon, Divider } from "antd";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
@@ -24,6 +24,7 @@ import SetInterviewTime from "./Section/SetInterviewTime";
 import FreeTimeTable from "./Section/FreeTimeTable";
 import ConfirmPassStatus from "./Section/ConfirmPassStatus";
 import apis from "../../../apis";
+import CVAnswers from "./Section/CVAnswers";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const { Item } = Form;
@@ -45,12 +46,25 @@ function CVDetail(props) {
   const [confirmReject, setConfirmReject] = useState(false);
   const [confirmInterview, setConfirmInterview] = useState(false);
   const [confirmPass, setConfirmPass] = useState(false);
+  const [answers, setAnswers] = useState([]);
+  const [viewCVAnswer, setViewCVAnswer] = useState(false);
   const cvStatus = CV_STATUS.find((item) => item.key === cvData?.status);
 
   const fetchCVData = async (id) => {
     const data = await apis.cv.getCVData(id);
     if (data.success) {
       setCVData(data.cvData);
+    } else if (!data.success) {
+      alert(data.message);
+    }
+  };
+
+  const fetchAnswers = async (id) => {
+    const data = await apis.cvAnswer.getAnswerWithCV(id);
+    if (data.success) {
+      setAnswers(data.answers);
+    } else if (!data.success) {
+      alert(data.message);
     }
   };
 
@@ -68,6 +82,7 @@ function CVDetail(props) {
 
   useEffect(() => {
     fetchCVData(id);
+    fetchAnswers(id);
   }, [id]);
 
   const formik = useFormik({
@@ -272,17 +287,47 @@ function CVDetail(props) {
           <Item label={t("free_time_table")}>
             <FreeTimeTable t={t} columns={columns} fixedData={fixedData} />
           </Item>
-          <Item label={t("note")}>
-            {cvData.note ? cvData.note : t("no_comment")}
-          </Item>
+          <Item label={t("note")}>{cvData?.note || t("no_comment")}</Item>
         </Col>
       </Row>
-      <Button
+      <Divider />
+      <div className="cv-detail__subtitle">
+        {t("show_cv_answers")}
+        <Icon
+          type={viewCVAnswer ? "down-circle" : "right-circle"}
+          onClick={() => setViewCVAnswer(!viewCVAnswer)}
+          className="cv-detail__show-icon"
+        />
+      </div>
+      {viewCVAnswer ? (
+        <>
+          {answers.map((answer) => (
+            <>
+              <Item
+                label={answer.question.content}
+                required={answer.question.isRequired}
+              >
+                {answer.content}
+              </Item>
+            </>
+          ))}
+        </>
+      ) : null}
+      <Divider />
+      {/* <Button
         onClick={() => setShowCV(!showCV)}
         style={{ marginBottom: "15px" }}
       >
         {showCV ? t("close_cv") : t("show_cv")}
-      </Button>
+      </Button> */}
+      <div className="cv-detail__subtitle">
+        {t("show_cv")}
+        <Icon
+          type={showCV ? "down-circle" : "right-circle"}
+          onClick={() => setShowCV(!showCV)}
+          className="cv-detail__show-icon"
+        />
+      </div>
       {showCV ? (
         <>
           <Row>

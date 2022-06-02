@@ -12,3 +12,4 @@ export const STUDENT_API = "/api/students";
 export const PAIR_API = "/api/pairs";
 export const REPORT_API = "/api/reports";
 export const QUESTION_API = "/api/questions";
+export const ANSWER_API = "/api/answers";

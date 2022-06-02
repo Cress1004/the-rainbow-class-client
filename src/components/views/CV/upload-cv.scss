@@ -34,6 +34,16 @@
     color: $primary-color;
     padding-bottom: $title-padding-bottom;
   }
+  &__subtitle {
+    font-size: $sub-title-font-size;
+    font-weight: $title-font-weight;
+    color: $primary-color;
+    margin-bottom: 30px;
+  }
+  &__show-icon {
+    margin-left: 5px;
+  }
+
   &__scale-button {
     button,
     button:hover,
