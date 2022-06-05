@@ -145,7 +145,7 @@ const resources = {
       list_cv: "Danh sách CV",
       cv_detail: "Chi tiết CV",
       create_time: "Thời gian đăng kí",
-      cv_file: "CV",
+      cv_file: "CV File",
       download_here: "Tải CV tại đây",
       show_cv: "Xem CV",
       close_cv: "Đóng CV",
@@ -234,6 +234,7 @@ const resources = {
       achievement: "Thành tích",
       select_semester: "Kỳ học",
       show_cv_answers: "Xem các câu trả lời",
+      audio_intro_by_english: "Video/Audio giới thiệu",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",

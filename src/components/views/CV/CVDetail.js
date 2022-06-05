@@ -1,9 +1,12 @@
-import { Col, Row, Form, Button, Icon, Divider } from "antd";
+import { Col, Row, Form, Button, Icon, Divider, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 import { Document, Page, pdfjs } from "react-pdf";
 import { Checkbox } from "antd";
+import { Player } from "video-react";
+import "video-react/dist/video-react.css";
+
 import {
   CV_STATUS,
   CV_STATUS_NAME,
@@ -24,7 +27,6 @@ import SetInterviewTime from "./Section/SetInterviewTime";
 import FreeTimeTable from "./Section/FreeTimeTable";
 import ConfirmPassStatus from "./Section/ConfirmPassStatus";
 import apis from "../../../apis";
-import CVAnswers from "./Section/CVAnswers";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const { Item } = Form;
@@ -48,6 +50,7 @@ function CVDetail(props) {
   const [confirmPass, setConfirmPass] = useState(false);
   const [answers, setAnswers] = useState([]);
   const [viewCVAnswer, setViewCVAnswer] = useState(false);
+  const [videoModalActive, setVideoModalActive] = useState(false);
   const cvStatus = CV_STATUS.find((item) => item.key === cvData?.status);
 
   const fetchCVData = async (id) => {
@@ -171,6 +174,10 @@ function CVDetail(props) {
     window.open(cvData.cvFileLink, "_blank");
   };
 
+  const closeModal = () => {
+    setVideoModalActive(false);
+  };
+
   const changeStatus = ({ key }) => {
     const selected = parseInt(key);
     if (selected === CV_STATUS_NAME.FAIL) setConfirmReject(true);
@@ -281,6 +288,28 @@ function CVDetail(props) {
                 {t("download_here")}
               </a>
             </Item>
+            {cvData.audioFileLink ? (
+              <Item label={t("audio_intro_by_english")}>
+                <Button onClick={() => setVideoModalActive(true)}>
+                  {t("show_video")}
+                </Button>
+              </Item>
+            ) : (
+              <></>
+            )}
+            <Modal
+              title={t("audio_intro_by_english")}
+              id="video-modal"
+              visible={videoModalActive}
+              onCancel={closeModal}
+              onOk={closeModal}
+              width="55%"
+              bodyStyle={{ height: 460, width: 800 }}
+            >
+              <Player autoPlay>
+                <source src={cvData.audioFileLink} type="video/mp4" />
+              </Player>
+            </Modal>
           </Form>
         </Col>
         <Col span={14}>
