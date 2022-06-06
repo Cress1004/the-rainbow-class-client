@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Icon, Input, message, Modal, Row } from "antd";
+import { Button, Icon, message, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import apis from "../../../apis";
@@ -7,8 +7,6 @@ import "./upload-cv.scss";
 import ModalAddQuestion from "./CVQuestionSessions/ModalAddQuestion";
 import QuestionDetail from "./CVQuestionSessions/QuestionDetail";
 
-const { Item } = Form;
-const { TextArea } = Input;
 function CVQuestion(props) {
   const { t } = useTranslation();
   const [addQuestionPopup, setAddQuestionPopup] = useState(false);
@@ -56,8 +54,9 @@ function CVQuestion(props) {
       isRequired: true,
     },
     onSubmit: (values, { setSubmitting }) => {
-      setTimeout(() => {
-        fetchAddNewQuestion(values);
+      setTimeout(async () => {
+        await fetchAddNewQuestion(values);
+        await fetchQuestions();
         setSubmitting(false);
       }, 400);
     },

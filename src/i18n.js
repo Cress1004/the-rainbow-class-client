@@ -235,6 +235,7 @@ const resources = {
       select_semester: "Kỳ học",
       show_cv_answers: "Xem các câu trả lời",
       audio_intro_by_english: "Video/Audio giới thiệu",
+      delete_question: "Xóa câu hỏi",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",
@@ -251,6 +252,8 @@ const resources = {
       modal_confirm_delete_lesson_title: "Xác nhận xóa bài học",
       modal_confirm_delete_lesson_content: "Xác nhận xóa bài học này",
       modal_input_retired_date: "Nhập vào ngày thôi học",
+      modal_confirm_delete_question: "Xác nhận xóa câu hỏi phỏng vấn",
+      modal_confirm_delete_question_content: "Bạn có chắc chắn xóa câu hỏi này?",
       //validation:
       required_name_message: "Hãy nhập vào tên của bạn",
       required_phone_number_message:

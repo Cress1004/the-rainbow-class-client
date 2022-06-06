@@ -34,9 +34,10 @@ function QuestionDetail(props) {
     setConfirmDelete(true);
   };
 
-  const deleteQuestion = () => {
+  const deleteQuestion = async () => {
     setConfirmDelete(false);
-    fetchDeleteQuestion(question._id);
+    await fetchDeleteQuestion(question._id);
+    await fetchQuestions();
   };
 
   const cancelDelete = () => {
