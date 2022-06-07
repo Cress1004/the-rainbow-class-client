@@ -11,6 +11,7 @@ import * as pairs from "./pairs";
 import * as reports from "./reports";
 import * as cvQuestion from "./cv-question";
 import * as cvAnswer from "./cv-answer";
+import * as notifications from "./notifitications";
 
 export default {
   users,
@@ -25,5 +26,6 @@ export default {
   pairs,
   reports,
   cvQuestion,
-  cvAnswer
+  cvAnswer,
+  notifications,
 };

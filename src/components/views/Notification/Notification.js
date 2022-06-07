@@ -1,16 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Icon, List, message, Typography } from "antd";
+import { Button, Icon, List, message, Popover, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import "./notification.scss";
-import Header from "./Header";
-import Footer from "./Footer";
 import Axios from "axios";
 import { NOTI_TYPE, NOTI_TYPE_TITLE } from "../../common/constant";
 import { getArrayLength } from "../../common/transformData";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import InfiniteScroll from "react-infinite-scroller";
+import apis from "../../../apis";
 
-const { Item } = List;
 const { Text } = Typography;
 
 function Notification(props) {
@@ -19,19 +18,24 @@ function Notification(props) {
   const ref = useRef(null);
   const [notifications, setNoti] = useState([]);
   const [unreadNoti, setUnreadNoti] = useState(0);
+  const [pagination, setPagination] = useState({ limit: 10 });
+  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const { socket } = props;
 
-  const fetchNotification = () => {
-    Axios.post(`/api/notification/get-notifications`, null).then((response) => {
-      if (response.data.success) {
-        const data = response.data.notifications;
-        const unread = data.filter((item) => item.data.read === false);
-        setNoti(unread);
-        setUnreadNoti(getArrayLength(unread));
-      } else if (!response.data.success) {
-        alert(response.data.message);
-      }
-    });
+  const fetchNotifications = async () => {
+    const data = await apis.notifications.getNotifications(pagination);
+    if (data.success) {
+      const notis = data.notifications;
+      const unread = notis.filter((item) => item.data.read === false);
+      setNoti(unread);
+      setUnreadNoti(getArrayLength(unread));
+    } else if (!data.success) {
+      message.error(data.message);
+    } else {
+      message.error("Error");
+    }
   };
 
   const fetchReadNotification = (id) => {
@@ -55,13 +59,13 @@ function Notification(props) {
   useEffect(() => {
     if (socket) {
       socket.on("new-cv-noti", (data) => {
-        fetchNotification();
+        fetchNotifications();
       });
     }
   }, []);
 
   useEffect(() => {
-    fetchNotification();
+    fetchNotifications();
   }, []);
 
   const showNoti = () => {
@@ -78,6 +82,10 @@ function Notification(props) {
     if (ref.current && !ref.current.contains(event.target)) {
       hideNoti();
     }
+  };
+
+  const handleSetVisible = () => {
+    setVisible(!visible);
   };
 
   const getNotiTitle = (type) => {
@@ -115,41 +123,110 @@ function Notification(props) {
     }
   };
 
-  const ListItemStyle = (item) => (
-    <Item>
-      <Text mark>[{getNotiTitle(item.data.type).text}]</Text> -{" "}
-      {`Lớp học ${item.notiCV.cv.class.name} `}
-      <br />
-      {getLinkNoti(item)}
-      <div style={{ textAlign: "right", fontSize: "11px" }}>
-        {t("time")}: {moment(item.data.created_at).format("h:mma D MMM YYYY")}
+  const content = (
+    data,
+    // onRead, loading, hasMore, handleInfiniteOnLoad,
+    t
+  ) =>
+    getArrayLength(data) ? (
+      <div className="notification">
+        <div ref={ref}>
+          {displayNoti ? (
+            <div className="infinite-container">
+              <InfiniteScroll
+                pageStart={0}
+                // loadMore={() => handleFetch({ _limit: comments.length + 10 })}
+                // hasMore={true || false}
+                useWindow={false}
+                loader={
+                  <div key="loading" className="loader">
+                    Loading ...
+                  </div>
+                }
+              >
+                <List
+                  itemLayout="horizontal"
+                  dataSource={data}
+                  renderItem={(item) => (
+                    <List.Item>
+                      <List.Item.Meta
+                        title={
+                          <div>
+                            <a
+                            // onClick={(e) => onRead(e, item)}
+                            >
+                              <Text mark>
+                                [{getNotiTitle(item.data.type).text}]
+                              </Text>{" "}
+                              - {`Lớp học ${item.notiCV.cv.class.name} `}
+                            </a>
+                          </div>
+                        }
+                        description={
+                          <div>
+                            <Icon
+                              className="header__notification--icon"
+                              type="clock-circle"
+                            />
+                            {moment(item.data.created_at).format(
+                              "h:mma D MMM YYYY"
+                            )}
+                          </div>
+                        }
+                      />
+                    </List.Item>
+                  )}
+                >
+                  {/* {loading && hasMore && (
+                  <div>
+                    <Spin />
+                  </div>
+                )} */}
+                </List>
+              </InfiniteScroll>
+            </div>
+          ) : null}
+        </div>
       </div>
-    </Item>
-  );
+    ) : (
+      t("no_notification")
+    );
 
   return (
-    <div className="notification">
+    <Popover
+      content={content(
+        data,
+        // onRead,
+        // loading,
+        // hasMore,
+        // this.handleInfiniteOnLoad,
+        t
+      )}
+      title={
+        <div className="header__notification--title">
+          <div>{t("notification")}</div>
+          <Button
+            type="link"
+            // onClick={() => onReadAll()}
+          >
+            {t("mark_all_as_read")}
+          </Button>
+        </div>
+      }
+      trigger="click"
+      className="header__notification"
+      visible={visible}
+      placement="bottomRight"
+      onVisibleChange={handleSetVisible}
+      getPopupContainer={() => document.querySelector(".header__notification")}
+    >
       <Icon
         type="notification"
         onClick={showNoti}
         className="notification__icon"
       />
       <span class="notification__header--unread">{unreadNoti}</span>
-      <div ref={ref}>
-        {displayNoti ? (
-          <List
-            className="notification__content"
-            header={
-              <Header unreadNoti={unreadNoti} setDisplayNoti={setDisplayNoti} />
-            }
-            footer={<Footer unreadNoti={unreadNoti} />}
-            bordered
-            dataSource={data}
-            renderItem={(item) => ListItemStyle(item)}
-          ></List>
-        ) : null}
-      </div>
-    </div>
+    </Popover>
   );
 }
 
