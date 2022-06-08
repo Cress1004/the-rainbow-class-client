@@ -8,6 +8,7 @@ import PermissionDenied from "../../Error/PermissionDenied";
 import apis from "../../../../apis";
 import useFetchAllClasses from "../../../../hook/Class/useFetchAllClasses";
 import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
+import Report from "../Dashboard/Report";
 
 const { Option } = Select;
 function ClassSchedule() {
@@ -50,6 +51,7 @@ function ClassSchedule() {
       {userRole.role === STUDENT && <PermissionDenied />}
       {userRole.role === VOLUNTEER && userRole.subRole !== SUPER_ADMIN && (
         <div>
+          <Report t={t} />
           <div className="class-schedule__title">{`${t("class_schedule")} - ${
             classData && classData.name
           }`}</div>

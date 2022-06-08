@@ -25,6 +25,18 @@ const getAllCV = async () => {
   }
 };
 
+const getNumberOfCV = async () => {
+  try {
+    const response = await api({
+      method: "GET",
+      url: `${CV_API}/get-number-of-cv`,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
 const updateCVStatus = async (values) => {
   try {
     const response = await api({
@@ -38,4 +50,4 @@ const updateCVStatus = async (values) => {
   }
 };
 
-export { getCVData, getAllCV, updateCVStatus };
+export { getCVData, getAllCV, updateCVStatus, getNumberOfCV };

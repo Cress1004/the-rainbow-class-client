@@ -202,6 +202,8 @@ const resources = {
       note: "Ghi chú",
       number_of_unregister_student: "Số học sinh chưa được đăng kí",
       number_of_waiting_student: "Số học sinh đang đợi xếp TNV",
+      number_of_unregister: "Chưa được đăng kí",
+      number_of_waiting: "Đang đợi xếp TNV",
       register_pair_for_student: "Đăng kí xếp TNV cho học sinh",
       report: "Báo cáo",
       add_report: "Viết báo cáo",

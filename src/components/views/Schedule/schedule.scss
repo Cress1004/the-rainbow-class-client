@@ -30,3 +30,32 @@
     width: 100%;
   }
 }
+
+.report-box {
+  margin: 20px;
+  padding: 10px;
+  height: 150px;
+  border-radius: 10px;
+  position: relative;
+  color: white;
+  font-weight: bolder;
+  &__class {
+    background-color: $danger-color;
+  }
+  &__volunteer {
+    background-color: $primary-color;
+  }
+  &__student {
+    background-color: $success-color;
+  }
+  &__cv {
+    background-color: $warning-color;
+  }
+  &__number {
+    text-align: center;
+    font-size: 28px;
+  }
+  p {
+    margin-bottom: 0.3em;
+  }
+}

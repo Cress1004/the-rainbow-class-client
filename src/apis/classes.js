@@ -26,6 +26,18 @@ const getAllClasses = async () => {
   }
 };
 
+const getNumberOfClasses = async () => {
+  try {
+    const response = await api({
+      method: "GET",
+      url: `${CLASS_API}/get-number-of-classes`,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
 const deleteClass = async (id) => {
   try {
     const response = await api({
@@ -218,4 +230,5 @@ export {
   addNewPairTeaching,
   setPairVolunteer,
   getPairByVolunteer,
+  getNumberOfClasses
 };
