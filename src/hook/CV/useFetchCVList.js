@@ -15,6 +15,7 @@ export default function useFetchCVList() {
       status: getCVStatus(item.status),
       className: item.class.name,
       classId: item.class._id,
+      createdAt: item.created_at
     }));
   };
 

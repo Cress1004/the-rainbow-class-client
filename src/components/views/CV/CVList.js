@@ -8,7 +8,7 @@ import {
   checkAdminAndMonitorRole,
   checkStringContentSubString,
 } from "../../common/function";
-import { getArrayLength } from "../../common/transformData";
+import { getArrayLength, transformDate } from "../../common/transformData";
 import "./upload-cv.scss";
 import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
 import PermissionDenied from "../Error/PermissionDenied";
@@ -89,6 +89,13 @@ function CVList(props) {
           ) : null}
         </>
       ),
+    },
+    {
+      title: t("created_time"),
+      dataIndex: "createdAt",
+      key: "createdAt",
+      width: 150,
+      render: (text, record) => renderData(transformDate(text), record),
     },
   ];
 
