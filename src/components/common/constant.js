@@ -125,13 +125,11 @@ export const CONNECTION_PORT = "http://localhost:5000";
 
 export const NOTI_TYPE = [
   { key: 0, value: "newCV", text: "Có CV mới!" },
-  { key: 1, value: "assignLesson", text: "Bạn được gán vào lesson mới" },
-  { key: 2, value: "assignInterview", text: "Bạn có lịch phỏng vấn TNV mới" },
+  { key: 1, value: "remindSetMonitor", text: "Chọn ban cán sự cho lớp mới!" },
 ];
 export const NOTI_TYPE_TITLE = {
   NEW_CV: 0,
-  ASSIGN_LESSON: 1,
-  ASSIGN_INTERVIEW: 2,
+  REMIND_SET_MONITOR: 1,
 };
 
 export const STUDENT_STATUS = [

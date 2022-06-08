@@ -28,7 +28,7 @@ function Notification(props) {
     const data = await apis.notifications.getNotifications(pagination);
     if (data.success) {
       const notis = data.notifications;
-      const unread = notis.filter((item) => item.data.read === false);
+      const unread = notis.filter((item) => item.read === false);
       setNoti(unread);
       setUnreadNoti(getArrayLength(unread));
     } else if (!data.success) {
@@ -92,37 +92,6 @@ function Notification(props) {
     return NOTI_TYPE.find((item) => item.key === type);
   };
 
-  const getLinkNoti = (noti) => {
-    switch (noti.data.type) {
-      case NOTI_TYPE_TITLE.NEW_CV:
-        return (
-          <Link to={`/cv/${noti?.notiCV?.cv?._id}`}>
-            <span onClick={() => fetchReadNotification(noti.data._id)}>
-              {t("detail")}
-            </span>
-          </Link>
-        );
-      case NOTI_TYPE_TITLE.ASSIGN_LESSON:
-        return (
-          <Link>
-            <span onClick={() => fetchReadNotification(noti.data._id)}>
-              {t("detail")}
-            </span>
-          </Link>
-        );
-      case NOTI_TYPE_TITLE.ASSIGN_INTERVIEW:
-        return (
-          <Link>
-            <span onClick={() => fetchReadNotification(noti.data._id)}>
-              {t("detail")}
-            </span>
-          </Link>
-        );
-      default:
-        break;
-    }
-  };
-
   const content = (
     data,
     // onRead, loading, hasMore, handleInfiniteOnLoad,
@@ -155,23 +124,52 @@ function Notification(props) {
                             <a
                             // onClick={(e) => onRead(e, item)}
                             >
-                              <Text mark>
-                                [{getNotiTitle(item.data.type).text}]
-                              </Text>{" "}
-                              - {`Lớp học ${item.notiCV.cv.class.name} `}
+                              <Text mark>[{getNotiTitle(item.type).text}]</Text>
+                              <br />
+                              {item?.content?.className}
                             </a>
                           </div>
                         }
                         description={
-                          <div>
-                            <Icon
-                              className="header__notification--icon"
-                              type="clock-circle"
-                            />
-                            {moment(item.data.created_at).format(
-                              "h:mma D MMM YYYY"
-                            )}
-                          </div>
+                          <>
+                            <div style={{ float: "left" }}>
+                              <Icon
+                                className="header__notification--icon"
+                                type="clock-circle"
+                              />
+                              {moment(item.created_at).format(
+                                "h:mma D MMM YYYY"
+                              )}
+                            </div>
+                            <div style={{ float: "right" }}>
+                              {(() => {
+                                switch (item.type) {
+                                  case NOTI_TYPE_TITLE.NEW_CV:
+                                    return (
+                                      <Link
+                                        to={`${item?.content?.path}/${item.content?.id}`}
+                                      >
+                                        <span>{t("detail")}</span>
+                                      </Link>
+                                    );
+                                  case NOTI_TYPE_TITLE.REMIND_SET_MONITOR:
+                                    return (
+                                      <Link
+                                        to={`/${item?.content?.path}/${item.content?.id}/set-monitor`}
+                                      >
+                                        <span
+                                          onClick={() =>
+                                            fetchReadNotification(item?._id)
+                                          }
+                                        >
+                                          {t("detail")}
+                                        </span>
+                                      </Link>
+                                    );
+                                }
+                              })()}
+                            </div>
+                          </>
                         }
                       />
                     </List.Item>
