@@ -7,6 +7,7 @@ import {
   RESET_PASSWORD,
 } from "./types";
 import { SERVER_API_URL, USER_API } from "../config";
+import { setCookie } from "../cookies/cookies";
 
 export function registerUser(dataToSubmit) {
   const request = axios
@@ -22,7 +23,11 @@ export function registerUser(dataToSubmit) {
 export function loginUser(dataToSubmit) {
   const request = axios
     .post(`${SERVER_API_URL}${USER_API}/login`, dataToSubmit)
-    .then((response) => response.data);
+    .then((response) => {
+      setCookie("w_authExp", response.data.w_authExp);
+      setCookie("w_auth", response.data.w_auth);
+      return response.data;
+    });
 
   return {
     type: LOGIN_USER,
