@@ -12,6 +12,7 @@ import * as reports from "./reports";
 import * as cvQuestion from "./cv-question";
 import * as cvAnswer from "./cv-answer";
 import * as notifications from "./notifitications";
+import * as admin from "./admin";
 
 export default {
   users,
@@ -28,4 +29,5 @@ export default {
   cvQuestion,
   cvAnswer,
   notifications,
+  admin,
 };

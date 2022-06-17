@@ -1,29 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Icon, Input, Table } from "antd";
-import Axios from "axios";
+import { Icon, Input, message, Table } from "antd";
 import "./admin.scss";
 import { checkStringContentSubString } from "../../../../common/function";
 import { getArrayLength } from "../../../../common/transformData";
 import TableNodata from "../../../NoData/TableNodata";
+import apis from "../../../../../apis";
 
 function AdminList(props) {
   const { t } = useTranslation();
   const [admin, setAdmin] = useState([]);
   const [searchData, setSearchData] = useState([]);
   const [inputValue, setInputValue] = useState("");
+  const [pagination, setPagination] = useState({});
 
   useEffect(() => {
-    Axios.post("/api/admin/get-admin", null).then((response) => {
-      const result = response.data;
-      if (result.success) {
-        setAdmin(transformAdminData(result.admin));
-        setSearchData(transformAdminData(result.admin));
-      } else if (!result.success) {
-        alert(result.message);
-      }
-    });
-  }, [t]);
+    fetchListAdmin();
+  }, []);
+
+  const fetchListAdmin = async () => {
+    const data = await apis.admin.getListAdmin(pagination);
+    if (data.success) {
+      setAdmin(transformAdminData(data.admin));
+      setSearchData(transformAdminData(data.admin));
+    } else if (!data.success) {
+      message.error(data.message);
+    } else {
+      message.error("Error");
+    }
+  };
 
   const transformAdminData = (adminData) => {
     return adminData?.map((item, index) => ({

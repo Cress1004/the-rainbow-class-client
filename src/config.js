@@ -16,3 +16,4 @@ export const REPORT_API = "/api/reports";
 export const QUESTION_API = "/api/questions";
 export const ANSWER_API = "/api/answers";
 export const NOTIFICATION_API = "/api/notifications";
+export const ADMIN_API = "/api/admin";
