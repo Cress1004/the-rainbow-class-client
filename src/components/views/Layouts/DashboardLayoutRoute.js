@@ -116,7 +116,7 @@ const DashboardLayout = ({ children, ...rest }) => {
                   <Menu.Item key="class_manager">
                     <Link to="/classes">
                       <Icon type="read" />
-                      <span>{t("class_list")}</span>
+                      <span>{t("class_manager")}</span>
                     </Link>
                   </Menu.Item>
                   {/* <Menu.Item key="cv_manager">

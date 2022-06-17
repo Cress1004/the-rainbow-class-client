@@ -27,6 +27,7 @@ import {
   COMPARE_SELECT_TITLE,
   FORMAT_MONTH_STRING,
   STUDENT,
+  STUDENT_STATUS,
   SUPER_ADMIN,
 } from "../../../../common/constant";
 import { useFormik } from "formik";
@@ -36,7 +37,6 @@ import {
   checkStringContentSubString,
 } from "../../../../common/function";
 import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUserData";
-import useFetchStudents from "../../../../../hook/Student/useFetchStudents";
 import useFetchClassNameList from "../../../../../hook/Class/useFetchClassNameList";
 import useFetchStudentTypes from "../../../../../hook/CommonData.js/useFetchStudentTypes";
 import TableNodata from "../../../NoData/TableNodata";
@@ -69,8 +69,7 @@ function StudentList(props) {
     const data = await apis.student.getStudents();
     if (data.success) {
       setStudentsData(data.students);
-    }
-    else {
+    } else {
       message.error("Error");
     }
   };
@@ -116,7 +115,7 @@ function StudentList(props) {
     formik.resetForm();
     setFilter(false);
     fetchStudentData();
-  }
+  };
 
   useEffect(() => {
     fetchStudentData();
@@ -138,6 +137,7 @@ function StudentList(props) {
       phoneNumber: item.user.phoneNumber,
       studentTypes: item.studentTypes,
       studentTypesText: transformStudentTypes(item.studentTypes),
+      isRetirement: item.retirementDate ? STUDENT_STATUS[1] : STUDENT_STATUS[0],
     }));
   };
 
@@ -147,13 +147,13 @@ function StudentList(props) {
       dataIndex: "userName",
       key: "userName",
       render: (text, key) => renderData(text, key),
-      width: 130,
+      width: 200,
     },
     {
       title: t("class_name"),
       dataIndex: "className",
       key: "className",
-      width: 145,
+      width: 175,
       // filters: getArrayLength(classNameList)
       //   ? classNameList.map((item) => ({
       //       text: item.name,
@@ -184,6 +184,17 @@ function StudentList(props) {
       // onFilter: (value, record) =>
       //   record.studentTypes.some((type) => type._id === value),
       render: (text, key) => renderData(text, key),
+    },
+    {
+      title: t("status"),
+      dataIndex: "isRetirement",
+      key: "isRetirement",
+      filters: STUDENT_STATUS.map((item) => ({
+        text: item.text,
+        value: item.key,
+      })),
+      onFilter: (value, record) => record.isRetirement.key === value,
+      render: (status, key) => renderData(status.text, key),
     },
   ];
 
@@ -314,11 +325,13 @@ function StudentList(props) {
             />
           </Col>
         </Row>
-        <div style={{textAlign: "right"}}>
-        <Button onClick={() => resetFilter()} style={{marginRight: "10px"}}>{t("reset_filter")}</Button>
-        <Button type="primary" htmlType="submit">
-          {t("filter")}
-        </Button>
+        <div style={{ textAlign: "right" }}>
+          <Button onClick={() => resetFilter()} style={{ marginRight: "10px" }}>
+            {t("reset_filter")}
+          </Button>
+          <Button type="primary" htmlType="submit">
+            {t("filter")}
+          </Button>
         </div>
       </Form>
     </div>
@@ -368,7 +381,15 @@ function StudentList(props) {
           )}
         </Row>
         {getArrayLength(searchData) ? (
-          <Table columns={columns} dataSource={searchData} />
+          <Table
+            rowClassName={(record) =>
+              `student-list__table--${
+                record.isRetirement.key ? "deactive" : "active"
+              }-row`
+            }
+            columns={columns}
+            dataSource={searchData}
+          />
         ) : (
           <TableNodata />
         )}

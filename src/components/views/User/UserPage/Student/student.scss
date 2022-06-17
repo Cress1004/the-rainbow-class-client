@@ -38,6 +38,11 @@
             color: white;
         }
     }
+    &__table {
+        &--deactive-row {
+            background-color: $gray-color;
+        }
+    }
 }
 
 .add-student {
