@@ -48,7 +48,7 @@ export function auth() {
 
 export function logoutUser() {
   const request = axios
-    .get(`${SERVER_API_URL}${USER_API}/logout`)
+    .get(`${SERVER_API_URL}${USER_API}/logout`, { withCredentials: true })
     .then((response) => response.data);
 
   return {
