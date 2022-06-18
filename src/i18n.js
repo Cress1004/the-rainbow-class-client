@@ -238,6 +238,13 @@ const resources = {
       show_cv_answers: "Xem các câu trả lời",
       audio_intro_by_english: "Video/Audio giới thiệu",
       delete_question: "Xóa câu hỏi",
+      total_classes: "Tổng số lớp",
+      total_volunteers: "Tổng số TNV",
+      total_students: "Tổng số học sinh",
+      total_cvs: "Tổng số CV",
+      account: "Tài khoản",
+      inactive: "Chưa kích hoạt",
+      cv: "CV",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",

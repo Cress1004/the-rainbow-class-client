@@ -86,8 +86,8 @@ const DashboardLayout = ({ children, ...rest }) => {
               )}
               {userRole.isAdmin && (
                 <Menu defaultSelectedKeys={["1"]} mode="inline">
-                  <Menu.Item key="schedule">
-                    <Link to="/schedules">
+                  <Menu.Item key="dashboard">
+                    <Link to="/dashboard">
                       <Icon type="home" />
                       <span>{t("dashboard")}</span>
                     </Link>

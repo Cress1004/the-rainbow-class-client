@@ -174,7 +174,7 @@ function StudentList(props) {
       title: t("student_types"),
       dataIndex: "studentTypesText",
       key: "studentTtypes",
-      width: 175,
+      width: 220,
       // filters: getArrayLength(studentTypes)
       //   ? studentTypes.map((item) => ({
       //       text: item.title,

@@ -134,7 +134,7 @@ export const NOTI_TYPE_TITLE = {
 
 export const STUDENT_STATUS = [
   { key: 0, value: "studing", text: "Đang học", color: "#219e6e" },
-  { key: 1, value: "retired", text: "Thôi học", color: "#e2a534" },
+  { key: 1, value: "retired", text: "Đã thôi học", color: "#e2a534" },
 ];
 export const STUDENT_STATUS_TITLE = {
   STUDING: 0,

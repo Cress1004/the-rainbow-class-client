@@ -32,9 +32,9 @@
 }
 
 .report-box {
-  margin: 20px;
+  margin-bottom: 10px;
   padding: 10px;
-  height: 150px;
+  height: 175px;
   border-radius: 10px;
   position: relative;
   color: white;
@@ -57,5 +57,8 @@
   }
   p {
     margin-bottom: 0.3em;
+  }
+  ul {
+    list-style-type: none;
   }
 }

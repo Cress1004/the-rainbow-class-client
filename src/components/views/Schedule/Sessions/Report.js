@@ -39,15 +39,15 @@ function Report(props) {
           </p>
           <ul className="no-bullets">
             <li>
-              {t("online")}: ({classData?.numberOfOnlineClasses || 0}{" "}
-              {t("class")})
+              {classData?.numberOfOnlineClasses || 0} {t("class")} {t("online")}
             </li>
             <li>
-              {t("offline")}: ({classData?.numberOfOfflineClasses || 0}{" "}
-              {t("class")})
+              {classData?.numberOfOfflineClasses || 0} {t("class")}{" "}
+              {t("offline")}
             </li>
           </ul>
         </Col>
+        <Col span={1}></Col>
         <Col span={5} className={"report-box report-box__volunteer"}>
           {t("total_volunteers")}
           <p className="report-box__number">
@@ -55,13 +55,14 @@ function Report(props) {
           </p>
           <ul className="no-bullets">
             <li>
-              {t("admin")} ({admin.length || 0} {t("QTV")})
+              {admin.length || 0} {t("admin")}
             </li>
             <li>
-              {t("inactive")} ({inactiveVolunteer.length || 0} {t("account")})
+              {inactiveVolunteer.length || 0} {t("account")} {t("inactive")}
             </li>
           </ul>
         </Col>
+        <Col span={1}></Col>
         <Col span={5} className={"report-box report-box__student"}>
           {t("total_students")}
           <p className="report-box__number">
@@ -69,22 +70,25 @@ function Report(props) {
           </p>
           <ul className="no-bullets">
             <li>
-              {t("number_of_unregister")} ({classData.totalUnpairStudent || 0} {t("HS")})
+              {t("number_of_unregister")} ({classData.totalUnpairStudent || 0}{" "}
+              {t("HS")})
             </li>
             <li>
-              {t("number_of_waiting")} ({classData.totalUnpairStudent || 0} {t("HS")})
+              {t("number_of_waiting")} ({classData.totalUnpairStudent || 0}{" "}
+              {t("HS")})
             </li>
           </ul>
         </Col>
+        <Col span={1}></Col>
         <Col span={5} className={"report-box report-box__cv"}>
           {t("total_cvs")}
-          <p className="report-box__number">{cvData?.totalCV || 0}</p>
+          <p className="report-box__number">{cvData?.totalCV || 0} {t("cv")}</p>
           <ul className="no-bullets">
             <li>
-              {CV_STATUS[0].text} ({cvData?.pendingCV || 0})
+              {cvData?.pendingCV || 0} {t("cv")} {CV_STATUS[0].text}
             </li>
             <li>
-              {CV_STATUS[1].text} ({cvData?.waitingCV || 0})
+              {cvData?.waitingCV || 0} {t("cv")} {CV_STATUS[1].text}
             </li>
           </ul>
         </Col>
