@@ -1,8 +1,10 @@
 import { Col, Row } from "antd";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import apis from "../../../../apis";
 import useFetchStudents from "../../../../hook/Student/useFetchStudents";
 import useFetchVolunteers from "../../../../hook/Volunteer/useFetchVolunteers";
+import { TEACHING_OPTIONS } from "../../../common/classConstant";
 import { CV_STATUS } from "../../../common/constant";
 
 function Report(props) {
@@ -35,15 +37,30 @@ function Report(props) {
         <Col span={5} className={"report-box report-box__class"}>
           {t("total_classes")}
           <p className="report-box__number">
-            {classData?.numberOfAllClases || 0} {t("class")}
+            <Link to={`classes`} className={"text-in-table-row"}>
+              <span style={{ color: "white" }}>
+                {classData?.numberOfAllClases || 0} {t("class")}
+              </span>
+            </Link>
           </p>
           <ul className="no-bullets">
-            <li>
-              {classData?.numberOfOnlineClasses || 0} {t("class")} {t("online")}
+            <li style={{ color: "white" }}>
+              <Link
+                to={`classes?offset=1&search=&query=%7B"teachingOption":1%7D`}
+                className={"text-in-table-row"}
+              >
+                {classData?.numberOfOnlineClasses || 0} {t("class")}{" "}
+                {TEACHING_OPTIONS[1].vie}
+              </Link>
             </li>
-            <li>
-              {classData?.numberOfOfflineClasses || 0} {t("class")}{" "}
-              {t("offline")}
+            <li style={{ color: "white" }}>
+              <Link
+                to={`classes?offset=1&search=&query=%7B"teachingOption":0%7D`}
+                className={"text-in-table-row"}
+              >
+                {classData?.numberOfOfflineClasses || 0} {t("class")}{" "}
+                {TEACHING_OPTIONS[0].vie}
+              </Link>
             </li>
           </ul>
         </Col>
@@ -82,7 +99,9 @@ function Report(props) {
         <Col span={1}></Col>
         <Col span={5} className={"report-box report-box__cv"}>
           {t("total_cvs")}
-          <p className="report-box__number">{cvData?.totalCV || 0} {t("cv")}</p>
+          <p className="report-box__number">
+            {cvData?.totalCV || 0} {t("cv")}
+          </p>
           <ul className="no-bullets">
             <li>
               {cvData?.pendingCV || 0} {t("cv")} {CV_STATUS[0].text}

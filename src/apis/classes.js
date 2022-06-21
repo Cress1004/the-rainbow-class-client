@@ -26,6 +26,33 @@ const getAllClasses = async () => {
   }
 };
 
+const getAllClassesWithParams = async ({
+  search,
+  query,
+  fields,
+  offset,
+  limit,
+  sort,
+}) => {
+  try {
+    const response = await api({
+      method: "GET",
+      url: `${CLASS_API}/get-all-classes`,
+      params: {
+        search,
+        query,
+        fields,
+        offset,
+        limit,
+        sort,
+      },
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
 const getNumberOfClasses = async () => {
   try {
     const response = await api({
@@ -230,5 +257,6 @@ export {
   addNewPairTeaching,
   setPairVolunteer,
   getPairByVolunteer,
-  getNumberOfClasses
+  getNumberOfClasses,
+  getAllClassesWithParams
 };
