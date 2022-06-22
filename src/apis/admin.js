@@ -1,18 +1,19 @@
 import { ADMIN_API } from "../config";
 import api from "./api";
 
-const getListAdmin = async ({ search, fields, offset, limit, sort }) => {
+const getListAdmin = async ({ search, query, fields, offset, limit, sort }) => {
   try {
     const response = await api({
       method: "GET",
       url: `${ADMIN_API}/get-admin`,
-      // params: {
-      //   search,
-      //   fields,
-      //   offset,
-      //   limit,
-      //   sort,
-      // },
+      params: {
+        search,
+        query,
+        fields,
+        offset,
+        limit,
+        sort,
+      },
     });
     return response;
   } catch (error) {

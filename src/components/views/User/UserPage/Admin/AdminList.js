@@ -2,27 +2,28 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Icon, Input, message, Table } from "antd";
 import "./admin.scss";
-import { checkStringContentSubString } from "../../../../common/function";
 import { getArrayLength } from "../../../../common/transformData";
 import TableNodata from "../../../NoData/TableNodata";
 import apis from "../../../../../apis";
+import queryString from "query-string";
 
 function AdminList(props) {
+  const defaultParams = queryString.parse(window.location.search);
+  defaultParams.limit = 10;
+  const [listParams, setListParams] = useState(defaultParams);
+  const [numberOfAdmin, setNumberOfAdmin] = useState();
   const { t } = useTranslation();
   const [admin, setAdmin] = useState([]);
-  const [searchData, setSearchData] = useState([]);
-  const [inputValue, setInputValue] = useState("");
-  const [pagination, setPagination] = useState({});
 
   useEffect(() => {
-    fetchListAdmin();
-  }, []);
+    fetchListAdmin(listParams);
+  }, [listParams]);
 
   const fetchListAdmin = async () => {
-    const data = await apis.admin.getListAdmin(pagination);
+    const data = await apis.admin.getListAdmin(listParams);
     if (data.success) {
       setAdmin(transformAdminData(data.admin));
-      setSearchData(transformAdminData(data.admin));
+      setNumberOfAdmin(data.numberOfAdmin);
     } else if (!data.success) {
       message.error(data.message);
     } else {
@@ -34,10 +35,40 @@ function AdminList(props) {
     return adminData?.map((item, index) => ({
       key: index,
       id: item._id,
-      userName: item.user.name,
-      phoneNumber: item.user.phoneNumber,
-      email: item.user.email,
+      userName: item.userInfo.name,
+      phoneNumber: item.userInfo.phoneNumber,
+      email: item.userInfo.email,
     }));
+  };
+
+  const parsePageAndSearch = (offset, search, filter) => {
+    return `offset=${offset}&search=${search || ""}&query=${
+      filter ? encodeURI(filter) : ""
+    }`;
+  };
+
+  const handleChangeSearchInput = (e) => {
+    setListParams({ ...listParams, search: e.target.value, offset: 1 });
+    setListParams((listParams) => {
+      window.history.replaceState(
+        "",
+        "",
+        `?${parsePageAndSearch(listParams.offset, listParams.search)}`
+      );
+      return listParams;
+    });
+  };
+
+  const handleChangePagination = (pageNumber) => {
+    setListParams({ ...listParams, offset: pageNumber });
+    setListParams((listParams) => {
+      window.history.replaceState(
+        "",
+        "",
+        `?${parsePageAndSearch(listParams.offset, listParams.search)}`
+      );
+      return listParams;
+    });
   };
 
   const columns = [
@@ -71,28 +102,28 @@ function AdminList(props) {
   return (
     <div className="admin-list">
       <div>
-        <div className="admin-list__title">
-          {t("admin")} ({`${admin?.length}`})
-        </div>
+        <div className="admin-list__title">{t("admin")}</div>
         <Input
           className="admin-list__search"
           prefix={<Icon type="search" />}
           placeholder={t("search_by_name_phone_email")}
-          value={inputValue}
-          onChange={(e) => {
-            const currValue = e.target.value;
-            setInputValue(currValue);
-            const filteredData = admin.filter(
-              (entry) =>
-                checkStringContentSubString(entry.userName, currValue) ||
-                checkStringContentSubString(entry.phoneNumber, currValue) ||
-                checkStringContentSubString(entry.email, currValue)
-            );
-            setSearchData(filteredData);
-          }}
+          defaultValue={defaultParams.search || undefined}
+          onChange={(e) => handleChangeSearchInput(e)}
         />
-        {getArrayLength(searchData) ? (
-          <Table columns={columns} dataSource={searchData} />
+        {getArrayLength(admin) ? (
+          <Table
+            columns={columns}
+            dataSource={admin}
+            pagination={{
+              total: numberOfAdmin,
+              defaultCurrent: defaultParams.offset
+                ? parseInt(defaultParams.offset)
+                : 1,
+              onChange: (pageNumber) => handleChangePagination(pageNumber),
+              pageSize: listParams.limit,
+              title: null,
+            }}
+          />
         ) : (
           <TableNodata />
         )}

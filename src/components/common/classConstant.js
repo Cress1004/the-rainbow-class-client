@@ -1,6 +1,6 @@
 // CLASS TEACHING OPTION
 export const TEACHING_OPTIONS = [
-    {key: 0, value: "teachByClass", vie: "Dạy theo lớp"},
+    {key: 0, value: "teachByClass", vie: "Dạy tập chung"},
     {key: 1, value: "oneToOneTutoring", vie: "Dạy kèm 1-1"}
 ]
 export const TEACH_BY_CLASS = 0;
