@@ -66,7 +66,7 @@ function ClassList(props) {
   const onChangePagination = (pageNumber) => {
     setListParams({ ...listParams, offset: pageNumber });
     setListParams((listParams) => {
-      fetchAllClassData(listParams);
+      // fetchAllClassData(listParams);
       window.history.replaceState(
         "",
         "",
@@ -79,7 +79,7 @@ function ClassList(props) {
   const onChangeSearchInput = (e) => {
     setListParams({ ...listParams, search: e.target.value, offset: 1 });
     setListParams((listParams) => {
-      fetchAllClassData(listParams);
+      // fetchAllClassData(listParams);
       window.history.replaceState("", "", `?${parsePageSearchFilter(listParams.offset, listParams.search, listParams.query)}`);
       return listParams;
     });
@@ -92,7 +92,7 @@ function ClassList(props) {
       offset: 1
     });
     setListParams((listParams) => {
-      fetchAllClassData(listParams);
+      // fetchAllClassData(listParams);
       window.history.replaceState("", "", `?${parsePageSearchFilter(listParams.offset, listParams.search, listParams.query)}`);
       return listParams;
     });

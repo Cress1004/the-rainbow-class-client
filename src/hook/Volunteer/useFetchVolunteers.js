@@ -8,9 +8,6 @@ export default function useFetchVolunteers() {
     const data = await apis.volunteer.getVolunteers();
     if (data.success) {
       setVolunteers(data.volunteers);
-      setVolunteers((volunteers) => {
-        return volunteers;
-      });
     }
   };
 

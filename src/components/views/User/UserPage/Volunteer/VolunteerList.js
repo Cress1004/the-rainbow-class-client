@@ -1,28 +1,65 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Table, Button, Icon, Input, Row } from "antd";
+import {
+  Table,
+  Button,
+  Icon,
+  Input,
+  Row,
+  message,
+  Form,
+  Select,
+  Popover,
+} from "antd";
 import "./volunteer.scss";
 import { Link } from "react-router-dom";
-import {
-  checkAdminAndMonitorRole,
-  checkStringContentSubString,
-} from "../../../../common/function";
+import { checkAdminAndMonitorRole } from "../../../../common/function";
 import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUserData";
-import useFetchVolunteers from "../../../../../hook/Volunteer/useFetchVolunteers";
 import { CLASS_MONITOR, SUB_CLASS_MONITOR } from "../../../../common/constant";
 import useFetchClassNameList from "../../../../../hook/Class/useFetchClassNameList";
 import { getArrayLength } from "../../../../common/transformData";
 import TableNodata from "../../../NoData/TableNodata";
+import apis from "../../../../../apis";
+import queryString from "query-string";
+import { parsePageSearchFilter } from "../../../../common/function/parseQueryString";
 
 function VolunteerList(props) {
+  const defaultParams = queryString.parse(window.location.search);
+  defaultParams.limit = 10;
+  const [listParams, setListParams] = useState(defaultParams);
+  const [numberOfVolunteer, setNumberOfVolunteer] = useState();
+  const [classInfo, setClassInfo] = useState();
   const { t } = useTranslation();
-  const [searchData, setSearchData] = useState([]);
-  const [volunteers, setVolunteers] = useState([]);
-  const [inputValue, setInputValue] = useState("");
+  const [volunteerData, setVolunteerData] = useState([]);
   const currentUser = useFetchCurrentUserData();
-  const userRole = currentUser.userRole;
-  const volunteersData = useFetchVolunteers();
   const classNameList = useFetchClassNameList();
+  const userRole = currentUser.userRole;
+
+  const { Item } = Form;
+  const { Option } = Select;
+
+  const layout = {
+    labelCol: { span: 9 },
+    wrapperCol: { span: 15 },
+  };
+
+  useEffect(() => {
+    const filterData = listParams.query ? JSON.parse(decodeURI(listParams.query)) : undefined;
+    fetchVolunteers(listParams);
+    setClassInfo(filterData?.classInfo)
+  }, [listParams]);
+
+  const fetchVolunteers = async () => {
+    const data = await apis.volunteer.getVolunteersWithParams(listParams);
+    if (data.success) {
+      setVolunteerData(transformVolunteerData(data.volunteers));
+      setNumberOfVolunteer(data.numberOfVolunteer);
+    } else if (!data.success) {
+      message.error(data.message);
+    } else {
+      message.error("Error");
+    }
+  };
 
   const transformRoleName = (name, role) => {
     if (role === CLASS_MONITOR) {
@@ -38,19 +75,14 @@ function VolunteerList(props) {
       key: index,
       id: item._id,
       userName: transformRoleName(item.user.name, item.role),
-      className: item.user.class ? item.user.class.name : t("unset"),
+      className: item.classInfo ? item.classInfo.name : t("unset"),
       phoneNumber: item.user.phoneNumber,
       role: item.role,
-      classId: item.user.class?._id,
+      classId: item?.classInfo?._id,
       email: item.user.email,
       isActive: item.user.isActive,
     }));
   };
-
-  useEffect(() => {
-    setVolunteers(transformVolunteerData(volunteersData));
-    setSearchData(transformVolunteerData(volunteersData));
-  }, [volunteersData]);
 
   const columns = [
     {
@@ -58,20 +90,13 @@ function VolunteerList(props) {
       dataIndex: "userName",
       key: "userName",
       render: (text, key) => renderData(text, key),
-      width: 130,
+      width: 175,
     },
     {
       title: t("class_name"),
       dataIndex: "className",
       key: "className",
-      width: 145,
-      filters: getArrayLength(classNameList)
-        ? classNameList.map((item) => ({
-            text: item.name,
-            value: item._id,
-          }))
-        : [],
-      onFilter: (value, record) => record.classId === value,
+      width: 150,
       render: (text, key) => renderData(text, key),
     },
     {
@@ -88,6 +113,13 @@ function VolunteerList(props) {
       width: 175,
       render: (text, key) => renderData(text, key),
     },
+    // {
+    //   title: t("active_status"),
+    //   dataIndex: "isActive",
+    //   key: "isActive",
+    //   width: 100,
+    //   render: (text, key) => renderData(text ? t("actived"): t("inactive"), key)
+    // },
   ];
 
   const renderData = (text, key) => (
@@ -96,28 +128,132 @@ function VolunteerList(props) {
     </Link>
   );
 
+  const handleChangePagination = (pageNumber) => {
+    setListParams({ ...listParams, offset: pageNumber });
+    setListParams((listParams) => {
+      window.history.replaceState(
+        "",
+        "",
+        `?${parsePageSearchFilter(
+          listParams.offset,
+          listParams.search,
+          listParams.filter
+        )}`
+      );
+      return listParams;
+    });
+  };
+
+  const handleChangeSearchInput = (e) => {
+    setListParams({ ...listParams, search: e.target.value, offset: 1 });
+    setListParams((listParams) => {
+      window.history.replaceState(
+        "",
+        "",
+        `?${parsePageSearchFilter(
+          listParams.offset,
+          listParams.search,
+          listParams.filter
+        )}`
+      );
+      return listParams;
+    });
+  };
+
+  const handleChangeFilter = () => {
+    setListParams({
+      ...listParams,
+      query: JSON.stringify({ classInfo: classInfo }),
+      offset: 1,
+    });
+    setListParams((listParams) => {
+      // fetchAllClassData(listParams);
+      window.history.replaceState(
+        "",
+        "",
+        `?${parsePageSearchFilter(
+          listParams.offset,
+          listParams.search,
+          listParams.query
+        )}`
+      );
+      return listParams;
+    });
+  };
+
+  const resetFilter = () => {
+    setListParams({ ...listParams, query: undefined, offset: 1 });
+    setListParams((listParams) => {
+      window.history.replaceState(
+        "",
+        "",
+        `?${parsePageSearchFilter(
+          listParams.offset,
+          listParams.search,
+          listParams.query
+        )}`
+      );
+      return listParams;
+    });
+  };
+
+  const content = (
+    <div>
+      <Form {...layout} style={{ width: "300px" }}>
+        <Item label={t("class")}>
+          <Select
+            value={classInfo}
+            placeholder={t("select_class")}
+            onChange={(value) => setClassInfo(value)}
+          >
+            {classNameList?.map((option) => (
+              <Option key={option._id} value={option._id}>
+                {option.name}
+              </Option>
+            ))}
+          </Select>
+        </Item>
+        <div style={{ textAlign: "right" }}>
+          <Button onClick={() => resetFilter()} style={{ marginRight: "10px" }}>
+            {t("reset_filter")}
+          </Button>
+          <Button
+            type="primary"
+            htmlType="submit"
+            onClick={() => handleChangeFilter()}
+          >
+            {t("filter")}
+          </Button>
+        </div>
+      </Form>
+    </div>
+  );
+
+  const filterIcon = (
+    <Icon
+      type="filter"
+      className={`volunteer-list__filter volunteer-list__filter--${
+        defaultParams.filter ? "active" : ""
+      }`}
+    />
+  );
+
   return (
     <div className="volunteer-list">
-      <div className="volunteer-list__title">
-        {t("volunteer_list")} ({`${volunteers?.length} ${t("volunteer")}`})
-      </div>
+      <div className="volunteer-list__title">{t("volunteer_list")}</div>
       <Row>
+        {userRole.isAdmin ? (
+          <Popover content={content} trigger="click" placement="bottomLeft">
+            {filterIcon}
+          </Popover>
+        ) : null}
+
         <Input
           className="volunteer-list__search"
           prefix={<Icon type="search" />}
           placeholder={t("search_by_name_phone_email")}
-          value={inputValue}
-          onChange={(e) => {
-            const currValue = e.target.value;
-            setInputValue(currValue);
-            const filteredData = volunteers.filter(
-              (entry) =>
-                checkStringContentSubString(entry.userName, currValue) ||
-                checkStringContentSubString(entry.phoneNumber, currValue) ||
-                checkStringContentSubString(entry.email, currValue)
-            );
-            setSearchData(filteredData);
-          }}
+          defaultValue={defaultParams.search || undefined}
+          onChange={(e) => handleChangeSearchInput(e)}
         />
         {checkAdminAndMonitorRole(userRole) && (
           <Button
@@ -133,15 +269,24 @@ function VolunteerList(props) {
         <span className="volunteer-list__note--deactive-record-note"></span>
         <span>{t("deactive_volunteer")}</span>
       </Row>
-      {getArrayLength(searchData) ? (
+      {getArrayLength(volunteerData) ? (
         <Table
           columns={columns}
-          dataSource={searchData}
+          dataSource={volunteerData}
           rowClassName={(record) =>
             `volunteer-list__table--${
-              record.isActive ? "active" : "deactive"
+              record?.isActive ? "active" : "deactive"
             }-row`
           }
+          pagination={{
+            total: numberOfVolunteer,
+            defaultCurrent: defaultParams.offset
+              ? parseInt(defaultParams.offset)
+              : 1,
+            onChange: (pageNumber) => handleChangePagination(pageNumber),
+            pageSize: listParams.limit,
+            title: null,
+          }}
         />
       ) : (
         <TableNodata />

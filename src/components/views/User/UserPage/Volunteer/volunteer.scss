@@ -42,6 +42,18 @@
             margin-right: 5px;
         }
     }
+    &__filter {
+        background-color: rgb(230, 230, 230);
+        height: 30px;
+        width: 30px;
+        padding: 8px;
+        border-radius: 15px;
+        margin-right: 10px;
+        &--active {
+            background-color: $primary-color;
+            color: white;
+        }
+      }
 }
 
 .add-volunteer {

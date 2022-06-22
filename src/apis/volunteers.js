@@ -26,6 +26,33 @@ const getVolunteers = async () => {
   }
 };
 
+const getVolunteersWithParams = async ({
+  search,
+  query,
+  fields,
+  offset,
+  limit,
+  sort,
+}) => {
+  try {
+    const response = await api({
+      method: "GET",
+      url: `${VOLUNTEER_API}/get-volunteers`,
+      params: {
+        search,
+        query,
+        fields,
+        offset,
+        limit,
+        sort,
+      },
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
 const getVolunteerData = async (volunteerId) => {
   try {
     const response = await api({
@@ -95,4 +122,5 @@ export {
   deleteVolunteer,
   getCurrentVolunteer,
   getTotalVolunteers,
+  getVolunteersWithParams
 };

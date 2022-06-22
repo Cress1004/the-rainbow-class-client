@@ -245,6 +245,8 @@ const resources = {
       account: "Tài khoản",
       inactive: "Chưa kích hoạt",
       cv: "CV",
+      actived: "Đã kích hoạt",
+      active_status: "Trạng thái TK",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",

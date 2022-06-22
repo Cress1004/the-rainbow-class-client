@@ -6,6 +6,7 @@ import { getArrayLength } from "../../../../common/transformData";
 import TableNodata from "../../../NoData/TableNodata";
 import apis from "../../../../../apis";
 import queryString from "query-string";
+import { parsePageAndSearch } from "../../../../common/function/parseQueryString";
 
 function AdminList(props) {
   const defaultParams = queryString.parse(window.location.search);
@@ -35,16 +36,10 @@ function AdminList(props) {
     return adminData?.map((item, index) => ({
       key: index,
       id: item._id,
-      userName: item.userInfo.name,
-      phoneNumber: item.userInfo.phoneNumber,
-      email: item.userInfo.email,
+      userName: item.user.name,
+      phoneNumber: item.user.phoneNumber,
+      email: item.user.email,
     }));
-  };
-
-  const parsePageAndSearch = (offset, search, filter) => {
-    return `offset=${offset}&search=${search || ""}&query=${
-      filter ? encodeURI(filter) : ""
-    }`;
   };
 
   const handleChangeSearchInput = (e) => {
