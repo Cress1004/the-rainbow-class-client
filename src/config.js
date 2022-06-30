@@ -15,5 +15,6 @@ export const PAIR_API = "/api/pairs";
 export const REPORT_API = "/api/reports";
 export const QUESTION_API = "/api/questions";
 export const ANSWER_API = "/api/answers";
-export const NOTIFICATION_API = "/api/notifications";
+export const NOTIFICATION_API = "/api/notification";
 export const ADMIN_API = "/api/admin";
+export const ACHIEVEMENT_API = "/api/achievement";

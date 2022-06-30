@@ -13,6 +13,7 @@ import * as cvQuestion from "./cv-question";
 import * as cvAnswer from "./cv-answer";
 import * as notifications from "./notifitications";
 import * as admin from "./admin";
+import * as achievement from "./achievement";
 
 export default {
   users,
@@ -30,4 +31,5 @@ export default {
   cvAnswer,
   notifications,
   admin,
+  achievement,
 };

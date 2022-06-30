@@ -26,6 +26,33 @@ const getStudents = async () => {
   }
 };
 
+const getStudentsWithParams = async ({
+  search,
+  query,
+  fields,
+  offset,
+  limit,
+  sort,
+}) => {
+  try {
+    const response = await api({
+      method: "GET",
+      url: `${STUDENT_API}/get-students`,
+      params: {
+        search,
+        query,
+        fields,
+        offset,
+        limit,
+        sort,
+      },
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
 const getStudentData = async (studentId) => {
   try {
     const response = await api({
@@ -68,7 +95,7 @@ const updateOverview = async (valueToSend) => {
     const response = await api({
       method: "POST",
       url: `${STUDENT_API}/${valueToSend.id}/update-overview`,
-      data: {values: valueToSend},
+      data: { values: valueToSend },
     });
     return response;
   } catch (error) {
@@ -110,5 +137,6 @@ export {
   deleteStudent,
   updateOverview,
   changeStatus,
-  studentFilter
+  studentFilter,
+  getStudentsWithParams,
 };

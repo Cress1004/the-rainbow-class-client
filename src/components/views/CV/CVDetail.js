@@ -207,6 +207,7 @@ function CVDetail(props) {
       file={cvData.cvFileLink}
       options={{ workerSrc: "/pdf.worker.js" }}
       onLoadSuccess={onDocumentLoadSuccess}
+      onLoadError={console.error}
     >
       {Array.from(new Array(totalPages), (el, index) => (
         <Page
@@ -291,7 +292,7 @@ function CVDetail(props) {
             {cvData.audioFileLink ? (
               <Item label={t("audio_intro_by_english")}>
                 <Button onClick={() => setVideoModalActive(true)}>
-                  {t("show_video")}
+                  {t("show_audio")}
                 </Button>
               </Item>
             ) : (
@@ -304,11 +305,11 @@ function CVDetail(props) {
               onCancel={closeModal}
               onOk={closeModal}
               width="55%"
-              bodyStyle={{ height: 460, width: 800 }}
+              bodyStyle={{ height: 300, width: 400 }}
             >
-              <Player autoPlay>
+              <video width="320" height="240" controls>
                 <source src={cvData.audioFileLink} type="video/mp4" />
-              </Player>
+              </video>
             </Modal>
           </Form>
         </Col>

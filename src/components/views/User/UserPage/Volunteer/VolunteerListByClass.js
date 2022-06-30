@@ -77,8 +77,8 @@ function VolunteerListByClass(props) {
       {getArrayLength(searchData) ? (
         <>
           <Row>
-            <Col span={15}></Col>
-            <Col span={5}>
+            <Col span={14}></Col>
+            <Col span={6}>
               <Input
                 className="volunteer-list__search"
                 prefix={<Icon type="search" />}
@@ -107,18 +107,9 @@ function VolunteerListByClass(props) {
               />
             </Col>
           </Row>
-          <Row className="volunteer-list__note">
-            <span className="volunteer-list__note--deactive-record-note"></span>
-            <span>{t("deactive_volunteer")}</span>
-          </Row>{" "}
           <Table
             columns={columns}
             dataSource={searchData}
-            rowClassName={(record) =>
-              `volunteer-list__table--${
-                record.isActive ? "active" : "deactive"
-              }-row`
-            }
           />
         </>
       ) : null}

@@ -23,6 +23,9 @@ import apis from "../../../../../apis";
 import queryString from "query-string";
 import { parsePageSearchFilter } from "../../../../common/function/parseQueryString";
 
+const { Item } = Form;
+const { Option } = Select;
+
 function VolunteerList(props) {
   const defaultParams = queryString.parse(window.location.search);
   defaultParams.limit = 10;
@@ -34,10 +37,6 @@ function VolunteerList(props) {
   const currentUser = useFetchCurrentUserData();
   const classNameList = useFetchClassNameList();
   const userRole = currentUser.userRole;
-
-  const { Item } = Form;
-  const { Option } = Select;
-
   const layout = {
     labelCol: { span: 9 },
     wrapperCol: { span: 15 },

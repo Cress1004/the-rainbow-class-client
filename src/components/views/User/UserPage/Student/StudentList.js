@@ -24,17 +24,14 @@ import {
   ACHIEVEMENT_SELECT_OPTION,
   ACHIEVEMENT_SELECT_TITLE,
   COMPARE_SELECT_OPTION,
-  COMPARE_SELECT_TITLE,
   FORMAT_MONTH_STRING,
   STUDENT,
   STUDENT_STATUS,
   SUPER_ADMIN,
 } from "../../../../common/constant";
-import { useFormik } from "formik";
 import PermissionDenied from "../../../Error/PermissionDenied";
 import {
   checkAdminAndMonitorRole,
-  checkStringContentSubString,
 } from "../../../../common/function";
 import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUserData";
 import useFetchClassNameList from "../../../../../hook/Class/useFetchClassNameList";
@@ -44,15 +41,20 @@ import moment from "moment";
 import useFetchSemesters from "../../../../../hook/CommonData.js/useFetchSemesters";
 import { checkNowOverSemesterTime } from "../../../../common/function/checkTime";
 import apis from "../../../../../apis";
+import queryString from "query-string";
+import { parsePageSearchFilter } from "../../../../common/function/parseQueryString";
+
 const { Item } = Form;
 const { Option } = Select;
 const { MonthPicker } = DatePicker;
 
 function StudentList(props) {
+  const defaultParams = queryString.parse(window.location.search);
+  defaultParams.limit = 10;
+  const [listParams, setListParams] = useState(defaultParams);
+  const [numberOfStudent, setNumberOfStudent] = useState();
+  const [filter, setFilter] = useState();
   const { t } = useTranslation();
-  const [students, setStudents] = useState([]);
-  const [searchData, setSearchData] = useState([]);
-  const [inputValue, setInputValue] = useState("");
   const [studentsData, setStudentsData] = useState([]);
   const userData = useFetchCurrentUserData();
   const userRole = userData.userRole;
@@ -62,25 +64,92 @@ function StudentList(props) {
   const currentSem = semesters.find((item) =>
     checkNowOverSemesterTime(item.startDate, item.endDate)
   );
-  const [filter, setFilter] = useState(false);
   const currentMonth = moment(new Date()).format(FORMAT_MONTH_STRING);
 
+  useEffect(() => {
+    const filterData = listParams.query
+      ? JSON.parse(decodeURI(listParams.query))
+      : undefined;
+    fetchStudentData(listParams);
+    setFilter(filterData);
+  }, [listParams]);
+
   const fetchStudentData = async () => {
-    const data = await apis.student.getStudents();
+    const data = await apis.student.getStudentsWithParams(listParams);
     if (data.success) {
-      setStudentsData(data.students);
+      setStudentsData(transformStudentData(data.students));
+      setNumberOfStudent(data.numberOfStudent);
     } else {
       message.error("Error");
     }
   };
 
-  const fetchStudentFilter = async (dataFilter) => {
-    const data = await apis.student.studentFilter(dataFilter);
-    if (data.success) {
-      setStudentsData(data.students);
-    } else {
-      message.error("Error");
-    }
+  const handleChangePagination = (pageNumber) => {
+    setListParams({ ...listParams, offset: pageNumber });
+    setListParams((listParams) => {
+      window.history.replaceState(
+        "",
+        "",
+        `?${parsePageSearchFilter(
+          listParams.offset,
+          listParams.search,
+          listParams.filter
+        )}`
+      );
+      return listParams;
+    });
+  };
+
+  const handleChangeSearchInput = (e) => {
+    setListParams({ ...listParams, search: e.target.value, offset: 1 });
+    setListParams((listParams) => {
+      window.history.replaceState(
+        "",
+        "",
+        `?${parsePageSearchFilter(
+          listParams.offset,
+          listParams.search,
+          listParams.filter
+        )}`
+      );
+      return listParams;
+    });
+  };
+
+  const handleChangeFilter = () => {
+    setListParams({
+      ...listParams,
+      query: JSON.stringify(filter),
+      offset: 1,
+    });
+    setListParams((listParams) => {
+      window.history.replaceState(
+        "",
+        "",
+        `?${parsePageSearchFilter(
+          listParams.offset,
+          listParams.search,
+          listParams.query
+        )}`
+      );
+      return listParams;
+    });
+  };
+
+  const resetFilter = () => {
+    setListParams({ ...listParams, query: undefined, offset: 1 });
+    setListParams((listParams) => {
+      window.history.replaceState(
+        "",
+        "",
+        `?${parsePageSearchFilter(
+          listParams.offset,
+          listParams.search,
+          listParams.query
+        )}`
+      );
+      return listParams;
+    });
   };
 
   const layout = {
@@ -92,48 +161,14 @@ function StudentList(props) {
     wrapperCol: { span: 16 },
   };
 
-  const formik = useFormik({
-    initialValues: {
-      class: undefined,
-      studentType: undefined,
-      achievementType: ACHIEVEMENT_SELECT_TITLE.BY_MONTH,
-      month: currentMonth,
-      semester: currentSem,
-      compareType: COMPARE_SELECT_TITLE.EQUAL,
-      point: undefined,
-    },
-    onSubmit: (values, { setSubmitting }) => {
-      setTimeout(async () => {
-        fetchStudentFilter(values);
-        setFilter(true);
-        setSubmitting(false);
-      }, 400);
-    },
-  });
-
-  const resetFilter = () => {
-    formik.resetForm();
-    setFilter(false);
-    fetchStudentData();
-  };
-
-  useEffect(() => {
-    fetchStudentData();
-  }, []);
-
-  useEffect(() => {
-    setStudents(transformStudentData(studentsData));
-    setSearchData(transformStudentData(studentsData));
-  }, [studentsData]);
-
   const transformStudentData = (data) => {
     return data?.map((item, index) => ({
       key: index,
       id: item._id,
       userName: item.user.name,
-      classId: item.user.class._id,
+      classId: item.user.class,
       isActive: item.user.isActive,
-      className: item.user.class ? item.user.class.name : t("unset"),
+      className: item.classInfo ? item.classInfo.name : t("unset"),
       phoneNumber: item.user.phoneNumber,
       studentTypes: item.studentTypes,
       studentTypesText: transformStudentTypes(item.studentTypes),
@@ -147,20 +182,13 @@ function StudentList(props) {
       dataIndex: "userName",
       key: "userName",
       render: (text, key) => renderData(text, key),
-      width: 200,
+      width: 175,
     },
     {
       title: t("class_name"),
       dataIndex: "className",
       key: "className",
-      width: 175,
-      // filters: getArrayLength(classNameList)
-      //   ? classNameList.map((item) => ({
-      //       text: item.name,
-      //       value: item._id,
-      //     }))
-      //   : [],
-      // onFilter: (value, record) => record.classId === value,
+      width: 150,
       render: (text, key) => renderData(text, key),
     },
     {
@@ -175,25 +203,13 @@ function StudentList(props) {
       dataIndex: "studentTypesText",
       key: "studentTtypes",
       width: 220,
-      // filters: getArrayLength(studentTypes)
-      //   ? studentTypes.map((item) => ({
-      //       text: item.title,
-      //       value: item._id,
-      //     }))
-      //   : [],
-      // onFilter: (value, record) =>
-      //   record.studentTypes.some((type) => type._id === value),
       render: (text, key) => renderData(text, key),
     },
     {
       title: t("status"),
       dataIndex: "isRetirement",
       key: "isRetirement",
-      filters: STUDENT_STATUS.map((item) => ({
-        text: item.text,
-        value: item.key,
-      })),
-      onFilter: (value, record) => record.isRetirement.key === value,
+      width: 100,
       render: (status, key) => renderData(status.text, key),
     },
   ];
@@ -215,14 +231,13 @@ function StudentList(props) {
     <div>
       <Form
         {...layout}
-        onSubmit={formik.handleSubmit}
         style={{ width: "700px" }}
       >
         <Item label={t("class")}>
           <Select
-            value={formik.values.class}
+            value={filter?.classInfo}
             placeholder={t("select_class")}
-            onChange={(value) => formik.setFieldValue("class", value)}
+            onChange={(value) => setFilter({...filter, classInfo: value})}
           >
             {classNameList?.map((option) => (
               <Option key={option._id} value={option._id}>
@@ -235,8 +250,8 @@ function StudentList(props) {
           <Select
             mode="multiple"
             placeholder={t("select_student_type")}
-            value={formik.values.studentType}
-            onChange={(value) => formik.setFieldValue("studentType", value)}
+            value={filter?.studentTypes}
+            onChange={(value) => setFilter({...filter, studentTypes: value})}
           >
             {studentTypes?.map((option) => (
               <Option key={option._id} value={option._id}>
@@ -252,9 +267,9 @@ function StudentList(props) {
             <Item {...tailLayout} label={t("achievement")}>
               <Select
                 placeholder={t("select_achievement_type")}
-                value={formik.values.achievementType}
+                value={filter?.achievementType}
                 onChange={(value) =>
-                  formik.setFieldValue("achievementType", value)
+                  setFilter({...filter, achievementType: value})
                 }
               >
                 {ACHIEVEMENT_SELECT_OPTION?.map((option) => (
@@ -267,12 +282,12 @@ function StudentList(props) {
           </Col>
           <Col span={10}>
             {" "}
-            {formik.values.achievementType ===
+            {filter?.achievementType ===
             ACHIEVEMENT_SELECT_TITLE.BY_MONTH ? (
               <Item {...tailLayout} label={t("select_month")}>
                 <MonthPicker
                   onChange={(date, dateString) =>
-                    formik.setFieldValue("month", dateString)
+                    setFilter({...filter, semester: undefined, month: dateString})
                   }
                   defaultValue={moment(currentMonth, FORMAT_MONTH_STRING)}
                   format={FORMAT_MONTH_STRING}
@@ -284,8 +299,8 @@ function StudentList(props) {
               <Item {...tailLayout} label={t("select_semester")}>
                 <Select
                   placeholder={t("select_semester")}
-                  value={formik.values.semester}
-                  onChange={(value) => formik.setFieldValue("semester", value)}
+                  value={filter?.semester}
+                  onChange={(value) =>setFilter({...filter, month: undefined, semester: value}) }
                 >
                   {semesters.map((option) => (
                     <Option key={option._id} value={option._id}>
@@ -304,8 +319,8 @@ function StudentList(props) {
             <Item {...tailLayout} label={t("achievement")}>
               <Select
                 placeholder={t("select_compare_type")}
-                value={formik.values.compareType}
-                onChange={(value) => formik.setFieldValue("compareType", value)}
+                value={filter?.compareType}
+                onChange={(value) => setFilter({...filter, compareType: value})}
               >
                 {COMPARE_SELECT_OPTION?.map((option) => (
                   <Option key={option.key} value={option.key}>
@@ -320,8 +335,8 @@ function StudentList(props) {
               placeholder="inputNumber"
               min={0}
               max={10}
-              value={formik.values.point}
-              onChange={(value) => formik.setFieldValue("point", value)}
+              value={filter?.point}
+              onChange={(value) => setFilter({...filter, point: value})}
             />
           </Col>
         </Row>
@@ -329,7 +344,7 @@ function StudentList(props) {
           <Button onClick={() => resetFilter()} style={{ marginRight: "10px" }}>
             {t("reset_filter")}
           </Button>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" onClick={() => handleChangeFilter()}>
             {t("filter")}
           </Button>
         </div>
@@ -349,9 +364,7 @@ function StudentList(props) {
   return (
     <div className="student-list">
       <div>
-        <div className="student-list__title">
-          {t("student_list")} ({`${students?.length} ${t("student")}`})
-        </div>
+        <div className="student-list__title">{t("student_list")}</div>
         <Row>
           <Popover content={content} trigger="click">
             {filterIcon}
@@ -359,19 +372,8 @@ function StudentList(props) {
           <Input
             className="student-list__search"
             prefix={<Icon type="search" />}
-            placeholder={t("search_by_name_phone")}
-            value={inputValue}
-            onChange={(e) => {
-              const currValue = e.target.value;
-              setInputValue(currValue);
-              const filteredData = students.filter(
-                (entry) =>
-                  checkStringContentSubString(entry.userName, currValue) ||
-                  checkStringContentSubString(entry.phoneNumber, currValue) ||
-                  checkStringContentSubString(entry.email, currValue)
-              );
-              setSearchData(filteredData);
-            }}
+            defaultValue={defaultParams.search || undefined}
+            onChange={(e) => handleChangeSearchInput(e)}
           />
           {checkAdminAndMonitorRole(userRole) && (
             <Button type="primary" className="student-list__add-student-button">
@@ -380,7 +382,7 @@ function StudentList(props) {
             </Button>
           )}
         </Row>
-        {getArrayLength(searchData) ? (
+        {getArrayLength(studentsData) ? (
           <Table
             rowClassName={(record) =>
               `student-list__table--${
@@ -388,7 +390,16 @@ function StudentList(props) {
               }-row`
             }
             columns={columns}
-            dataSource={searchData}
+            dataSource={studentsData}
+            pagination={{
+              total: numberOfStudent,
+              defaultCurrent: defaultParams.offset
+                ? parseInt(defaultParams.offset)
+                : 1,
+              onChange: (pageNumber) => handleChangePagination(pageNumber),
+              pageSize: listParams.limit,
+              title: null,
+            }}
           />
         ) : (
           <TableNodata />

@@ -114,7 +114,7 @@ export function transformEventOfLesson(data) {
 }
 
 export function transformScheduleTimeData(time) {
-  return `${time.date} ${time.startTime} - ${time.endTime}`;
+  return `${time?.date} ${time?.startTime} - ${time?.endTime}`;
 }
 
 export function transformDate(date) {
