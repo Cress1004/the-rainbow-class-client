@@ -42,7 +42,7 @@
   "scripts": {
     "dev": "react-scripts start",
     "start": "serve -s build",
-    "build": "react-scripts build --max-old-space-size=6048"
+    "build": "react-scripts build"
   },
   "eslintConfig": {
     "extends": "react-app"
