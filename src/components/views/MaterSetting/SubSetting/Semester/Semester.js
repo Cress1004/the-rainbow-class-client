@@ -1,4 +1,4 @@
-import { Button, Table, Form, Input, message } from "antd";
+import { Button, Table, message } from "antd";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import "../../master-setting.scss";

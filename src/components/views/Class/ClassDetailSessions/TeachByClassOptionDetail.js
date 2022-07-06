@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import { Button, Row, Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";

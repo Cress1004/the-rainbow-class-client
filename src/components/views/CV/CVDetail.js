@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 import { Document, Page, pdfjs } from "react-pdf";
 import { Checkbox } from "antd";
-import { Player } from "video-react";
 import "video-react/dist/video-react.css";
 
 import {

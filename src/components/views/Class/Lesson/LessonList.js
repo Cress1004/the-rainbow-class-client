@@ -11,7 +11,7 @@ import TableNodata from "../../NoData/TableNodata";
 
 function LessonList(props) {
   const { t } = useTranslation();
-  const { id, lessons, classData } = props;
+  const { lessons, classData } = props;
   const data = lessons
     ? lessons.map((item, index) => ({
         key: index,

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Col,
   DatePicker,
@@ -21,7 +22,6 @@ import {
   transformScheduleTimeData,
 } from "../../../common/transformData";
 import TableNodata from "../../NoData/TableNodata";
-import _function from "../../../common/function";
 import {
   checkNowOverSemesterTime,
 } from "../../../common/function/checkTime";
@@ -157,7 +157,7 @@ function TeachByClassReportList(props) {
 
   if (getArrayLength(lessonAndAchievement)) {
     lessonAndAchievement.map((lesson) => {
-      fixedColumns.push({
+      return fixedColumns.push({
         title: (
           <Popover content={transfromLessonDetail(lesson.lesson)}>
             {transformDate(lesson.lesson.schedule.time.date)}

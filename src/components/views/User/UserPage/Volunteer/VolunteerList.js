@@ -46,7 +46,7 @@ function VolunteerList(props) {
     const filterData = listParams.query ? JSON.parse(decodeURI(listParams.query)) : undefined;
     fetchVolunteers(listParams);
     setClassInfo(filterData?.classInfo)
-  }, [listParams]);
+  }, [listParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchVolunteers = async () => {
     const data = await apis.volunteer.getVolunteersWithParams(listParams);

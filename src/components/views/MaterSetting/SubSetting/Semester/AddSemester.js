@@ -3,10 +3,6 @@ import React from "react";
 import { FORMAT_DATE } from "../../../../common/constant";
 
 function AddSemester(props) {
-  const layout = {
-    labelCol: { span: 5 },
-    wrapperCol: { span: 15 },
-  };
   const { formik, openMessage, t } = props;
 
   return (

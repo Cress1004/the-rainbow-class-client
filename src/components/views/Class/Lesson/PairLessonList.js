@@ -1,6 +1,5 @@
 import React from "react";
 import { Table, Row } from "antd";
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   getArrayLength,

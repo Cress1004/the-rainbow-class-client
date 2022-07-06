@@ -39,7 +39,6 @@ import useFetchStudentTypes from "../../../../../hook/CommonData.js/useFetchStud
 import TableNodata from "../../../NoData/TableNodata";
 import moment from "moment";
 import useFetchSemesters from "../../../../../hook/CommonData.js/useFetchSemesters";
-import { checkNowOverSemesterTime } from "../../../../common/function/checkTime";
 import apis from "../../../../../apis";
 import queryString from "query-string";
 import { parsePageSearchFilter } from "../../../../common/function/parseQueryString";
@@ -61,9 +60,6 @@ function StudentList(props) {
   const classNameList = useFetchClassNameList();
   const studentTypes = useFetchStudentTypes();
   const semesters = useFetchSemesters();
-  const currentSem = semesters.find((item) =>
-    checkNowOverSemesterTime(item.startDate, item.endDate)
-  );
   const currentMonth = moment(new Date()).format(FORMAT_MONTH_STRING);
 
   useEffect(() => {
@@ -72,7 +68,7 @@ function StudentList(props) {
       : undefined;
     fetchStudentData(listParams);
     setFilter(filterData);
-  }, [listParams]);
+  }, [listParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchStudentData = async () => {
     const data = await apis.student.getStudentsWithParams(listParams);

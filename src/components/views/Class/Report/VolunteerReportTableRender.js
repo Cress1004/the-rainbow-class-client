@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Divider, Icon, message, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import apis from "../../../../apis";

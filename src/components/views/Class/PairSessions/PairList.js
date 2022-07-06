@@ -1,4 +1,4 @@
-import { Button, Col, Divider, Icon, Row, Select, Table } from "antd";
+import { Button, Col, Icon, Row, Select, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import apis from "../../../../apis";

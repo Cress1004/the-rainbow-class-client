@@ -8,7 +8,6 @@ import PermissionDenied from "../../Error/PermissionDenied";
 import apis from "../../../../apis";
 import useFetchAllClasses from "../../../../hook/Class/useFetchAllClasses";
 import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
-import Report from "../Sessions/Report";
 
 const { Option } = Select;
 function ClassSchedule() {

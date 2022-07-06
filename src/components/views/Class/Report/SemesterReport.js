@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { message, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import apis from "../../../../apis";
@@ -46,7 +47,7 @@ function SemesterReport(props) {
 
   if (getArrayLength(monthList)) {
     monthList.map((month) => {
-      fixedColumns.push({
+      return fixedColumns.push({
         title: month,
         dataIndex: `monthAverage`,
         key: month,
@@ -54,7 +55,13 @@ function SemesterReport(props) {
         maxWidth: 50,
         render: (record) => {
           var currentMonthAcv = record?.find((item) => item.month === month);
-          return <div>{!isNaN(currentMonthAcv.avgMonth) ? currentMonthAcv.avgMonth.toFixed(2) : "-"}</div>;
+          return (
+            <div>
+              {!isNaN(currentMonthAcv.avgMonth)
+                ? currentMonthAcv.avgMonth.toFixed(2)
+                : "-"}
+            </div>
+          );
         },
       });
     });
@@ -75,8 +82,9 @@ function SemesterReport(props) {
       }
       sumData.push({
         month: month,
-        avgMonth: (sumMonth / getArrayLength(monthAcv)),
+        avgMonth: sumMonth / getArrayLength(monthAcv),
       });
+      return null;
     });
     return sumData;
   };
@@ -86,7 +94,7 @@ function SemesterReport(props) {
     avgByMonth.forEach((item) => {
       if (!isNaN(item.avgMonth)) sum += item.avgMonth;
     });
-    console.log(sum)
+    console.log(sum);
     return (sum / getArrayLength(monthList)).toFixed(2);
   };
 

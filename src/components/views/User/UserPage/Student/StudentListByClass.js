@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Table, Row, Input, Icon, Button, Col } from "antd";
+import { Table, Row, Input, Icon, Col } from "antd";
 import "./student.scss";
 import { Link } from "react-router-dom";
 import {
@@ -9,7 +9,6 @@ import {
 } from "../../../../common/transformData";
 import { checkStringContentSubString } from "../../../../common/function";
 import useFetchStudentTypes from "../../../../../hook/CommonData.js/useFetchStudentTypes";
-import { Excel } from "antd-table-saveas-excel";
 import ExportStudentDataToExcel from "../../../../../export/ExportStudentDataToExcel";
 
 function StudentListByClass(props) {
@@ -70,14 +69,14 @@ function StudentListByClass(props) {
     },
   ];
 
-  const handleClickExport = () => {
-    const excel = new Excel();
-    excel
-      .addSheet("test")
-      .addColumns(columns)
-      .addDataSource(students)
-      .saveAs("Excel.xlsx");
-  };
+  // const handleClickExport = () => {
+  //   const excel = new Excel();
+  //   excel
+  //     .addSheet("test")
+  //     .addColumns(columns)
+  //     .addDataSource(students)
+  //     .saveAs("Excel.xlsx");
+  // };
 
   const renderData = (text, key) => (
     <Link to={`/students/${key.id}`} className={"text-in-table-row"}>

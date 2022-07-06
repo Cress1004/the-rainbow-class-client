@@ -196,7 +196,6 @@ function EditClass(props) {
   };
 
   const changeStudentType = (value) => {
-    const oldData = formik.values.studentTypes;
     const newData = studentTypes.filter((item) => value.includes(item._id));
     formik.setFieldValue("studentTypes", newData);
   };

@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Icon, List, message, Popover, Typography } from "antd";
 import { useTranslation } from "react-i18next";
@@ -20,8 +22,6 @@ function Notification(props) {
   const [unreadNoti, setUnreadNoti] = useState(0);
   const [pagination, setPagination] = useState({ limit: 10 });
   const [visible, setVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
   const { socket } = props;
 
   const fetchNotifications = async () => {
@@ -166,6 +166,7 @@ function Notification(props) {
                                         </span>
                                       </Link>
                                     );
+                                  default: return null
                                 }
                               })()}
                             </div>

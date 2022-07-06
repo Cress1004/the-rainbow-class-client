@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { useHistory } from "react-router-dom";
@@ -127,10 +128,6 @@ function StudentDetail(props) {
   const deleteStudent = () => {
     setConfirmDelete(false);
     fetchDeleteStudent(id);
-  };
-
-  const cancelDelete = () => {
-    setConfirmDelete(false);
   };
 
   const checkFillAllData = () => {

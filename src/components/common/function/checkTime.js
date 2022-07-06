@@ -1,5 +1,4 @@
 import moment from "moment";
-import { FORMAT_MONTH_STRING } from "../constant";
 
 export function checkNowOverSemesterTime(start, end) {
   var startDate = new Date(start);

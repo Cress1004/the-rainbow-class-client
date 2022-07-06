@@ -46,7 +46,7 @@ function MyReportOneToOneTeaching(props) {
 
   useEffect(() => {
     fetchReportsByPair(pairData?._id, currentMonth);
-  }, [pairData]);
+  }, [pairData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const changeMonth = (month) => {
     setMonth(moment(month).format(FORMAT_MONTH_STRING));

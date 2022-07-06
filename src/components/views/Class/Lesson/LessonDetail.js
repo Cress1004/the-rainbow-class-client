@@ -90,7 +90,7 @@ function LessonDetail(props) {
 
   useEffect(() => {
     fetchLessonData(id, lessonId);
-  }, [id, lessonId]);
+  }, [id, lessonId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const openDeletePopup = () => {
     setConfirmDelete(true);

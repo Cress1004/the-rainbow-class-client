@@ -1,5 +1,5 @@
 import { Button, Row } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { checkCurrentUserBelongToCurrentClass } from "../../../common/checkRole";
 import AddLesson from "../Lesson/AddLesson";

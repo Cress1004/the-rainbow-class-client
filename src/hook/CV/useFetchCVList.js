@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import { useState, useEffect } from "react";
 import apis from "../../apis";
 import { getCVStatus } from "../../components/common/function";

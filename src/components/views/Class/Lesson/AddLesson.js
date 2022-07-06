@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Row,
   Form,
@@ -24,7 +24,6 @@ import {
 } from "../../../common/constant";
 import { generateKey } from "../../../common/function";
 import moment from "moment";
-import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
 import useFetchLocation from "../../../../hook/CommonData.js/useFetchLocation";
 import apis from "../../../../apis";
 import useFetchClassData from "../../../../hook/Class/useFetchClassData";
@@ -45,13 +44,11 @@ function AddLesson(props) {
   const [ward, setWard] = useState("");
   const [address, setAddress] = useState({});
   const [defaultSchedule, setDefaultSchedule] = useState({});
-  const [lessonData, setLessonData] = useState({});
   const [time, setTime] = useState(null);
   const [teachOption, setTeachOption] = useState(OFFLINE_OPTION);
-  const currentUser = useFetchCurrentUserData();
   const location = useFetchLocation();
   const classData = useFetchClassData(id);
-  const { setAddLesson, fetchLessonsByPair, pairId,  setLessons} = props;
+  const { setAddLesson, fetchLessonsByPair, pairId} = props;
 
   const layout = {
     labelCol: { span: 5 },

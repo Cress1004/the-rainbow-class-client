@@ -199,7 +199,6 @@ const resources = {
       add_new_semester: "Thêm kì học mới",
       number_of_lessons_per_week: "Số buổi",
       lessons_per_week: "buổi/tuần",
-      note: "Ghi chú",
       number_of_unregister_student: "Số học sinh chưa được đăng kí",
       number_of_waiting_student: "Số học sinh đang đợi xếp TNV",
       number_of_unregister: "Chưa được đăng kí",

@@ -87,7 +87,7 @@ function QuestionDetail(props) {
     <div>
       <Row>
         <Col
-          span={question.isRequired ? 4 : 5}
+          span={question.isRequired ? 6 : 7}
           className="cv-question__question-detail--subtitle"
         >
           {`${t("question_number")} ${index + 1} 
@@ -106,7 +106,7 @@ function QuestionDetail(props) {
         ) : (
           <>
             {" "}
-            <Col span={1}>
+            <Col span={2}>
               <Icon
                 type="edit"
                 onClick={() => setEditting(true)}

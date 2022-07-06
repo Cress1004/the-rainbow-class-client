@@ -81,7 +81,7 @@ function ClassDetail(props) {
     fetchClassData(id);
     const params = new URLSearchParams(window.location.search);
     if (params.get("tab")) setDefaultTab(params.get("tab"));
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const menu = (
     <Menu>

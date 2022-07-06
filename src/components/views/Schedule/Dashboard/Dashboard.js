@@ -1,6 +1,6 @@
 import React from "react";
 import "../schedule.scss";
-import { STUDENT, SUPER_ADMIN, VOLUNTEER } from "../../../common/constant";
+import { STUDENT, VOLUNTEER } from "../../../common/constant";
 import AdminDashboard from "../Sessions/AdminDashboard";
 import PermissionDenied from "../../Error/PermissionDenied";
 import StudentTimesheet from "./StudentTimesheet";

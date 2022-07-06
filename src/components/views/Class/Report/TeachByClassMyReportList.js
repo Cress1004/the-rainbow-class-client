@@ -55,7 +55,7 @@ function TeachByClassMyReportList(props) {
       localStorage.setItem("report-current-month", currentMonth);
     }
     fetchReportsByVolunteer(currentVolunteerData?._id, month);
-  }, [currentVolunteerData, classData]);
+  }, [currentVolunteerData, classData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const transformDataSourceMyReports = (myReports) => {
     // let sum = 0;

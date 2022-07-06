@@ -1,4 +1,5 @@
-import { message, Tabs } from "antd";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -11,7 +12,6 @@ import PairList from "../PairSessions/PairList";
 import PairByVolunteer from "../PairSessions/PairByVolunteer";
 import { checkAdminAndMonitorRole } from "../../../common/function";
 import apis from "../../../../apis";
-import _function from "../../../common/function";
 import { checkAdminRole } from "../../../common/checkRole";
 import AllReportOneToOneTeaching from "../Report/AllReportOneToOneTeaching";
 import MyReportOneToOneTeaching from "../Report/MyReportOneToOneTeaching";

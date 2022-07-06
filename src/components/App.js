@@ -33,8 +33,6 @@ import ClassSchedule from "./views/Schedule/ClassSchedule/ClassSchedule";
 import AdminList from "./views/User/UserPage/Admin/AdminList";
 import SetMonitor from "./views/Class/Session/SetMonitor";
 import CommentStudent from "./views/Class/CommentStudent/CommentStudent";
-import HomePageLayoutRoute from "./views/Layouts/HomePageLayoutRoute";
-import UploadCV from "./views/CV/UploadCV";
 import CVList from "./views/CV/CVList";
 import CVDetail from "./views/CV/CVDetail";
 import { CONNECTION_PORT } from "./common/constant";
@@ -55,7 +53,7 @@ function App(props) {
 
   useEffect(() => {
     setupSocket();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -63,10 +61,6 @@ function App(props) {
         <Route exact path="/">
           <Redirect to="/dashboard" />
         </Route>
-        <HomePageLayoutRoute
-          path="/upload-cv"
-          component={Auth(UploadCV, false)}
-        />
         <DashboardLayoutRoute
           path="/dashboard"
           exact={true}

@@ -31,7 +31,7 @@ function CommentStudent(props) {
 
   if (getArrayLength(lessonData)) {
     lessonData.map((lesson) => {
-      fixedColumns.push({
+      return fixedColumns.push({
         title: lesson.title,
         dataIndex: `achievement`,
         key: lesson._id,

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Col, Row, Select, Form } from "antd";
 import React, { useEffect, useState } from "react";
 import apis from "../../../../apis";
