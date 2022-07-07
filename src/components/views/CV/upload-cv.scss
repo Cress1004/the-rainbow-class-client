@@ -19,11 +19,27 @@
   }
   &__status {
     height: 30px;
-    width: 160px;
+    width: 120px;
     padding: 3px;
     border-radius: 25px;
     font-weight: bolder;
     text-align: center;
+  }
+  &__filter {
+    background-color: rgb(230, 230, 230);
+    height: 30px;
+    width: 30px;
+    padding: 8px;
+    border-radius: 15px;
+    margin-right: 10px;
+    &--active {
+        background-color: $primary-color;
+        color: white;
+    }
+  }
+  &__tool {
+    display: flex;
+    float: right;
   }
 }
 

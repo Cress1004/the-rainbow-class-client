@@ -166,14 +166,14 @@ function Report(props) {
           </p>
           <ul className="no-bullets">
             <li>
-              <Link to={`cv`} className={"text-in-table-row"}>
+              <Link to={`cv?offset=1&search=&query=%7B"status":0%7D`} className={"text-in-table-row"}>
                 <span style={{ color: "white" }}>
                   {cvData?.pendingCV || 0} {t("cv")} {CV_STATUS[0].text}
                 </span>
               </Link>
             </li>
             <li>
-              <Link to={`cv`} className={"text-in-table-row"}>
+              <Link to={`cv?offset=1&search=&query=%7B"status":1%7D`} className={"text-in-table-row"}>
                 <span style={{ color: "white" }}>
                   {cvData?.waitingCV || 0} {t("cv")} {CV_STATUS[1].text}
                 </span>

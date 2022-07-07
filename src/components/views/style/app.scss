@@ -52,5 +52,11 @@ $label-font-weight: bolder;
     &--icon {
         float: left;
     }
+  };
+  &__text-1-line {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }
