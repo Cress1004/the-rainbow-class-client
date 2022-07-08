@@ -114,7 +114,7 @@ export function transformEventOfLesson(data) {
 }
 
 export function transformScheduleTimeData(time) {
-  return `${time?.date} ${time?.startTime} - ${time?.endTime}`;
+  return `${moment(new Date(time?.date)).format(FORMAT_DATE)} ${time?.startTime} - ${time?.endTime}`;
 }
 
 export function transformDate(date) {

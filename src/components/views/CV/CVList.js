@@ -163,7 +163,7 @@ function CVList(props) {
     {
       title: t("register_class"),
       dataIndex: "classInfo",
-      key: "classInfo",
+      key: "_id",
       width: 170,
       render: (classInfo, record) => renderData(classInfo.name, record),
     },
@@ -204,7 +204,7 @@ function CVList(props) {
   const renderData = (text, key) => (
     <Popover content={text}>
       <Link
-        to={`/cv/${key.id}`}
+        to={`/cv/${key._id}`}
         className={"text-in-table-row custom__text-1-line"}
       >
         <span>{text}</span>

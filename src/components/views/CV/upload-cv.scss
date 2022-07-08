@@ -54,7 +54,6 @@
     font-size: $sub-title-font-size;
     font-weight: $title-font-weight;
     color: $primary-color;
-    margin-bottom: 30px;
   }
   &__show-icon {
     margin-left: 5px;
@@ -119,9 +118,11 @@
     .ant-btn-group > span:first-child:not(:last-child) > .ant-btn::after {
       color: black;
     }
-    .ant-dropdown-button.ant-btn-group > .ant-btn:last-child:not(:first-child) {
+    .ant-dropdown-button.ant-btn-group > .ant-btn:last-child:not(:first-child), 
+    .ant-dropdown-trigger {
       border-top-right-radius: 25px;
       border-bottom-right-radius: 25px;
+      width: 38px;
     }
     .ant-dropdown-button.ant-btn-group
       > .ant-btn:last-child:not(:first-child)::after {
@@ -171,8 +172,12 @@
     float: left;
   }
   &__free-time-table {
-    .ant-table-tbody > tr > th,
     .ant-table-tbody > tr > td {
+      text-align: center;
+      padding: 8px 0px;
+    }
+    .ant-table-thead > tr > th {
+      padding: 8px 8px;
       text-align: center;
     }
   }
@@ -214,6 +219,10 @@
   > .ant-form-item {
     margin-bottom: 0px;
   }
+}
+
+.set-interview-time-modal .ant-modal-body {
+  padding: 0px 24px;
 }
 
 .cv-question {

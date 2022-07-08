@@ -1,4 +1,4 @@
-import { Col } from "antd";
+import { Col, Input } from "antd";
 import { DatePicker } from "antd";
 import { TimePicker } from "antd";
 import { Modal } from "antd";
@@ -25,6 +25,7 @@ function SetInterviewTime(props) {
     fixedData,
     interviewData,
     classId,
+    linkOnline
   } = props;
 
   const [adminAndCurrentMonitor, setAdminAndCurrentMonitor] = useState([]);
@@ -48,7 +49,11 @@ function SetInterviewTime(props) {
 
   const checkFillAllData = () => {
     return (
-      formik.values.date && formik.values.endTime && formik.values.startTime && formik.values.participants
+      formik.values.date &&
+      formik.values.endTime &&
+      formik.values.startTime &&
+      formik.values.participants &&
+      formik.values.linkOnline
     );
   };
 
@@ -65,8 +70,12 @@ function SetInterviewTime(props) {
   };
 
   const onChangeParticipants = (value) => {
-    formik.setFieldValue("participants", value)
-  }
+    formik.setFieldValue("participants", value);
+  };
+
+  const onChangeLinkOnline = (e) => {
+    formik.setFieldValue("linkOnline", e.target.value);
+  };
 
   const participantsList = adminAndCurrentMonitor?.map((item) => (
     <Option key={item.user._id}>{item.user.name}</Option>
@@ -74,6 +83,7 @@ function SetInterviewTime(props) {
 
   return (
     <Modal
+      className="set-interview-time-modal"
       title={t("set_interview_time")}
       visible={confirmInterview}
       onOk={formik.handleSubmit}
@@ -100,7 +110,7 @@ function SetInterviewTime(props) {
               onChange={onChangeDate}
               placeholder={t("date_placeholder")}
               defaultValue={
-                interviewData ? moment(interviewData.time.date) : undefined
+                interviewData ? moment(interviewData.time?.date) : undefined
               }
             />
           </Col>
@@ -112,7 +122,7 @@ function SetInterviewTime(props) {
               onChange={onChangeStartTime}
               defaultValue={
                 interviewData
-                  ? moment(interviewData.time.startTime, FORMAT_TIME_SCHEDULE)
+                  ? moment(interviewData.time?.startTime, FORMAT_TIME_SCHEDULE)
                   : undefined
               }
             />
@@ -125,11 +135,18 @@ function SetInterviewTime(props) {
               onChange={onChangeEndTime}
               defaultValue={
                 interviewData
-                  ? moment(interviewData.time.endTime, FORMAT_TIME_SCHEDULE)
+                  ? moment(interviewData.time?.endTime, FORMAT_TIME_SCHEDULE)
                   : undefined
               }
             />
           </Col>
+        </Item>
+        <Item label={t("link_interview")}>
+          <Input
+            onChange={onChangeLinkOnline}
+            placeholder={t("link_interview_placeholder")}
+            defaultValue={linkOnline || undefined}
+          />
         </Item>
         <Item label={t("person_in_charge")}>
           <Select
@@ -137,7 +154,9 @@ function SetInterviewTime(props) {
             allowClear
             style={{ width: "100%" }}
             placeholder={t("select_person_in_charge")}
-            defaultValue={interviewData?.paticipants ? interviewData.paticipants : undefined}
+            defaultValue={
+              interviewData?.paticipants ? interviewData.paticipants : undefined
+            }
             onChange={onChangeParticipants}
           >
             {participantsList}

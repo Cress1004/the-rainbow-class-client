@@ -1,11 +1,10 @@
-import { Col, Row, Form, Button, Icon, Divider, Modal } from "antd";
+import { Col, Row, Form, Button, Icon, Divider, message } from "antd";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 import { Document, Page, pdfjs } from "react-pdf";
 import { Checkbox } from "antd";
 import "video-react/dist/video-react.css";
-
 import {
   CV_STATUS,
   CV_STATUS_NAME,
@@ -49,7 +48,7 @@ function CVDetail(props) {
   const [confirmPass, setConfirmPass] = useState(false);
   const [answers, setAnswers] = useState([]);
   const [viewCVAnswer, setViewCVAnswer] = useState(false);
-  const [videoModalActive, setVideoModalActive] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
   const cvStatus = CV_STATUS.find((item) => item.key === cvData?.status);
 
   const fetchCVData = async (id) => {
@@ -77,8 +76,9 @@ function CVDetail(props) {
       setConfirmReject(false);
       setConfirmInterview(false);
       setConfirmPass(false);
+      message.success("Mail was sent to user!");
     } else if (!data.success) {
-      alert(data.message);
+      message.error(data.message);
     }
   };
 
@@ -91,16 +91,17 @@ function CVDetail(props) {
     initialValues: {
       cvId: id,
       status: cvData.status,
-      date: cvData.schedule?.time.date,
-      startTime: cvData.schedule?.time.startTime,
-      endTime: cvData.schedule?.time.endTime,
+      date: cvData.schedule?.time?.date,
+      startTime: cvData.schedule?.time?.startTime,
+      endTime: cvData.schedule?.time?.endTime,
       participants: cvData.schedule?.paticipants,
+      linkOnline: cvData.schedule?.linkOnline,
     },
     enableReinitialize: true,
     onSubmit: (values, { setSubmitting }) => {
-      setTimeout(() => {
-        fetchUpdateCVStatus(id, values);
-        setSubmitting(false);
+      setTimeout(async () => {
+        await fetchUpdateCVStatus(id, values);
+        await setSubmitting(false);
       }, 400);
     },
   });
@@ -110,7 +111,7 @@ function CVDetail(props) {
       title: "",
       dataIndex: "time",
       fixed: true,
-      width: 120,
+      width: 100,
     },
   ];
 
@@ -171,10 +172,6 @@ function CVDetail(props) {
   };
   const downloadFile = () => {
     window.open(cvData.cvFileLink, "_blank");
-  };
-
-  const closeModal = () => {
-    setVideoModalActive(false);
   };
 
   const changeStatus = ({ key }) => {
@@ -265,6 +262,7 @@ function CVDetail(props) {
                         checkCVDataStatus(CV_STATUS_NAME.FAIL) ||
                         checkCVDataStatus(CV_STATUS_NAME.PASS)
                       }
+                      getPopupContainer={(trigger) => trigger.parentElement}
                     >
                       {cvStatus.text}
                     </Dropdown.Button>
@@ -279,46 +277,44 @@ function CVDetail(props) {
                         onClick={() => setConfirmInterview(true)}
                       />
                     </Item>
+                    <Item label={t("interview_link")}>
+                      <a
+                        href={cvData.schedule?.linkOnline}
+                      >{`${cvData.schedule?.linkOnline?.slice(0, 25)}...`}</a>
+                    </Item>
                   </>
                 ) : null}
               </div>
             ) : null}
-            <Item label={t("cv_file")}>
-              <a onClick={() => downloadFile()} target="_blank">
-                {t("download_here")}
-              </a>
-            </Item>
-            {cvData.audioFileLink ? (
-              <Item label={t("audio_intro_by_english")}>
-                <Button onClick={() => setVideoModalActive(true)}>
-                  {t("show_audio")}
-                </Button>
-              </Item>
-            ) : (
-              <></>
-            )}
-            <Modal
-              title={t("audio_intro_by_english")}
-              id="video-modal"
-              visible={videoModalActive}
-              onCancel={closeModal}
-              onOk={closeModal}
-              width="55%"
-              bodyStyle={{ height: 300, width: 400 }}
-            >
-              <video width="320" height="240" controls>
-                <source src={cvData.audioFileLink} type="video/mp4" />
-              </video>
-            </Modal>
           </Form>
         </Col>
         <Col span={14}>
           <Item label={t("free_time_table")}>
             <FreeTimeTable t={t} columns={columns} fixedData={fixedData} />
-          </Item>
+          </Item>{" "}
           <Item label={t("note")}>{cvData?.note || t("no_comment")}</Item>
         </Col>
       </Row>
+      <Divider />
+      <div className="cv-detail__subtitle">
+        {t("show_cv")}
+        <Icon
+          type={showCV ? "down-circle" : "right-circle"}
+          onClick={() => setShowCV(!showCV)}
+          className="cv-detail__show-icon"
+        />
+      </div>
+      {showCV ? (
+        <>
+          {scale}
+          <div style={{ textAlign: "right" }}>
+            <a onClick={() => downloadFile()} target="_blank">
+              {t("download_cv_here")}
+            </a>
+          </div>
+          <div className="all-page-container">{pdfDoc}</div>
+        </>
+      ) : null}
       <Divider />
       <div className="cv-detail__subtitle">
         {t("show_cv_answers")}
@@ -343,28 +339,25 @@ function CVDetail(props) {
         </>
       ) : null}
       <Divider />
-      {/* <Button
-        onClick={() => setShowCV(!showCV)}
-        style={{ marginBottom: "15px" }}
-      >
-        {showCV ? t("close_cv") : t("show_cv")}
-      </Button> */}
-      <div className="cv-detail__subtitle">
-        {t("show_cv")}
-        <Icon
-          type={showCV ? "down-circle" : "right-circle"}
-          onClick={() => setShowCV(!showCV)}
-          className="cv-detail__show-icon"
-        />
-      </div>
-      {showCV ? (
+      {cvData.audioFileLink ? (
         <>
-          <Row>
-            <div className="all-page-container">
-              {scale}
-              {pdfDoc}
+          {" "}
+          <div className="cv-detail__subtitle">
+            {t("audio_intro_by_english")}
+            <Icon
+              type={showVideo ? "down-circle" : "right-circle"}
+              onClick={() => setShowVideo(!showVideo)}
+              className="cv-detail__show-icon"
+            />
+          </div>
+          {showVideo ? (
+            <div style={{ textAlign: "center", marginTop: "15px" }}>
+              <audio controls>
+                <source src={cvData.audioFileLink} type="video/mp4" />
+              </audio>
             </div>
-          </Row>
+          ) : null}
+          <Divider />
         </>
       ) : null}
       <ConfirmRejectStatus
@@ -373,12 +366,14 @@ function CVDetail(props) {
         setConfirmReject={setConfirmReject}
         formik={formik}
       />
+      {console.log(cvData.linkOnline)}
       {cvData.class?._id ? (
         <SetInterviewTime
           t={t}
           confirmInterview={confirmInterview}
           setConfirmInterview={setConfirmInterview}
           interviewData={cvData.schedule}
+          linkOnline={cvData.schedule?.linkOnline}
           formik={formik}
           columns={columns}
           fixedData={fixedData}
