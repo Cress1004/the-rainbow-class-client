@@ -8,11 +8,17 @@
     .ant-table-wrapper {
         padding-top: 60px;
     }
+    &__close-icon {
+        color: $danger-color;
+    }
+    &__form {
+        margin-top: 15px;
+    }
 }
 
 .type-of-student-list {
     &__title {
-        font-size: $title-font-size;
+        font-size: $sub-title-font-size;
         font-weight: $title-font-weight;
         color: $primary-color;
     }

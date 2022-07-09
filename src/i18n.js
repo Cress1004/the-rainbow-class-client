@@ -254,6 +254,7 @@ const resources = {
       link_interview: "Link phỏng vấn online",
       link_interview_placeholder: "Điền vào đường link online",
       interviewer: "Phụ trách PV",
+      input_new_student_type: "Điền vào đối tượng học sinh mới",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",
