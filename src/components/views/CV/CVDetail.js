@@ -34,10 +34,14 @@ const SCALE_STEP = 0.1;
 
 function CVDetail(props) {
   const { t } = useTranslation();
-  const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
+  const rightLayout = {
+    labelCol: { span: 11 },
+    wrapperCol: { span: 13 },
   };
+  const leftLayout = {
+    labelCol: { span: 5 },
+    wrapperCol: { span: 19 },
+  }
   const { id } = useParams();
   const [cvData, setCVData] = useState({});
   const [totalPages, setTotalPages] = useState(null);
@@ -94,7 +98,7 @@ function CVDetail(props) {
       date: cvData.schedule?.time?.date,
       startTime: cvData.schedule?.time?.startTime,
       endTime: cvData.schedule?.time?.endTime,
-      participants: cvData.schedule?.paticipants,
+      participants: cvData.schedule?.participants?.map(item => item._id),
       linkOnline: cvData.schedule?.linkOnline,
     },
     enableReinitialize: true,
@@ -240,11 +244,19 @@ function CVDetail(props) {
     <div className="cv-detail">
       <div className="cv-detail__title">{t("cv_detail")}</div>
       <Row>
-        <Col span={10}>
-          <Form {...layout} className="cv-detail__show-detail">
+        <Col span={14}>
+        <Form {...leftLayout} className="cv-detail__show-detail">
             <Item label={t("user_name")}>{cvData.userName}</Item>
             <Item label={t("email")}>{cvData.email}</Item>
             <Item label={t("phone_number")}>{cvData.phoneNumber}</Item>
+          </Form>
+          <Item label={t("free_time_table")}>
+            <FreeTimeTable t={t} columns={columns} fixedData={fixedData} />
+          </Item>{" "}
+          <Item label={t("note")}>{cvData?.note || t("no_comment")}</Item>
+        </Col>
+        <Col span={10}>
+          <Form {...rightLayout} className="cv-detail__show-detail">
             <Item label={t("create_time")}>
               {moment(cvData.created_at).format(FORMAT_DATE)}
             </Item>
@@ -284,15 +296,19 @@ function CVDetail(props) {
                     </Item>
                   </>
                 ) : null}
+                {getArrayLength(cvData.schedule?.participants) ? (
+                  <Item label={t("interviewer")}>
+                    {cvData.schedule.participants.map((item) => (
+                      <>
+                        <span>{item.name}</span>
+                        <br />
+                      </>
+                    ))}
+                  </Item>
+                ) : null}
               </div>
             ) : null}
           </Form>
-        </Col>
-        <Col span={14}>
-          <Item label={t("free_time_table")}>
-            <FreeTimeTable t={t} columns={columns} fixedData={fixedData} />
-          </Item>{" "}
-          <Item label={t("note")}>{cvData?.note || t("no_comment")}</Item>
         </Col>
       </Row>
       <Divider />
@@ -327,14 +343,14 @@ function CVDetail(props) {
       {viewCVAnswer ? (
         <>
           {answers.map((answer) => (
-            <>
+            <div className="cv-detail__answer-detail">
               <Item
                 label={answer.question.content}
                 required={answer.question.isRequired}
               >
                 {answer.content}
               </Item>
-            </>
+            </div>
           ))}
         </>
       ) : null}

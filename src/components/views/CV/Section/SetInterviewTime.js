@@ -155,7 +155,7 @@ function SetInterviewTime(props) {
             style={{ width: "100%" }}
             placeholder={t("select_person_in_charge")}
             defaultValue={
-              interviewData?.paticipants ? interviewData.paticipants : undefined
+              formik.values.participants
             }
             onChange={onChangeParticipants}
           >

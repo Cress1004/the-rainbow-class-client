@@ -60,3 +60,11 @@ $label-font-weight: bolder;
     overflow: hidden;
   }
 }
+
+.ant-form-item label {
+  margin-right: 15px;
+}
+
+.ant-form-item label:after {
+  content: none;
+}

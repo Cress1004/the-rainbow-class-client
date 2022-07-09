@@ -27,10 +27,8 @@ function Notification(props) {
   const fetchNotifications = async () => {
     const data = await apis.notifications.getNotifications(pagination);
     if (data.success) {
-      const notis = data.notifications;
-      const unread = notis.filter((item) => item.read === false);
-      setNoti(unread);
-      setUnreadNoti(getArrayLength(unread));
+      setNoti(data.notifications);
+      setUnreadNoti(data.count);
     } else if (!data.success) {
       message.error(data.message);
     } else {
@@ -166,7 +164,22 @@ function Notification(props) {
                                         </span>
                                       </Link>
                                     );
-                                  default: return null
+                                  case NOTI_TYPE_TITLE.NOTI_SET_INTERVIEW_PARTICIPANT:
+                                    return (
+                                      <Link
+                                        to={`/${item?.content?.path}/${item.content?.id}`}
+                                      >
+                                        <span
+                                          onClick={() =>
+                                            fetchReadNotification(item?._id)
+                                          }
+                                        >
+                                          {t("detail")}
+                                        </span>
+                                      </Link>
+                                    );
+                                  default:
+                                    return null;
                                 }
                               })()}
                             </div>

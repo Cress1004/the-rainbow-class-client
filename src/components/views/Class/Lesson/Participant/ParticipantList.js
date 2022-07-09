@@ -5,7 +5,7 @@ import SetPersonInCharge from "./SetPersonInCharge";
 import { getArrayLength } from "../../../../common/transformData";
 import TableNodata from "../../../NoData/TableNodata";
 
-function PaticipantList(props) {
+function ParticipantList(props) {
   const { t } = useTranslation();
   const {
     participants,
@@ -64,4 +64,4 @@ function PaticipantList(props) {
   );
 }
 
-export default PaticipantList;
+export default ParticipantList;

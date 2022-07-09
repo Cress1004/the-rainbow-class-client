@@ -3,7 +3,6 @@ import { useFormik } from "formik";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
-import { getArrayLength } from "../../../common/transformData";
 import apis from "../../../../apis";
 import useFetchClassData from "../../../../hook/Class/useFetchClassData";
 const { Option } = Select;
@@ -59,7 +58,6 @@ function SetMonitor(props) {
   return (
     <div className="set-monitor">
       <div className="set-monitor__title">{t("set_monitor")}</div>
-      {getArrayLength(volunteers) && (
         <Form {...layout} name="control-hooks" onSubmit={formik.handleSubmit}>
           <Form.Item label={t("class_monitor")} required>
             <Select
@@ -74,7 +72,7 @@ function SetMonitor(props) {
               onChange={handleChangeClassMonitor}
               placeholder={t("select_class_monitor")}
             >
-              {volunteers.map((option) => (
+              {volunteers?.map((option) => (
                 <Option
                   key={option._id}
                   value={option._id}
@@ -98,7 +96,7 @@ function SetMonitor(props) {
               placeholder={t("select_sub_class_monitor")}
               onChange={handleChangeSubClassMonitor}
             >
-              {volunteers.map((option) => (
+              {volunteers?.map((option) => (
                 <Option
                   key={option._id}
                   value={option._id}
@@ -115,7 +113,6 @@ function SetMonitor(props) {
             </Button>
           </Form.Item>
         </Form>
-      )}
     </div>
   );
 }

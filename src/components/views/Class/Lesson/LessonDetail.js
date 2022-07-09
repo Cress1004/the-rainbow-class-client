@@ -8,7 +8,7 @@ import {
   transformScheduleTimeData,
 } from "../../../common/transformData";
 import { OFFLINE_OPTION, STUDENT } from "../../../common/constant";
-import PaticipantList from "./Paticipant/PaticipantList";
+import ParticipantList from "./Participant/ParticipantList";
 import { checkCurrentUserBelongToCurrentClass } from "../../../common/checkRole";
 import PermissionDenied from "../../Error/PermissionDenied";
 import { checkAdminAndMonitorRole } from "../../../common/function";
@@ -43,10 +43,10 @@ function LessonDetail(props) {
         address: transformAddressData(data.schedule.address),
         time: transformScheduleTimeData(data.schedule.time),
         date: new Date(data.schedule.time.date),
-        paticipants: data.schedule.paticipants,
+        participants: data.schedule.participants,
         personInCharge: data.schedule.personInCharge,
       });
-      data.schedule.paticipants.find(
+      data.schedule.participants.find(
         (participant) => participant._id === userId
       )
         ? setAssign(true)
@@ -201,9 +201,9 @@ function LessonDetail(props) {
             </Row>
             <hr />
             <Row>
-              <div className="lesson-detail__paticipant-list-title">
-                {`${t("paticipants")} (${getArrayLength(
-                  lessonData.paticipants
+              <div className="lesson-detail__participant-list-title">
+                {`${t("participants")} (${getArrayLength(
+                  lessonData.participants
                 )})`}
               </div>
               {userRole && userRole.role !== STUDENT && (
@@ -227,9 +227,9 @@ function LessonDetail(props) {
                 </div>
               )}
             </Row>
-            {getArrayLength(lessonData.paticipants) ? (
-              <PaticipantList
-                participants={lessonData.paticipants}
+            {getArrayLength(lessonData.participants) ? (
+              <ParticipantList
+                participants={lessonData.participants}
                 checkAdminAndMonitorRole={checkAdminAndMonitorRole(userRole)}
                 personInCharge={lessonData.personInCharge}
                 scheduleId={lessonData.scheduleId}

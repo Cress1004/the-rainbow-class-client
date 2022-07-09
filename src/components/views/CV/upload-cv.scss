@@ -134,6 +134,12 @@
       margin-bottom: 10px;
     }
   }
+  &__answer-detail {
+    .ant-form-item-label {
+      white-space: inherit;
+      text-align: left;
+    }
+  }
 }
 
 .upload-cv {
