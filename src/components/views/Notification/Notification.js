@@ -40,7 +40,7 @@ function Notification(props) {
     Axios.get(`/api/notification/${id}`).then((response) => {
       if (response.data.success) {
         message.success("update status done!");
-        fetchNotifications()
+        fetchNotifications();
       } else if (!response.data.success) {
         message.error("update status fail!");
       }
@@ -200,6 +200,22 @@ function Notification(props) {
                                       <div>
                                         <Link
                                           to={`/${item?.content?.path}/${item.content?.id}`}
+                                        >
+                                          <span
+                                            onClick={() =>
+                                              fetchReadNotification(item?._id)
+                                            }
+                                          >
+                                            {t("detail")}
+                                          </span>
+                                        </Link>
+                                      </div>
+                                    );
+                                  case NOTI_TYPE_TITLE.NOTI_INCHARGE_LESSON:
+                                    return (
+                                      <div>
+                                        <Link
+                                          to={`/classes/${item.content?.classId}/lessons/${item.content?.lessonId}`}
                                         >
                                           <span
                                             onClick={() =>

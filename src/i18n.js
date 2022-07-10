@@ -34,7 +34,7 @@ const resources = {
       target_student: "Đối tượng",
       number_of_student: "Sĩ số",
       my_schedule: "Lịch cá nhân",
-      cancel: "Quay lại",
+      cancel: "Hủy",
       volunteer_list: "Danh sách Tình nguyện viên",
       volunteer: "Tình nguyện viên",
       user_name: "Họ và tên",
@@ -264,6 +264,8 @@ const resources = {
       select_class_monitor: "Chọn lớp trưởng",
       select_sub_class_monitor: "Chọn lớp phó",
       save: "Lưu",
+      input_link: "Nhập vào đường link",
+      select_person_incharge: "Chọn TNV phụ trách",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",

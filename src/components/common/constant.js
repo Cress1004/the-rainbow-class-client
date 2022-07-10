@@ -126,9 +126,26 @@ export const CONNECTION_PORT = "http://localhost:5000";
 export const NOTI_TYPE = [
   { key: 0, value: "newCV", text: "Có CV mới!" },
   { key: 1, value: "remindSetMonitor", text: "Chọn ban cán sự cho lớp mới!" },
-  { key: 2, value: "setInterviewParticipant", text: "Bạn có lịch phỏng vấn mới!"},
-  { key: 3, value: "upgrade_monitor_role", text: "Bạn được chọn làm ban cán sự lớp!"},
-  { key: 4, value: "downgrade_monitor_role", text: "Bạn không còn làm cán sự lớp!"},
+  {
+    key: 2,
+    value: "setInterviewParticipant",
+    text: "Bạn có lịch phỏng vấn mới!",
+  },
+  {
+    key: 3,
+    value: "upgrade_monitor_role",
+    text: "Bạn được chọn làm ban cán sự lớp!",
+  },
+  {
+    key: 4,
+    value: "downgrade_monitor_role",
+    text: "Bạn không còn làm cán sự lớp!",
+  },
+  {
+    key: 5,
+    value: "incharge_lesson",
+    text: "Bạn được phân công phụ trách bài học mới!",
+  },
 ];
 export const NOTI_TYPE_TITLE = {
   NEW_CV: 0,
@@ -136,6 +153,7 @@ export const NOTI_TYPE_TITLE = {
   NOTI_SET_INTERVIEW_PARTICIPANT: 2,
   NOTI_UPGRADE_MONITOR_ROLE: 3,
   NOTI_DOWNGRADE_MONITOR_ROLE: 4,
+  NOTI_INCHARGE_LESSON: 5,
 };
 
 export const STUDENT_STATUS = [

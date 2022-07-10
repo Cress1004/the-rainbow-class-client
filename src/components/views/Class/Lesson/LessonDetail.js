@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Row, Dropdown, Icon, Col, Menu, Button, Modal } from "antd";
+import { Row, Dropdown, Icon, Menu, Button, Modal, Form, message } from "antd";
 import {
   getArrayLength,
   transformAddressData,
@@ -19,7 +19,13 @@ import {
 import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
 import apis from "../../../../apis";
 
+const { Item } = Form;
+
 function LessonDetail(props) {
+  const layout = {
+    labelCol: { span: 4 },
+    wrapperCol: { span: 18 },
+  };
   const { t } = useTranslation();
   const userId = localStorage.getItem("userId");
   const { id, lessonId } = useParams();
@@ -59,7 +65,7 @@ function LessonDetail(props) {
   const fetchDeleteLesson = async (classId, lessonId) => {
     const data = await apis.lessons.deleteLesson(classId, lessonId);
     if (data.success) {
-      alert(t("delete_lesson_success"));
+      message.success(t("delete_lesson_success"));
       history.push(`/classes/${classId}/`);
     }
   };
@@ -71,8 +77,11 @@ function LessonDetail(props) {
       scheduleId
     );
     if (data.success) {
+      await fetchLessonData(id, lessonId);
       setAssign(true);
-      fetchLessonData(id, lessonId);
+      message.success("assign_lesson_success");
+    } else {
+      message.error(data);
     }
   };
 
@@ -83,8 +92,11 @@ function LessonDetail(props) {
       scheduleId
     );
     if (data.success) {
+      await fetchLessonData(id, lessonId);
       setAssign(false);
-      fetchLessonData(id, lessonId);
+      message.success("assign_lesson_success");
+    } else {
+      message.error(data);
     }
   };
 
@@ -162,43 +174,26 @@ function LessonDetail(props) {
       <div className="lesson-detail__info-area">
         {" "}
         {lessonData && (
-          <>
-            <Row>
-              <Col span={4} className="label-text">
-                {t("lesson_name")}
-              </Col>
-              <Col span={16}>{lessonData.title}</Col>
-            </Row>
-            <Row>
-              <Col span={4} className="label-text">
-                {t("description")}
-              </Col>
-              <Col span={16}>{lessonData.description}</Col>
-            </Row>
-            <Row>
-              <Col span={4} className="label-text">
-                {t("teach_option")}
-              </Col>{" "}
+          <Form {...layout} className="class-detail">
+            <Item label={t("lesson_name")}>{lessonData.title}</Item>
+            <Item label={t("description")}>{lessonData.description}</Item>
+            <Item label={t("teach_option")}>
+              {" "}
               {lessonData.teachOption === OFFLINE_OPTION ? (
-                <Col span={16}>
-                  <Row>{t("offline")}</Row>
-                  <Row>{lessonData.address}</Row>
-                </Col>
+                <>
+                  {t("offline")}
+                  <br />
+                  {lessonData.address}
+                </>
               ) : (
-                <Col span={16}>
-                  <Row>{t("online")}</Row>
-                  <Row>
-                    <a href={lessonData.linkOnline}>{lessonData.linkOnline}</a>
-                  </Row>
-                </Col>
+                <>
+                  {t("online")}
+                  <br />
+                  <a href={lessonData.linkOnline}>{lessonData.linkOnline}</a>
+                </>
               )}
-            </Row>
-            <Row>
-              <Col span={4} className="label-text">
-                {t("schedule_time")}
-              </Col>
-              <Col span={16}>{lessonData.time}</Col>
-            </Row>
+            </Item>
+            <Item label={t("schedule_time")}>{lessonData.time}</Item>
             <hr />
             <Row>
               <div className="lesson-detail__participant-list-title">
@@ -219,7 +214,7 @@ function LessonDetail(props) {
                     <Button
                       type="primary"
                       onClick={assignSchedule}
-                      disabled={checkOverTimeToRegister(lessonData.date)}
+                      disabled={checkOverTimeToRegister(lessonData.date, 3)}
                     >
                       {t("assign_this_schedule")}
                     </Button>
@@ -238,7 +233,7 @@ function LessonDetail(props) {
                 classId={id}
               />
             ) : null}
-          </>
+          </Form>
         )}
       </div>
       <Modal

@@ -9,6 +9,7 @@ import {
   DatePicker,
   TimePicker,
   Col,
+  message,
 } from "antd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -48,7 +49,7 @@ function AddLesson(props) {
   const [teachOption, setTeachOption] = useState(OFFLINE_OPTION);
   const location = useFetchLocation();
   const classData = useFetchClassData(id);
-  const { setAddLesson, fetchLessonsByPair, pairId} = props;
+  const { setAddLesson, fetchLessonsByPair, pairId } = props;
 
   const layout = {
     labelCol: { span: 5 },
@@ -75,11 +76,12 @@ function AddLesson(props) {
   const fetchAddLesson = async (classId, dataToSend) => {
     const data = await apis.lessons.addLesson(classId, dataToSend);
     if (data.success) {
+      message.success("add_new_lesson_success");
       history.push(`/classes/${classId}`);
     } else if (!data.success) {
-      alert(data.message);
+      message.error(data.message);
     } else {
-      alert("Fail to get api");
+      message.error("Fail to get api");
     }
   };
 
@@ -118,26 +120,26 @@ function AddLesson(props) {
   });
 
   // useEffect(() => {
- 
-    // const addressData = classData.address;
-    // if (addressData) {
-    //   setAddress({
-    //     address: addressData.address,
-    //     description: addressData.description,
-    //   });
-    //   setLessonData({ ...lessonData, address: addressData });
-    //   setProvince(addressData.address.province);
-    //   setDistrict(addressData.address.district);
-    //   setWard(addressData.address.ward);
-    //   fetchDistricts(addressData.address.province.id);
-    //   fetchWards(
-    //     addressData.address.province.id,
-    //     addressData.address.district.id
-    //   );
-    // }
-    // return () =>{
-    //   setAddLesson(true);
-    // }
+
+  // const addressData = classData.address;
+  // if (addressData) {
+  //   setAddress({
+  //     address: addressData.address,
+  //     description: addressData.description,
+  //   });
+  //   setLessonData({ ...lessonData, address: addressData });
+  //   setProvince(addressData.address.province);
+  //   setDistrict(addressData.address.district);
+  //   setWard(addressData.address.ward);
+  //   fetchDistricts(addressData.address.province.id);
+  //   fetchWards(
+  //     addressData.address.province.id,
+  //     addressData.address.district.id
+  //   );
+  // }
+  // return () =>{
+  //   setAddLesson(true);
+  // }
   // }, []);
 
   const handleChangeProvice = (value) => {
@@ -333,7 +335,7 @@ function AddLesson(props) {
           <div>
             <Item label={t("link_online")}>
               <Input
-                placeholder="input_link"
+                placeholder={t("input_link")}
                 name="linkOnline"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -347,15 +349,16 @@ function AddLesson(props) {
           </div>
         )}
         <Item name="time" label={t("schedule")}>
-          <Col span={8}>
+          <Col span={10}>
             <DatePicker
               onChange={onChangeDate}
               placeholder={t("date_placeholder")}
             />
           </Col>
-          <Col span={2}>{t("from")}</Col>
-          <Col span={5}>
+          <Col span={7}>
+            <span className="add-class__from-to-label">{t("from")}</span>
             <TimePicker
+              className="add-class__time-picker"
               format={FORMAT_TIME_SCHEDULE}
               value={
                 time && time.startTime
@@ -368,9 +371,10 @@ function AddLesson(props) {
               }
             />
           </Col>
-          <Col span={2}>{t("to")}</Col>
-          <Col span={5}>
+          <Col span={7}>
+            <span className="add-class__from-to-label">{t("to")}</span>
             <TimePicker
+              className="add-class__time-picker"
               format={FORMAT_TIME_SCHEDULE}
               value={
                 time && time.endTime

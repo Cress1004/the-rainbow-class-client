@@ -350,16 +350,17 @@ function EditLesson(props) {
         )}
         {time && (
           <Item name="time" label={t("schedule")} required>
-            <Col span={8}>
+            <Col span={10}>
               <DatePicker
                 value={convertDateStringToMoment(time.date)}
                 onChange={onChangeDate}
                 placeholder={t("date_placeholder")}
               />
             </Col>
-            <Col span={2}>{t("from")}</Col>
-            <Col span={5}>
+            <Col span={7}>
+              <span className="add-class__from-to-label">{t("from")}</span>
               <TimePicker
+                className="add-class__time-picker"
                 format={FORMAT_TIME_SCHEDULE}
                 value={
                   time && time.endTime
@@ -372,9 +373,10 @@ function EditLesson(props) {
                 }
               />
             </Col>
-            <Col span={2}>{t("to")}</Col>
-            <Col span={5}>
+            <Col span={7}>
+              <span className="add-class__from-to-label">{t("to")}</span>
               <TimePicker
+                className="add-class__time-picker"
                 format={FORMAT_TIME_SCHEDULE}
                 value={
                   time && time.endTime

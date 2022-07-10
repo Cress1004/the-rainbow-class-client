@@ -1,9 +1,9 @@
-export function checkOverTimeToRegister(date) {
+export function checkOverTimeToRegister(date, overDay) {
   if (date) {
     var currentdate = new Date();
     var differenceInTime = date.getTime() - currentdate.getTime();
     var differenceInDate = differenceInTime / (1000 * 3600 * 24);
-    if (differenceInDate < 7) return true;
+    if (differenceInDate < overDay) return true;
     else return false;
   }
 }

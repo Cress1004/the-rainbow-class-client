@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Button, Col, Form, Icon, Row, Select } from "antd";
+import { Button, Col, Form, Icon, message, Row, Select } from "antd";
 import { useFormik } from "formik";
 import apis from "../../../../../apis";
+import { checkStringContentSubString } from "../../../../common/function";
 
 const { Option } = Select;
 
@@ -13,12 +14,12 @@ function SetPersonInCharge(props) {
     scheduleId,
     fetchLessonData,
     lessonId,
-    classId
+    classId,
   } = props;
   const [isEdit, setEdit] = useState(false);
   const layout = {
-    labelCol: { span: 3 },
-    wrapperCol: { span: 21 },
+    labelCol: { span: 4 },
+    wrapperCol: { span: 20 },
   };
 
   const personInchargeName =
@@ -27,10 +28,13 @@ function SetPersonInCharge(props) {
   const fetchUpdatePersonInCharge = async (values, classId, lessonId) => {
     const data = await apis.schedules.updatePersonInCharge(values);
     if (data.success) {
+      await fetchLessonData(classId, lessonId);
       setEdit(false);
-      fetchLessonData(classId, lessonId);
+      message.success("save_person_incharge_success");
     } else if (!data.success) {
-      alert(data.message);
+      message.error(data.message);
+    } else {
+      message.error("some_thing_went_wrong");
     }
   };
 
@@ -41,8 +45,8 @@ function SetPersonInCharge(props) {
     },
     enableReinitialize: true,
     onSubmit: (values, { setSubmitting }) => {
-      setTimeout(() => {
-        fetchUpdatePersonInCharge(values, classId, lessonId);
+      setTimeout(async () => {
+        await fetchUpdatePersonInCharge(values, classId, lessonId);
         setSubmitting(false);
       }, 400);
     },
@@ -55,15 +59,20 @@ function SetPersonInCharge(props) {
   return (
     <div className="lesson-detail__person-incharge">
       <Form {...layout} onSubmit={formik.handleSubmit}>
-        <Form.Item label={t("person_in_charge")} labelAlign="left">
+        <Form.Item label={t("person_in_charge")}>
           {isEdit ? (
             <Row>
-              <Col span={10}>
+              <Col span={7}>
                 <Select
+                  allowClear
                   showSearch
+                  filterOption={(input, option) =>
+                    checkStringContentSubString(option.props.children, input)
+                  }
                   placeholder={t("select_person_incharge")}
-                  style={{ width: "85%" }}
+                  style={{ width: "90%" }}
                   onChange={changePersonInCharge}
+                  defaultValue={formik.values.personInChargeId}
                 >
                   {participants.map((option) => (
                     <Option key={option.id} value={option.id}>
@@ -76,7 +85,6 @@ function SetPersonInCharge(props) {
                 <Button
                   type="primary"
                   htmlType="submit"
-                  disabled={!formik.values.personInChargeId}
                 >
                   {t("save")}
                 </Button>

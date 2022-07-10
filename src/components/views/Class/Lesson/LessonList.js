@@ -2,12 +2,8 @@ import React from "react";
 import { Table, Row } from "antd";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  getArrayLength,
-  transformScheduleTimeData,
-} from "../../../common/transformData";
+import { transformScheduleTimeData } from "../../../common/transformData";
 import { OFFLINE_OPTION } from "../../../common/constant";
-import TableNodata from "../../NoData/TableNodata";
 
 function LessonList(props) {
   const { t } = useTranslation();
@@ -36,7 +32,7 @@ function LessonList(props) {
       dataIndex: "title",
       key: "title",
       render: (text, key) => renderData(text, key),
-      width: 100,
+      width: 180,
     },
     {
       title: t("person_in_charge"),
@@ -49,7 +45,7 @@ function LessonList(props) {
       title: t("time"),
       dataIndex: "time",
       key: "time",
-      width: 150,
+      width: 140,
       render: (text, key) => renderData(text, key),
     },
     {
@@ -80,11 +76,7 @@ function LessonList(props) {
           {t("lesson_list")} ({`${data.length} ${t("lesson")}`})
         </div>
       </Row>
-      {getArrayLength(data) ? (
-        <Table columns={columns} dataSource={data} />
-      ) : (
-        <TableNodata />
-      )}
+      <Table columns={columns} dataSource={data} />
     </div>
   );
 }

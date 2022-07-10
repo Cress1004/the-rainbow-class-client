@@ -249,6 +249,7 @@ function ClassList(props) {
         />
         {checkAdminRole(userRole) && (
           <Button type="primary" className="class-list__add-class-button">
+             <Icon type="plus-circle" />{" "}
             <Link to="/add-class">{t("add_class")}</Link>
           </Button>
         )}

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { Button, Row, Tabs } from "antd";
+import { Button, Icon, Row, Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -54,7 +54,11 @@ function TeachByClassOptionDetail(props) {
               {checkAdminAndMonitorRole(userRole) && (
                 <Row>
                   <div className="class-detail__add-lesson">
-                    <Button type="primary">
+                    <Button
+                      type="primary"
+                      className="class-list__add-class-button"
+                    >
+                      <Icon type="plus-circle" />{" "}
                       <Link to={`/classes/${classId}/lessons/add`}>
                         {t("add_lesson")}
                       </Link>
@@ -62,7 +66,11 @@ function TeachByClassOptionDetail(props) {
                   </div>
                 </Row>
               )}
-              <LessonList classId={classId} lessons={lessons} classData={classData}/>
+              <LessonList
+                classId={classId}
+                lessons={lessons}
+                classData={classData}
+              />
             </div>
           )}
         </TabPane>
