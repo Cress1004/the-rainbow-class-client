@@ -12,6 +12,8 @@ import {
   TimePicker,
   Icon,
   Radio,
+  Popover,
+  message,
 } from "antd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -65,9 +67,10 @@ function EditClass(props) {
   const fetchEditClass = async (classId, dataToSend) => {
     const data = await apis.classes.editClass(classId, dataToSend);
     if (data.success) {
+      message.success(t("edit class info success"));
       history.push(`/classes/${id}`);
     } else if (!data.success) {
-      alert(data.message);
+      message.error(data.message);
     }
   };
 
@@ -182,8 +185,8 @@ function EditClass(props) {
     const newSchedule = {
       key: generateKey(),
       dayOfWeek: undefined,
-      startTime: undefined,
-      endTime: undefined,
+      startTime: "00:00",
+      endTime: "00:00",
     };
     setDefaultSchedule([...defaultSchedule, newSchedule]);
   };
@@ -230,9 +233,10 @@ function EditClass(props) {
                 ))}
               </Select>
             </Col>
-            <Col span={2}>{t("from")}</Col>
-            <Col span={5}>
+            <Col span={7}>
+              <span className="add-class__from-to-label">{t("from")}</span>
               <TimePicker
+                className="add-class__time-picker"
                 format={FORMAT_TIME_SCHEDULE}
                 defaultValue={moment(item.startTime, FORMAT_TIME_SCHEDULE)}
                 placeholder={t("time_placeholder")}
@@ -250,9 +254,10 @@ function EditClass(props) {
                 }
               />
             </Col>
-            <Col span={2}>{t("to")}</Col>
-            <Col span={5}>
+            <Col span={7}>
+              <span className="add-class__from-to-label">{t("to")}</span>
               <TimePicker
+                className="add-class__time-picker"
                 format={FORMAT_TIME_SCHEDULE}
                 defaultValue={moment(item.endTime, FORMAT_TIME_SCHEDULE)}
                 placeholder={t("time_placeholder")}
@@ -270,15 +275,26 @@ function EditClass(props) {
                 }
               />
             </Col>
-            <Col span={2}>
-              <Icon
-                type="close-circle"
-                onClick={(e) => deleteDefaultSchedule(e, item.key)}
-              />
+            <Col span={1}></Col>
+            <Col span={1}>
+              <Popover
+                className="add-class_close-circle-icon"
+                content={t("delete_default_schedule")}
+              >
+                {" "}
+                <Icon
+                  type="close-circle"
+                  onClick={(e) => deleteDefaultSchedule(e, item.key)}
+                />
+              </Popover>
             </Col>
           </Row>
         ))}
-      <Icon type="plus-circle" onClick={addNewDefaultSchedule} />
+      <div className="add-class__plus-circle-icon">
+        <Popover content={t("add_new_default_schedule")}>
+          <Icon type="plus-circle" onClick={addNewDefaultSchedule} />
+        </Popover>
+      </div>
     </>
   );
 

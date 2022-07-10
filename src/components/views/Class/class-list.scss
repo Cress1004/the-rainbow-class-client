@@ -55,6 +55,19 @@
     color: $primary-color;
     padding-bottom: $title-padding-bottom;
   }
+  &__time-picker {
+      width: 110px;
+  }
+  &__from-to-label {
+    margin: 10px;
+  }
+  &__plus-circle-icon {
+    text-align: center;
+    color: $success-color;
+  }
+  &__close-circle-icon {
+    color: $danger-color;
+  }
 }
 
 .class-detail {

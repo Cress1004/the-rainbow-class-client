@@ -57,14 +57,14 @@ function StudentListByClass(props) {
       dataIndex: "studentTypesText",
       key: "studentTtypes",
       width: 175,
-      filters: getArrayLength(studentTypes)
-        ? studentTypes.map((item) => ({
-            text: item.title,
-            value: item._id,
-          }))
-        : [],
-      onFilter: (value, record) =>
-        record.studentTypes.some((type) => type._id === value),
+      // filters: getArrayLength(studentTypes)
+      //   ? studentTypes.map((item) => ({
+      //       text: item.title,
+      //       value: item._id,
+      //     }))
+      //   : [],
+      // onFilter: (value, record) =>
+      //   record.studentTypes.some((type) => type._id === value),
       render: (text, key) => renderData(text, key),
     },
   ];
@@ -87,11 +87,11 @@ function StudentListByClass(props) {
   return (
     <div className="student-list">
       <div>
-        {getArrayLength(searchData) ? (
+        {getArrayLength(students) ? (
           <>
             <Row>
-              <Col span={14}></Col>
-              <Col span={6}>
+              <Col span={11}></Col>
+              <Col span={7}>
                 <Input
                   className="student-list__search"
                   prefix={<Icon type="search" />}
@@ -116,7 +116,7 @@ function StudentListByClass(props) {
                   }}
                 />
               </Col>
-              <Col span={4}>
+              <Col span={6} className="volunteer-list__export-button">
                 <ExportStudentDataToExcel
                   t={t}
                   studentsData={studentsData}

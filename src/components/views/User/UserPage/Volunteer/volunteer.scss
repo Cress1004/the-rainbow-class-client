@@ -54,6 +54,13 @@
             color: white;
         }
       }
+    &__export-button {
+        .ant-btn {
+            border-radius: 15px;
+            background-color: $success-color;
+            color: white;
+        }
+    }
 }
 
 .add-volunteer {

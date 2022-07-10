@@ -18,8 +18,8 @@ function ClassBasicInfo(props) {
   const { t } = useTranslation();
   const { classData } = props;
   const layout = {
-    labelCol: { span: 4 },
-    wrapperCol: { span: 16 },
+    labelCol: { span: 6 },
+    wrapperCol: { span: 12 },
   };
   const [showDetailInfo, setShowDetailInfo] = useState(true);
   const [showVolunteers, setShowVolunteers] = useState(false);
@@ -63,10 +63,10 @@ function ClassBasicInfo(props) {
           <Divider />
           <Row style={{ textAlign: "center" }}>
             <Col span={12}>
-              {t("class_monitor")}: {classData.classMonitor?.user.name}
+              {t("class_monitor")}: {classData.classMonitor?.user.name || t("unset")}
             </Col>
             <Col span={12}>
-              {t("sub_class_monitor")}: {classData.subClassMonitor?.user.name}
+              {t("sub_class_monitor")}: {classData.subClassMonitor?.user.name || t("unset")}
             </Col>
           </Row>
         </div>

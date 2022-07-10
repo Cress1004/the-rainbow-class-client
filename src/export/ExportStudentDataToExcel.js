@@ -104,8 +104,6 @@ function ExportStudentDataToExcel(props) {
     },
   ];
 
-  console.log(wscols)
-
   return (
     <div>
       <ExportStudentCSV

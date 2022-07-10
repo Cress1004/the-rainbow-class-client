@@ -74,11 +74,11 @@ function VolunteerListByClass(props) {
 
   return (
     <div className="volunteer-list">
-      {getArrayLength(searchData) ? (
+      {getArrayLength(volunteers) ? (
         <>
           <Row>
-            <Col span={14}></Col>
-            <Col span={6}>
+            <Col span={11}></Col>
+            <Col span={7}>
               <Input
                 className="volunteer-list__search"
                 prefix={<Icon type="search" />}
@@ -100,17 +100,14 @@ function VolunteerListByClass(props) {
                 }}
               />
             </Col>
-            <Col span={4}>
+            <Col span={6} className="volunteer-list__export-button">
               <ExportVolunteerDataToExcel
                 t={t}
                 volunteersData={volunteersData}
               />
             </Col>
           </Row>
-          <Table
-            columns={columns}
-            dataSource={searchData}
-          />
+          <Table columns={columns} dataSource={searchData} />
         </>
       ) : null}
     </div>

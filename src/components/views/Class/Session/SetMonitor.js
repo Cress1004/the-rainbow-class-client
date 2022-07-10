@@ -1,4 +1,4 @@
-import { Form, Select, Button } from "antd";
+import { Form, Select, Button, message } from "antd";
 import { useFormik } from "formik";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -26,9 +26,10 @@ function SetMonitor(props) {
   const fetchSetMonitor = async (dataToSend) => {
     const data = await apis.classes.setMonitor(dataToSend);
     if (data.success) {
+      message.success("Lưu thông tin cán sự lớp thành công");
       history.push(`/classes/${id}`);
     } else if (!data.success) {
-      alert(data.message);
+      message.error(data.message);
     }
   };
 

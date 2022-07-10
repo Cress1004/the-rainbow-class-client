@@ -222,7 +222,7 @@ const resources = {
       class_report_list: "Thành tích lớp học",
       volunteers_list: "Danh_sach_TNV",
       export_volunteers_data_to_excel: "Xuất danh sách TNV",
-      export_students_data_to_excel: "Xuất danh sách học sinh",
+      export_students_data_to_excel: "Xuất danh sách HS",
       monthly_report: "Thành tích tháng",
       semester_report: "Thành tích kỳ học",
       cv_question: "Câu hỏi phỏng vấn",
@@ -255,6 +255,15 @@ const resources = {
       link_interview_placeholder: "Điền vào đường link online",
       interviewer: "Phụ trách PV",
       input_new_student_type: "Điền vào đối tượng học sinh mới",
+      select_teaching_option: "Chọn hình thức dạy",
+      teachingOption: "Hình thức dạy",
+      teach_by_class: "Dạy tập chung",
+      one_2_one_tutoring: "Dạy kèm 1-1",
+      delete_default_schedule: "Xóa lịch học cố định",
+      add_new_default_schedule: "Thêm lịch học cố định",
+      select_class_monitor: "Chọn lớp trưởng",
+      select_sub_class_monitor: "Chọn lớp phó",
+      save: "Lưu",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",
@@ -272,11 +281,14 @@ const resources = {
       modal_confirm_delete_lesson_content: "Xác nhận xóa bài học này",
       modal_input_retired_date: "Nhập vào ngày thôi học",
       modal_confirm_delete_question: "Xác nhận xóa câu hỏi phỏng vấn",
-      modal_confirm_delete_question_content: "Bạn có chắc chắn xóa câu hỏi này?",
+      modal_confirm_delete_question_content:
+        "Bạn có chắc chắn xóa câu hỏi này?",
       confirm_reject_status: "Xác nhận đánh trượt CV",
-      reject_this_CV_and_cannot_change_status: "Nếu bạn đánh trượt CV, sẽ không thể chuyển trạng thái của CV về Chờ duyệt hoặc Chờ phỏng vấn",
+      reject_this_CV_and_cannot_change_status:
+        "Nếu bạn đánh trượt CV, sẽ không thể chuyển trạng thái của CV về Chờ duyệt hoặc Chờ phỏng vấn",
       confirm_pass_status: "Xác nhận ứng viên đỗ phỏng vấn",
-      approve_this_CV_and_cannot_change_status: "Sau khi xác nhận ứng viên đỗ phỏng vấn, tài khoản của TNV mới sẽ được tự động tạo và đưa vào hệ thống. Email kích hoạt tài khoản sẽ được gửi đến cho Tình nguyện viên mới.",
+      approve_this_CV_and_cannot_change_status:
+        "Sau khi xác nhận ứng viên đỗ phỏng vấn, tài khoản của TNV mới sẽ được tự động tạo và đưa vào hệ thống. Email kích hoạt tài khoản sẽ được gửi đến cho Tình nguyện viên mới.",
       //validation:
       required_name_message: "Hãy nhập vào tên của bạn",
       required_phone_number_message:

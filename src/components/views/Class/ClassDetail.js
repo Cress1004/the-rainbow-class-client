@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Row, Button, Modal, Icon, Menu, Dropdown } from "antd";
+import { Row, Button, Modal, Icon, Menu, Dropdown, message } from "antd";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router";
 import { checkAdminAndMonitorRole } from "../../common/function";
 import {
   checkCurrentMonitorBelongToCurrentClass,
-  checkCurrentVolunteerBelongToCurrentClass,
 } from "../../common/checkRole";
 import { SUPER_ADMIN } from "../../common/constant";
 import PermissionDenied from "../Error/PermissionDenied";
@@ -38,10 +37,10 @@ function ClassDetail(props) {
   const fetchDeleteClass = async (id) => {
     const data = await apis.classes.deleteClass(id);
     if (data.success) {
-      alert(t("delete_class_success"));
+      message.success(t("delete_class_success"));
       history.push("/classes");
     } else {
-      alert(t("fail_to_delete_class"));
+      message.error(t("fail_to_delete_class"));
     }
   };
 
@@ -68,9 +67,9 @@ function ClassDetail(props) {
     }
   };
 
-  const deleteClass = () => {
+  const deleteClass = async () => {
     setConfirmDelete(false);
-    fetchDeleteClass(id);
+    await fetchDeleteClass(id);
   };
 
   const cancelDelete = () => {
@@ -93,13 +92,6 @@ function ClassDetail(props) {
       {checkCurrentMonitorBelongToCurrentClass(currentUserData, id) ? (
         <Menu.Item key="set-monitor">
           <Link to={`/classes/${id}/set-monitor`}>{t("set_monitor")}</Link>
-        </Menu.Item>
-      ) : null}
-      {checkCurrentVolunteerBelongToCurrentClass(currentUserData, id) ? (
-        <Menu.Item key="comment-student">
-          <Link to={`/classes/${id}/comment-student`}>
-            {t("comment_student")}
-          </Link>
         </Menu.Item>
       ) : null}
       {checkCurrentMonitorBelongToCurrentClass(currentUserData, id) ? (
@@ -127,7 +119,11 @@ function ClassDetail(props) {
           {currentUserData &&
             checkAdminAndMonitorRole(currentUserData.userRole) && (
               <div className="class-detail__more-option">
-                <Dropdown overlay={menu} trigger={["click"]}>
+                <Dropdown
+                  overlay={menu}
+                  trigger={["click"]}
+                  getPopupContainer={(trigger) => trigger.parentElement}
+                >
                   <a
                     href={() => false}
                     className="ant-dropdown-link"
