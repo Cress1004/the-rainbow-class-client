@@ -40,6 +40,7 @@ function Notification(props) {
     Axios.get(`/api/notification/${id}`).then((response) => {
       if (response.data.success) {
         message.success("update status done!");
+        fetchNotifications()
       } else if (!response.data.success) {
         message.error("update status fail!");
       }
@@ -177,6 +178,38 @@ function Notification(props) {
                                           {t("detail")}
                                         </span>
                                       </Link>
+                                    );
+                                  case NOTI_TYPE_TITLE.NOTI_UPGRADE_MONITOR_ROLE:
+                                    return (
+                                      <div>
+                                        <Link
+                                          to={`/${item?.content?.path}/${item.content?.id}`}
+                                        >
+                                          <span
+                                            onClick={() =>
+                                              fetchReadNotification(item?._id)
+                                            }
+                                          >
+                                            {t("detail")}
+                                          </span>
+                                        </Link>
+                                      </div>
+                                    );
+                                  case NOTI_TYPE_TITLE.NOTI_DOWNGRADE_MONITOR_ROLE:
+                                    return (
+                                      <div>
+                                        <Link
+                                          to={`/${item?.content?.path}/${item.content?.id}`}
+                                        >
+                                          <span
+                                            onClick={() =>
+                                              fetchReadNotification(item?._id)
+                                            }
+                                          >
+                                            {t("detail")}
+                                          </span>
+                                        </Link>
+                                      </div>
                                     );
                                   default:
                                     return null;
