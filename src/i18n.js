@@ -259,7 +259,7 @@ const resources = {
       select_teaching_option: "Chọn hình thức dạy",
       teachingOption: "Hình thức dạy",
       teach_by_class: "Dạy tập chung",
-      one_2_one_tutoring: "Dạy kèm 1-1",
+      one_2_one_tutoring: "Dạy kèm",
       delete_default_schedule: "Xóa lịch học cố định",
       add_new_default_schedule: "Thêm lịch học cố định",
       select_class_monitor: "Chọn lớp trưởng",

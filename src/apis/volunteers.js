@@ -114,6 +114,18 @@ const getTotalVolunteers = async () => {
   }
 };
 
+const getVolunteerCount = async () => {
+  try {
+    const response = await api({
+      method: "GET",
+      url: `${VOLUNTEER_API}/volunteer-count`,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+}
+
 export {
   addVolunteer,
   getVolunteers,
@@ -122,5 +134,6 @@ export {
   deleteVolunteer,
   getCurrentVolunteer,
   getTotalVolunteers,
-  getVolunteersWithParams
+  getVolunteersWithParams,
+  getVolunteerCount
 };

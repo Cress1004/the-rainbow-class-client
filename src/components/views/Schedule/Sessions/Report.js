@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import apis from "../../../../apis";
 import useFetchStudents from "../../../../hook/Student/useFetchStudents";
-import useFetchVolunteers from "../../../../hook/Volunteer/useFetchVolunteers";
 import { TEACHING_OPTIONS } from "../../../common/classConstant";
 import { CV_STATUS } from "../../../common/constant";
 
@@ -12,19 +11,13 @@ function Report(props) {
   const { t } = props;
   const [classData, setClassData] = useState({});
   const [cvData, setCVData] = useState({});
-  const students = useFetchStudents();
-  const volunteers = useFetchVolunteers();
-  const [admin, setAdmin] = useState();
-  const inactiveVolunteer = volunteers?.filter((item) => !item?.user?.isActive);
+  const [volunteerCountData, setVolunteerCountData] = useState();
+  const [studentCountData, setStudentCountData] = useState();
 
-  useEffect(() => {
-    fetchListAdmin();
-  }, []);
-
-  const fetchListAdmin = async () => {
-    const data = await apis.admin.getListAdmin({ limit: 10 });
+  const fetchVolunteerCountData = async () => {
+    const data = await apis.volunteer.getVolunteerCount();
     if (data.success) {
-      setAdmin(transformAdminData(data.admin));
+      setVolunteerCountData(data.volunteerCountData);
     } else if (!data.success) {
       message.error(data.message);
     } else {
@@ -32,14 +25,15 @@ function Report(props) {
     }
   };
 
-  const transformAdminData = (adminData) => {
-    return adminData?.map((item, index) => ({
-      key: index,
-      id: item._id,
-      userName: item.user.name,
-      phoneNumber: item.user.phoneNumber,
-      email: item.user.email,
-    }));
+  const fetchStudentCountData = async () => {
+    const data = await apis.student.getStudentCountData();
+    if (data.success) {
+      setStudentCountData(data.studentCountData);
+    } else if (!data.success) {
+      message.error(data.message);
+    } else {
+      message.error("Error");
+    }
   };
 
   const fetchNumberOfClasses = async () => {
@@ -55,6 +49,8 @@ function Report(props) {
   useEffect(() => {
     fetchNumberOfClasses();
     fetchNumberOfCV();
+    fetchVolunteerCountData();
+    fetchStudentCountData();
   }, []);
 
   return (
@@ -100,7 +96,7 @@ function Report(props) {
           <p className="report-box__number">
             <Link to={`volunteers`} className={"text-in-table-row"}>
               <span style={{ color: "white" }}>
-                {volunteers.length || 0} {t("TNV")}
+                {volunteerCountData?.numberOfVolunteers || 0} {t("TNV")}
               </span>
             </Link>
           </p>
@@ -108,14 +104,17 @@ function Report(props) {
             <li>
               <Link to={`admin`} className={"text-in-table-row"}>
                 <span style={{ color: "white" }}>
-                  {admin?.length || 0} {t("admin")}
+                  {volunteerCountData?.numberOfAdmins || 0} {t("admin")}
                 </span>
               </Link>
             </li>
             <li>
-              <Link to={`volunteers?offset=1&search=&query=%7B"isActive":"false"%7D`} className={"text-in-table-row"}>
+              <Link
+                to={`volunteers?offset=1&search=&query=%7B"isActive":"false"%7D`}
+                className={"text-in-table-row"}
+              >
                 <span style={{ color: "white" }}>
-                  {inactiveVolunteer.length || 0} {t("account")} {t("inactive")}
+                  {volunteerCountData?.numberOfInactiveVolunteer || 0} {t("account")} {t("inactive")}
                 </span>
               </Link>
             </li>
@@ -127,7 +126,7 @@ function Report(props) {
           <p className="report-box__number">
             <Link to={`students`} className={"text-in-table-row"}>
               <span style={{ color: "white" }}>
-                {students.length || 0} {t("student")}
+                {studentCountData?.numberOfStudent || 0} {t("student")}
               </span>
             </Link>
           </p>
@@ -138,7 +137,7 @@ function Report(props) {
                 className={"text-in-table-row"}
               >
                 <span style={{ color: "white" }}>
-                  {students.length - 3 || 0} {t("HS")} {t("number_of_studing")}
+                  {studentCountData?.studyingStudent || 0} {t("HS")} {t("number_of_studing")}
                 </span>
               </Link>
             </li>
@@ -148,7 +147,7 @@ function Report(props) {
                 className={"text-in-table-row"}
               >
                 <span style={{ color: "white" }}>
-                {3} {t ("HS")} {t("number_of_retirement")} 
+                  {studentCountData?.retiredStudent || 0} {t("HS")} {t("number_of_retirement")}
                 </span>
               </Link>
             </li>
@@ -166,14 +165,20 @@ function Report(props) {
           </p>
           <ul className="no-bullets">
             <li>
-              <Link to={`cv?offset=1&search=&query=%7B"status":0%7D`} className={"text-in-table-row"}>
+              <Link
+                to={`cv?offset=1&search=&query=%7B"status":0%7D`}
+                className={"text-in-table-row"}
+              >
                 <span style={{ color: "white" }}>
                   {cvData?.pendingCV || 0} {t("cv")} {CV_STATUS[0].text}
                 </span>
               </Link>
             </li>
             <li>
-              <Link to={`cv?offset=1&search=&query=%7B"status":1%7D`} className={"text-in-table-row"}>
+              <Link
+                to={`cv?offset=1&search=&query=%7B"status":1%7D`}
+                className={"text-in-table-row"}
+              >
                 <span style={{ color: "white" }}>
                   {cvData?.waitingCV || 0} {t("cv")} {CV_STATUS[1].text}
                 </span>

@@ -129,6 +129,18 @@ const studentFilter = async (data) => {
   }
 };
 
+const getStudentCountData = async () => {
+  try {
+    const response = await api({
+      method: "GET",
+      url: `${STUDENT_API}/student-count`,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+}
+
 export {
   addStudent,
   getStudents,
@@ -139,4 +151,5 @@ export {
   changeStatus,
   studentFilter,
   getStudentsWithParams,
+  getStudentCountData
 };

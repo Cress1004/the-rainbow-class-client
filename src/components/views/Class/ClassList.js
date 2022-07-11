@@ -27,7 +27,6 @@ import {
 import PermissionDenied from "../Error/PermissionDenied";
 import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
 import common from "../../common";
-import TableNodata from "../NoData/TableNodata";
 import queryString from "query-string";
 import apis from "../../../apis";
 
@@ -42,6 +41,7 @@ function ClassList(props) {
   const [listParams, setListParams] = useState(defaultParams);
   const [numberOfClasses, setNumberOfClasses] = useState();
   const [teachingOption, setTeachingOption] = useState();
+  const [popoverVisible, setPopoverVisible] = useState(false);
   const currentUserData = useFetchCurrentUserData();
   const userRole = currentUserData.userRole;
   const teachingOptions = common.classConstant.TEACHING_OPTIONS;
@@ -62,8 +62,10 @@ function ClassList(props) {
   };
 
   const parsePageSearchFilter = (offset, search, filter) => {
-    return `offset=${offset}&search=${search || ''}&query=${filter ? encodeURI(filter) : ''}`
-  }
+    return `offset=${offset}&search=${search || ""}&query=${
+      filter ? encodeURI(filter) : ""
+    }`;
+  };
 
   const onChangePagination = (pageNumber) => {
     setListParams({ ...listParams, offset: pageNumber });
@@ -72,7 +74,11 @@ function ClassList(props) {
       window.history.replaceState(
         "",
         "",
-        `?${parsePageSearchFilter(listParams.offset, listParams.search, listParams.query)}`
+        `?${parsePageSearchFilter(
+          listParams.offset,
+          listParams.search,
+          listParams.query
+        )}`
       );
       return listParams;
     });
@@ -82,7 +88,15 @@ function ClassList(props) {
     setListParams({ ...listParams, search: e.target.value, offset: 1 });
     setListParams((listParams) => {
       // fetchAllClassData(listParams);
-      window.history.replaceState("", "", `?${parsePageSearchFilter(listParams.offset, listParams.search, listParams.query)}`);
+      window.history.replaceState(
+        "",
+        "",
+        `?${parsePageSearchFilter(
+          listParams.offset,
+          listParams.search,
+          listParams.query
+        )}`
+      );
       return listParams;
     });
   };
@@ -91,22 +105,40 @@ function ClassList(props) {
     setListParams({
       ...listParams,
       query: JSON.stringify({ teachingOption: teachingOption }),
-      offset: 1
+      offset: 1,
     });
     setListParams((listParams) => {
       // fetchAllClassData(listParams);
-      window.history.replaceState("", "", `?${parsePageSearchFilter(listParams.offset, listParams.search, listParams.query)}`);
+      window.history.replaceState(
+        "",
+        "",
+        `?${parsePageSearchFilter(
+          listParams.offset,
+          listParams.search,
+          listParams.query
+        )}`
+      );
       return listParams;
     });
+    setPopoverVisible(false);
   };
 
   const resetFilter = () => {
-    setListParams({...listParams, query: undefined, offset: 1})
+    setListParams({ ...listParams, query: undefined, offset: 1 });
     setListParams((listParams) => {
-      window.history.replaceState("", "", `?${parsePageSearchFilter(listParams.offset, listParams.search, listParams.query)}`);
+      window.history.replaceState(
+        "",
+        "",
+        `?${parsePageSearchFilter(
+          listParams.offset,
+          listParams.search,
+          listParams.query
+        )}`
+      );
       return listParams;
     });
-  }
+    setPopoverVisible(false);
+  };
 
   const transformClassData = (classes) => {
     return classes?.map((item, index) => ({
@@ -127,9 +159,11 @@ function ClassList(props) {
   };
 
   useEffect(() => {
-    const filterData = listParams.query ? JSON.parse(decodeURI(listParams.query)) : undefined;
+    const filterData = listParams.query
+      ? JSON.parse(decodeURI(listParams.query))
+      : undefined;
     fetchAllClassData(listParams);
-    setTeachingOption(filterData?.teachingOption)
+    setTeachingOption(filterData?.teachingOption);
   }, [listParams]);
 
   const columns = [
@@ -188,10 +222,7 @@ function ClassList(props) {
 
   const content = (
     <div>
-      <Form
-        {...layout}
-        style={{ width: "300px" }}
-      >
+      <Form {...layout} style={{ width: "300px" }}>
         <Item label={t("teaching_option")}>
           <Select
             value={teachingOption}
@@ -206,10 +237,7 @@ function ClassList(props) {
           </Select>
         </Item>
         <div style={{ textAlign: "right" }}>
-          <Button
-             onClick={() => resetFilter()}
-            style={{ marginRight: "10px" }}
-          >
+          <Button onClick={() => resetFilter()} style={{ marginRight: "10px" }}>
             {t("reset_filter")}
           </Button>
           <Button
@@ -228,7 +256,7 @@ function ClassList(props) {
     <Icon
       type="filter"
       className={`class-list__filter class-list__filter--${
-        defaultParams.filter ? "active" : ""
+        defaultParams.query ? "active" : ""
       }`}
     />
   );
@@ -237,7 +265,14 @@ function ClassList(props) {
     <div className="class-list">
       <div className="class-list__title">{t("class_list")}</div>
       <Row>
-        <Popover content={content} trigger="click" placement="bottomLeft">
+        <Popover
+          content={content}
+          trigger="click"
+          visible={popoverVisible}
+          onClick={() => setPopoverVisible(!popoverVisible)}
+          placement="bottomLeft"
+          getPopupContainer={(trigger) => trigger.parentElement}
+        >
           {filterIcon}
         </Popover>
         <Input
@@ -249,26 +284,24 @@ function ClassList(props) {
         />
         {checkAdminRole(userRole) && (
           <Button type="primary" className="class-list__add-class-button">
-             <Icon type="plus-circle" />{" "}
+            <Icon type="plus-circle" />{" "}
             <Link to="/add-class">{t("add_class")}</Link>
           </Button>
         )}
       </Row>
-      {getArrayLength(classes) ? (
-        <Table
-          columns={columns}
-          dataSource={classes}
-          pagination={{
-            total: numberOfClasses,
-            defaultCurrent: defaultParams.offset ? parseInt(defaultParams.offset)  : 1,
-            onChange: (pageNumber) => onChangePagination(pageNumber),
-            pageSize: listParams.limit,
-            title: null,
-          }}
-        />
-      ) : (
-        <TableNodata />
-      )}
+      <Table
+        columns={columns}
+        dataSource={classes}
+        pagination={{
+          total: numberOfClasses,
+          defaultCurrent: defaultParams.offset
+            ? parseInt(defaultParams.offset)
+            : 1,
+          onChange: (pageNumber) => onChangePagination(pageNumber),
+          pageSize: listParams.limit,
+          title: null,
+        }}
+      />
     </div>
   );
 }
