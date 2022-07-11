@@ -1,7 +1,17 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Form, Input, Select, Button, Radio, DatePicker, Col, Row } from "antd";
+import {
+  Form,
+  Input,
+  Select,
+  Button,
+  Radio,
+  DatePicker,
+  Col,
+  Row,
+  message,
+} from "antd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./student.scss";
@@ -57,6 +67,7 @@ function AddStudent(props) {
   const fetchAddStudent = async (dataToSend) => {
     const data = await apis.student.addStudent(dataToSend);
     if (data.success) {
+      message.success("Add new student success");
       history.push("/students");
     } else if (!data.success) {
       alert(data.message);
@@ -88,7 +99,9 @@ function AddStudent(props) {
       class: Yup.string().required(t("required_class_message")),
       studentTypes: Yup.array().required(t("required_studentType_message")),
       birthday: Yup.string().required(t("required_birthday")).nullable(),
-      admissionDay: Yup.string().required(t("required_admission_day")).nullable(),
+      admissionDay: Yup.string()
+        .required(t("required_admission_day"))
+        .nullable(),
     }),
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {

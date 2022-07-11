@@ -5,6 +5,7 @@ import apis from "../../../../apis";
 import { FORMAT_MONTH_STRING } from "../../../common/constant";
 import { checkNowOverSemesterTime } from "../../../common/function/checkTime";
 import SemesterReport from "./SemesterReport";
+import StudentReportTableRender from "./StudentReportTableRender";
 import VolunteerReportTableRender from "./VolunteerReportTableRender";
 
 const { MonthPicker } = DatePicker;
@@ -59,9 +60,9 @@ function AllReportOneToOneTeaching(props) {
 
   const renderVolunteer = (volunteers) => (
     <div className="report-list">
-      <Row>
-        <Col span={14}></Col>
-        <Col span={4}>
+      <Row style={{ marginBottom: "20px" }}>
+        <Col span={10}></Col>
+        <Col span={6}>
           <Switch
             style={{ width: "150px", marginTop: "5px" }}
             checkedChildren={t("monthly_report")}
@@ -70,15 +71,17 @@ function AllReportOneToOneTeaching(props) {
             onChange={() => handleChangeMonthly()}
           />
         </Col>
-        <Col span={6}>
+        <Col span={8}>
           {" "}
-          <span style={{ marginRight: "10px" }}>{t("select_month")}</span>
           {monthly ? (
-            <MonthPicker
-              onChange={(date, dateString) => changeMonth(dateString)}
-              defaultValue={moment(month, FORMAT_MONTH_STRING)}
-              format={FORMAT_MONTH_STRING}
-            />
+            <>
+              <span style={{ marginRight: "10px" }}>{t("select_month")}</span>
+              <MonthPicker
+                onChange={(date, dateString) => changeMonth(dateString)}
+                defaultValue={moment(month, FORMAT_MONTH_STRING)}
+                format={FORMAT_MONTH_STRING}
+              />
+            </>
           ) : (
             <div>
               <span style={{ marginRight: "10px" }}>
@@ -112,15 +115,76 @@ function AllReportOneToOneTeaching(props) {
           ))}
         </>
       ) : (
-        <SemesterReport
-          t={t}
-          semester={semester}
-          classData={classData}
-        />
+        <SemesterReport t={t} semester={semester} classData={classData} />
       )}
     </div>
   );
-  return <div>{renderVolunteer(classData?.volunteers)}</div>;
+
+  const renderStudent = (students) => (
+    <div className="report-list">
+      <Row style={{ marginBottom: "20px" }}>
+        <Col span={10}></Col>
+        <Col span={6}>
+          <Switch
+            style={{ width: "150px", marginTop: "5px" }}
+            checkedChildren={t("monthly_report")}
+            unCheckedChildren={t("semester_report")}
+            defaultChecked
+            onChange={() => handleChangeMonthly()}
+          />
+        </Col>
+        <Col span={8}>
+          {" "}
+          {monthly ? (
+            <>
+              <span style={{ marginRight: "10px" }}>{t("select_month")}</span>
+              <MonthPicker
+                onChange={(date, dateString) => changeMonth(dateString)}
+                defaultValue={moment(month, FORMAT_MONTH_STRING)}
+                format={FORMAT_MONTH_STRING}
+              />
+            </>
+          ) : (
+            <div>
+              <span style={{ marginRight: "10px" }}>
+                {t("select_semester")}
+              </span>
+              <Select
+                style={{ width: "200px" }}
+                placeholder={t("select_semester")}
+                value={semester?.title}
+                onChange={handleChangeSemester}
+              >
+                {semesters.map((option) => (
+                  <Option key={option._id} value={option._id}>
+                    {option.title}
+                  </Option>
+                ))}
+              </Select>
+            </div>
+          )}
+        </Col>
+      </Row>
+      {monthly ? (
+        <>
+          {students?.map((student) => (
+            <StudentReportTableRender
+              student={student}
+              t={t}
+              month={month}
+              classData={classData}
+            />
+          ))}
+        </>
+      ) : (
+        <SemesterReport t={t} semester={semester} classData={classData} />
+      )}
+    </div>
+  );
+
+  console.log(classData)
+
+  return <div>{renderStudent(classData?.students)}</div>;
 }
 
 export default AllReportOneToOneTeaching;

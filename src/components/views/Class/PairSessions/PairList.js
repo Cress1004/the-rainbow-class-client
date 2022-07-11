@@ -8,7 +8,6 @@ import {
   transformSubjects,
 } from "../../../common/transformData";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import RegisterPairForNewStudent from "../ClassDetailSessions/Tabs/RegisterPairForNewStudent";
 import TableNodata from "../../NoData/TableNodata";
 import "../class-list.scss";
@@ -40,9 +39,6 @@ function PairList(props) {
       pairId: "",
       volunteer: "",
     },
-    validationSchema: Yup.object({
-      volunteer: Yup.string().required(t("required_volunteer")),
-    }),
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
         fetchSetPairVolunteer(classData, values);
@@ -106,7 +102,6 @@ function PairList(props) {
       key: "volunteerName",
       render: (text, item) => (
         <span>
-          {console.log(item)}
           {editting[item.key] ? (
             <div>
               <Select
@@ -135,7 +130,6 @@ function PairList(props) {
                   onClick={formik.handleSubmit}
                   style={{ marginRight: "10px" }}
                   type="primary"
-                  disabled={!formik.values.volunteer}
                 >
                   {t("submit")}
                 </Button>
@@ -180,7 +174,7 @@ function PairList(props) {
       dataIndex: "numberOfLessons",
       key: "numberOfLessons",
       render: (text) => <span>{text || 0}</span>,
-      width: 75,
+      width: 100,
     },
     {
       title: t("action"),
@@ -188,7 +182,7 @@ function PairList(props) {
       key: "id",
       render: (text, item) => (
         <span>
-          <Button>
+          <Button disabled={!item.volunteerName}>
             <Link to={`/classes/${classData._id}/pairs/${text}`}>
               {t("view")}
             </Link>

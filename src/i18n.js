@@ -273,6 +273,7 @@ const resources = {
       select_student: "Chọn học sinh",
       input_grade: "Nhập vào khối lớp",
       pair_detail: "Chi tiết",
+      volunteer_name: "TNV phụ trách hiện tại",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",

@@ -240,6 +240,19 @@ const getPairByVolunteer = async (classId, volunteerId) => {
   }
 };
 
+const getPairByStudent = async (classId, studentId) => {
+  try {
+    const response = await api({
+      method: "POST",
+      url: `${CLASS_API}/${classId}/pairs/get-pair-data-by-student`,
+      data: { studentId: studentId },
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
 export {
   addClass,
   getAllClasses,
@@ -259,4 +272,5 @@ export {
   getPairByVolunteer,
   getNumberOfClasses,
   getAllClassesWithParams,
+  getPairByStudent
 };
