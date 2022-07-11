@@ -37,6 +37,7 @@ import CVList from "./views/CV/CVList";
 import CVDetail from "./views/CV/CVDetail";
 import { CONNECTION_PORT } from "./common/constant";
 import CVQuestion from "./views/CV/CVQuestion";
+import PairDetail from "./views/Class/PairSessions/PairDetail";
 // import Report from "./views/Statistic/Statistic";
 
 function App(props) {
@@ -117,6 +118,12 @@ function App(props) {
           path="/classes/:id/lessons/:lessonId/edit"
           exact={true}
           component={Auth(EditLesson, true)}
+          socket={socket}
+        />
+         <DashboardLayoutRoute
+          path="/classes/:id/pairs/:pairId"
+          exact={true}
+          component={Auth(PairDetail, true)}
           socket={socket}
         />
         <DashboardLayoutRoute

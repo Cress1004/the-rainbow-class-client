@@ -1,0 +1,21 @@
+@import "../../style/app.scss";
+
+.pair-detail {
+  &__title {
+    font-size: $title-font-size;
+    font-weight: $title-font-weight;
+    color: $primary-color;
+    padding-bottom: $title-padding-bottom;
+  }
+  .ant-form-item {
+    margin-bottom: 0px;
+  }
+  &__lesson-list {
+    &--title {
+        font-size: $sub-title-font-size;
+        font-weight: $title-font-weight;
+        color: $primary-color;
+        padding-bottom: $title-padding-bottom;
+    }
+  }
+}

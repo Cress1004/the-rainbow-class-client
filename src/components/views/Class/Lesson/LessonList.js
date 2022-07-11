@@ -62,12 +62,14 @@ function LessonList(props) {
   ];
 
   const renderData = (text, key) => (
-    <Link
-      to={`/classes/${classData._id}/lessons/${key.id}`}
-      className={"text-in-table-row"}
-    >
-      <span>{text}</span>
-    </Link>
+    <>
+      <Link
+        to={`/classes/${classData._id}/lessons/${key.id}`}
+        className={"text-in-table-row"}
+      >
+        <span>{text}</span>
+      </Link>
+    </>
   );
   return (
     <div className="lesson-list">

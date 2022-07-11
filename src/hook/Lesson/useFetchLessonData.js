@@ -18,6 +18,7 @@ export default function useFetchLessonData(classId, lessonId) {
         description: lessonInfo.description,
         address: lessonInfo.schedule.address,
         time: lessonInfo.schedule.time,
+        pairTeaching: lessonInfo.pairTeaching
       });
       setLessonData((lessonData) => {
         return lessonData;

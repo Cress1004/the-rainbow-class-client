@@ -258,5 +258,5 @@ export {
   setPairVolunteer,
   getPairByVolunteer,
   getNumberOfClasses,
-  getAllClassesWithParams
+  getAllClassesWithParams,
 };

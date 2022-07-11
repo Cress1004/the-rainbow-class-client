@@ -5,6 +5,7 @@ import { checkCurrentUserBelongToCurrentClass } from "../../../common/checkRole"
 import AddLesson from "../Lesson/AddLesson";
 import PairDetail from "./PairDetail";
 import PairLessonList from "../Lesson/PairLessonList";
+import LessonList from "../Lesson/LessonList";
 
 function PairByVolunteer(props) {
   const { t } = useTranslation();
@@ -49,7 +50,7 @@ function PairByVolunteer(props) {
                   </div>
                 </Row>
               ) : null}
-              <PairLessonList lessons={lessons} />
+              <LessonList lessons={lessons} classData={classData}/>
             </div>
           ) : null}
         </div>

@@ -66,4 +66,9 @@
     &__all-achievement-table {
         margin-top: 10px;
     }
+    &__comment-detail {
+        .ant-form-item {
+            margin-bottom: 0px;
+        }
+    }
 }

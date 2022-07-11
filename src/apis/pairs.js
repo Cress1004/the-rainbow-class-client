@@ -13,4 +13,17 @@ const getLessonsByPair = async (pairId) => {
   }
 };
 
-export { getLessonsByPair };
+const getPairById = async (pairId) => {
+  try {
+    const response = await api({
+      method: "GET",
+      url: `${PAIR_API}/${pairId}`,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+}
+
+
+export { getLessonsByPair, getPairById };

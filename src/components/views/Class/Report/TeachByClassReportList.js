@@ -139,7 +139,7 @@ function TeachByClassReportList(props) {
   );
 
   const showCommentDetail = (currentLesson) => (
-    <Form {...layout} name="control-hooks">
+    <Form {...layout} name="control-hooks" className="report-list__comment-detail">
       <Form.Item label={t("created_by")}>
         {currentLesson?.createdBy.user.name}
       </Form.Item>
@@ -233,8 +233,8 @@ function TeachByClassReportList(props) {
   return (
     <div className="report-list__header">
       <Row>
-        <Col span={14}></Col>
-        <Col span={4}>
+        <Col span={10}></Col>
+        <Col span={6}>
           <Switch
             style={{ width: "150px", marginTop: "5px" }}
             checkedChildren={t("monthly_report")}
@@ -243,7 +243,7 @@ function TeachByClassReportList(props) {
             onChange={() => handleChangeMonthly()}
           />
         </Col>
-        <Col span={6}>
+        <Col span={8}>
           {monthly ? (
             <div>
               <span style={{ marginRight: "10px" }}>{t("select_month")}</span>

@@ -1,4 +1,4 @@
-import { Button, Form, Input, InputNumber, Radio, Select } from "antd";
+import { Button, Form, Input, InputNumber, message, Radio, Select } from "antd";
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -104,13 +104,16 @@ function RegisterPairForNewStudent(props) {
     wrapperCol: { span: 15 },
   };
   const tailLayout = {
-    wrapperCol: { offset: 18, span: 4 },
+    wrapperCol: { offset: 16, span: 8 },
   };
 
   const fetchAddNewPair = async (classId, values) => {
     const data = await apis.classes.addNewPairTeaching(classId, values);
     if (data.success) {
       setAddNewStudent(false);
+      message.success("register_new_pair_success");
+    } else {
+      message.error("fail to add new pair");
     }
   };
 
@@ -175,7 +178,7 @@ function RegisterPairForNewStudent(props) {
               width: "100%",
               marginRight: "10px",
             }}
-            placeholder={t("input_student_type")}
+            placeholder={t("input_grade")}
             onChange={(value) => formik.setFieldValue("grade", value)}
             name="grade"
           >
@@ -277,11 +280,16 @@ function RegisterPairForNewStudent(props) {
             </Item>
           </div>
         ) : null}
-        <Item label="note">
+        <Item label={t("note")}>
           <TextArea name="note" onChange={formik.handleChange}></TextArea>
         </Item>
         <Item {...tailLayout}>
-          <Button onClick={() => setAddNewStudent(false)}>{t("cancel")}</Button>
+          <Button
+            onClick={() => setAddNewStudent(false)}
+            style={{ marginRight: "10px" }}
+          >
+            {t("cancel")}
+          </Button>
           <Button type="primary" htmlType="submit">
             {t("register")}
           </Button>

@@ -249,7 +249,7 @@ function EditLesson(props) {
         placeholder={t("input_district")}
         onChange={handleChangeDistrict}
       >
-        {districts.length
+        {districts?.length
           ? districts.map((option) => (
               <Option key={option._id} value={option.id}>
                 {option.name}
@@ -268,7 +268,7 @@ function EditLesson(props) {
         placeholder={t("input_ward")}
         onChange={handleChangeWard}
       >
-        {wards.length
+        {wards?.length
           ? wards.map((option) => (
               <Option key={option._id} value={option.id}>
                 {option.name}
@@ -283,7 +283,13 @@ function EditLesson(props) {
       />
     </Item>
   );
-  if (!checkCurrentMonitorBelongToCurrentClass(currentUser, id)) {
+  if (
+    (!checkCurrentMonitorBelongToCurrentClass(currentUser, id) &&
+      !lessonData.pairTeaching) ||
+    lessonData?.pairTeaching?.volunteer.user._id !==
+      localStorage.getItem("userId")
+  ) {
+    console.log(lessonData?.pairTeaching?.volunteer.user._id);
     return <PermissionDenied />;
   }
 

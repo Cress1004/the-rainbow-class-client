@@ -51,6 +51,8 @@ function LessonDetail(props) {
         date: new Date(data.schedule.time.date),
         participants: data.schedule.participants,
         personInCharge: data.schedule.personInCharge,
+        pairTeaching: data.pairTeaching,
+        class: data.class,
       });
       data.schedule.participants.find(
         (participant) => participant._id === userId
@@ -66,7 +68,14 @@ function LessonDetail(props) {
     const data = await apis.lessons.deleteLesson(classId, lessonId);
     if (data.success) {
       message.success(t("delete_lesson_success"));
-      history.push(`/classes/${classId}/`);
+      history.push(
+        `${
+          !lessonData.pairTeaching._id ||
+          (!checkAdminAndMonitorRole(userRole) && lessonData.pairTeaching._id)
+            ? `/classes/${classId}/`
+            : `/classes/${classId}/pairs/${lessonData.pairTeaching._id}`
+        }`
+      );
     }
   };
 
@@ -157,9 +166,15 @@ function LessonDetail(props) {
     <div className="lesson-detail">
       <Row>
         <div className="lesson-detail__title">{t("lesson_detail")}</div>
-        {checkAdminAndMonitorRole(userRole) && (
+        {(checkAdminAndMonitorRole(userRole) && !lessonData.pairTeaching) ||
+        (checkCurrentUserBelongToCurrentClass(currentUser, lessonData.class) &&
+          lessonData.pairTeaching) ? (
           <div className="lesson-detail__more-option">
-            <Dropdown overlay={menu} trigger={["click"]}>
+            <Dropdown
+              overlay={menu}
+              trigger={["click"]}
+              placement={"bottomLeft"}
+            >
               <a
                 href={() => false}
                 className="ant-dropdown-link"
@@ -169,7 +184,7 @@ function LessonDetail(props) {
               </a>
             </Dropdown>
           </div>
-        )}
+        ) : null}
       </Row>
       <div className="lesson-detail__info-area">
         {" "}
@@ -194,45 +209,51 @@ function LessonDetail(props) {
               )}
             </Item>
             <Item label={t("schedule_time")}>{lessonData.time}</Item>
-            <hr />
-            <Row>
-              <div className="lesson-detail__participant-list-title">
-                {`${t("participants")} (${getArrayLength(
-                  lessonData.participants
-                )})`}
-              </div>
-              {userRole && userRole.role !== STUDENT && (
-                <div className="lesson-detail__assign-button">
-                  {assign ? (
-                    <Button
-                      onClick={unassignSchedule}
-                      disabled={disableUnRegisterButton}
-                    >
-                      {t("unassign_this_schedule")}
-                    </Button>
-                  ) : (
-                    <Button
-                      type="primary"
-                      onClick={assignSchedule}
-                      disabled={checkOverTimeToRegister(lessonData.date, 3)}
-                    >
-                      {t("assign_this_schedule")}
-                    </Button>
+            {lessonData.pairTeaching ? null : (
+              <div>
+                <hr />
+                <Row>
+                  <div className="lesson-detail__participant-list-title">
+                    {`${t("participants")} (${getArrayLength(
+                      lessonData.participants
+                    )})`}
+                  </div>
+                  {userRole && userRole.role !== STUDENT && (
+                    <div className="lesson-detail__assign-button">
+                      {assign ? (
+                        <Button
+                          onClick={unassignSchedule}
+                          disabled={disableUnRegisterButton}
+                        >
+                          {t("unassign_this_schedule")}
+                        </Button>
+                      ) : (
+                        <Button
+                          type="primary"
+                          onClick={assignSchedule}
+                          disabled={checkOverTimeToRegister(lessonData.date, 3)}
+                        >
+                          {t("assign_this_schedule")}
+                        </Button>
+                      )}
+                    </div>
                   )}
-                </div>
-              )}
-            </Row>
-            {getArrayLength(lessonData.participants) ? (
-              <ParticipantList
-                participants={lessonData.participants}
-                checkAdminAndMonitorRole={checkAdminAndMonitorRole(userRole)}
-                personInCharge={lessonData.personInCharge}
-                scheduleId={lessonData.scheduleId}
-                fetchLessonData={fetchLessonData}
-                lessonId={lessonId}
-                classId={id}
-              />
-            ) : null}
+                </Row>
+                {getArrayLength(lessonData.participants) ? (
+                  <ParticipantList
+                    participants={lessonData.participants}
+                    checkAdminAndMonitorRole={checkAdminAndMonitorRole(
+                      userRole
+                    )}
+                    personInCharge={lessonData.personInCharge}
+                    scheduleId={lessonData.scheduleId}
+                    fetchLessonData={fetchLessonData}
+                    lessonId={lessonId}
+                    classId={id}
+                  />
+                ) : null}
+              </div>
+            )}
           </Form>
         )}
       </div>

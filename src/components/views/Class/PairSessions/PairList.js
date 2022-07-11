@@ -1,4 +1,4 @@
-import { Button, Col, Icon, Row, Select, Table } from "antd";
+import { Button, Col, Icon, Popover, Row, Select, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import apis from "../../../../apis";
@@ -12,6 +12,8 @@ import * as Yup from "yup";
 import RegisterPairForNewStudent from "../ClassDetailSessions/Tabs/RegisterPairForNewStudent";
 import TableNodata from "../../NoData/TableNodata";
 import "../class-list.scss";
+import { checkStringContentSubString } from "../../../common/function";
+import { Link } from "react-router-dom";
 
 const { Option } = Select;
 
@@ -69,7 +71,7 @@ function PairList(props) {
 
   const unRegisterStudents = pairsTeaching?.filter((item) => item.status === 0);
 
-  const waittingStudent = pairsTeaching?.filter((item) => item.status === 1);
+  const waittingStudent = pairsTeaching?.filter((item) => !item.volunteer);
 
   const tableOrgData = pairsTeaching?.filter(
     (item) => !unRegisterStudents.includes(item)
@@ -93,8 +95,8 @@ function PairList(props) {
       title: t("student_name"),
       dataIndex: "studentName",
       key: "studentName",
-      render: (text) => <span>{text}</span>,
-      width: 165,
+      render: (text) => renderText(text),
+      width: 175,
     },
     {
       title: t("volunteer_incharge"),
@@ -102,17 +104,19 @@ function PairList(props) {
       key: "volunteerName",
       render: (text, item) => (
         <span>
+          {console.log(item)}
           {editting[item.key] ? (
             <div>
               <Select
-                value={
-                  item.id === formik.values.pairId
-                    ? formik.values.volunteer
-                    : item.volunteer?.user.name
+                allowClear
+                showSearch
+                filterOption={(input, option) =>
+                  checkStringContentSubString(option.props.children, input)
                 }
+                defaultValue={item.volunteerName}
                 placeholder={t("input_volunteer_incharge")}
                 onChange={(value) => formik.setFieldValue("volunteer", value)}
-                style={{ width: "100%" }}
+                style={{ width: "100%", marginBottom: "5px" }}
               >
                 {currentClassVolunteer?.map((option) => (
                   <Option key={option.key} value={option._id}>
@@ -120,11 +124,19 @@ function PairList(props) {
                   </Option>
                 ))}
               </Select>
-              {formik.errors.volunteer ? (
-                <span className="custom__error-message">
-                  {formik.errors.name}
-                </span>
-              ) : null}
+              <>
+                <Button
+                  onClick={formik.handleSubmit}
+                  style={{ marginRight: "10px" }}
+                  type="primary"
+                  disabled={!formik.values.volunteer}
+                >
+                  {t("submit")}
+                </Button>
+                <Button onClick={() => changeEditting(item)}>
+                  {t("cancel")}
+                </Button>
+              </>
             </div>
           ) : (
             <div>
@@ -134,35 +146,35 @@ function PairList(props) {
           )}
         </span>
       ),
-      width: 165,
+      width: 175,
     },
     {
-      title: t("teach_option"),
+      title: t("Hình thức"),
       dataIndex: "teachOption",
       key: "teachOption",
-      render: (text, item) => <span>{text}</span>,
-      width: 150,
+      render: (text, item) => renderText(text),
+      width: 100,
     },
     {
       title: t("grade"),
       dataIndex: "grade",
       key: "grade",
-      render: (text, item) => <span>{text}</span>,
-      width: 100,
+      render: (text, item) => renderText(text),
+      width: 75,
     },
     {
       title: t("subjects"),
       dataIndex: "subjects",
       key: "subjects",
-      render: (text, item) => <span>{text}</span>,
-      width: 200,
+      render: (text, item) => renderText(text),
+      width: 150,
     },
     {
       title: t("number_of_lessons"),
       dataIndex: "numberOfLessons",
       key: "numberOfLessons",
       render: (text) => <span>{text || 0}</span>,
-      width: 100,
+      width: 75,
     },
     {
       title: t("action"),
@@ -170,21 +182,20 @@ function PairList(props) {
       key: "id",
       render: (text, item) => (
         <span>
-          {!editting[item.key] ? (
-            <Button>{t("view")}</Button>
-          ) : (
-            <>
-              <Button onClick={formik.handleSubmit}>{t("submit")}</Button>
-              <Button onClick={() => changeEditting(item)}>
-                {t("cancel")}
-              </Button>
-            </>
-          )}
+          <Button><Link to={`/classes/${classData._id}/pairs/${text}`}>{t("view")}</Link></Button>
         </span>
       ),
       width: 150,
     },
   ];
+
+  const renderText = (text) => {
+    return (
+      <Popover content={text}>
+        <span className="custom__text-1-line">{text}</span>
+      </Popover>
+    );
+  };
 
   return (
     <div className="class-detail__pairs-table">
@@ -194,7 +205,7 @@ function PairList(props) {
         </Col>
         <Col span={12} className="class-detail__pairs-table--option-button">
           {addNewStudent ? null : (
-            <Button onClick={() => setAddNewStudent(true)} type="primary">
+            <Button onClick={() => setAddNewStudent(true)} type="primary" disabled={!unRegisterStudents.length}>
               {t("register_pairs_for_student")} (
               {getArrayLength(unRegisterStudents)})
             </Button>
