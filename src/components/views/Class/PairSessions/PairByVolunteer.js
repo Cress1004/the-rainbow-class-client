@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { checkCurrentUserBelongToCurrentClass } from "../../../common/checkRole";
 import AddLesson from "../Lesson/AddLesson";
 import PairDetail from "./PairDetail";
-import PairLessonList from "../Lesson/PairLessonList";
 import LessonList from "../Lesson/LessonList";
 
 function PairByVolunteer(props) {
@@ -34,8 +33,7 @@ function PairByVolunteer(props) {
         </div>
       ) : (
         <div>
-          {" "}
-          <PairDetail pairData={pairData} t={t} />
+          <PairDetail pairIdByVolunteer={pairData._id}/>
           {checkCurrentUserBelongToCurrentClass(
             currentUserData,
             classData._id

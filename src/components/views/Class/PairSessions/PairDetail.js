@@ -1,7 +1,7 @@
-import { Col, Divider, Form, message, Row } from "antd";
+import { Button, Col, Divider, Form, message, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import apis from "../../../../apis";
 import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
 import { checkAdminRole } from "../../../common/checkRole";
@@ -18,7 +18,7 @@ import "./pair.scss";
 const { Item } = Form;
 
 function PairDetail(props) {
-  // const { pairData, t, currentUserData } = props;
+  const { pairIdByVolunteer } = props;
   const { t } = useTranslation();
   const { id, pairId } = useParams();
   const classData = { _id: id };
@@ -27,7 +27,9 @@ function PairDetail(props) {
   const [lessons, setLessons] = useState([]);
 
   const fetchPairData = async () => {
-    const data = await apis.pairs.getPairById(pairId);
+    const data = await apis.pairs.getPairById(
+      pairId ? pairId : pairIdByVolunteer
+    );
     if (data.success) {
       setPairData(data.pairData);
     } else {
@@ -36,7 +38,9 @@ function PairDetail(props) {
   };
 
   const fetchLessonsByPair = async () => {
-    const data = await apis.pairs.getLessonsByPair(pairId);
+    const data = await apis.pairs.getLessonsByPair(
+      pairId ? pairId : pairIdByVolunteer
+    );
     if (data.success) {
       setLessons(data.lessons);
     } else {
@@ -51,10 +55,13 @@ function PairDetail(props) {
 
   useEffect(() => {
     fetchPairData();
-    fetchLessonsByPair();
+    if (pairId) fetchLessonsByPair();
   }, [pairId]);
 
-  if (!checkAdminAndMonitorRole(currentUserData?.userRole)) {
+  if (
+    !checkAdminAndMonitorRole(currentUserData?.userRole) &&
+    pairData?.volunteer?.user?._id.toString() !== localStorage.getItem("userId")
+  ) {
     return (
       <div>
         Bạn chưa được ghép cặp với học sinh, hãy liên hệ với Cán sự lớp và Quản
@@ -65,11 +72,7 @@ function PairDetail(props) {
 
   return (
     <div className="pair-detail">
-      <Col
-        span={24}
-        className="pair-detail__title"
-        style={{ display: "inline" }}
-      >
+      <Col className="pair-detail__title" style={{ display: "inline" }}>
         {t("pair_detail")}
       </Col>
       <Form {...layout}>
@@ -102,7 +105,7 @@ function PairDetail(props) {
         </Col>
       </Form>
       <Divider />
-      <LessonList lessons={lessons} classData={classData}/>
+      {pairId ? <LessonList lessons={lessons} classData={classData} /> : null}
     </div>
   );
 }
