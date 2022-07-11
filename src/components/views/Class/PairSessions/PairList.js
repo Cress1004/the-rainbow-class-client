@@ -77,6 +77,8 @@ function PairList(props) {
     (item) => !unRegisterStudents.includes(item)
   );
 
+  const pairedVolunteers = classData.pairsTeaching.map((item) => item?.volunteer?._id);
+
   const dataSource = tableOrgData
     ? tableOrgData.map((item, index) => ({
         key: index,
@@ -119,7 +121,11 @@ function PairList(props) {
                 style={{ width: "100%", marginBottom: "5px" }}
               >
                 {currentClassVolunteer?.map((option) => (
-                  <Option key={option.key} value={option._id}>
+                  <Option
+                    key={option.key}
+                    value={option._id}
+                    disabled={option.user.name !== item.volunteerName && pairedVolunteers.includes(option._id)}
+                  >
                     {option.user.name}
                   </Option>
                 ))}
@@ -182,7 +188,11 @@ function PairList(props) {
       key: "id",
       render: (text, item) => (
         <span>
-          <Button><Link to={`/classes/${classData._id}/pairs/${text}`}>{t("view")}</Link></Button>
+          <Button>
+            <Link to={`/classes/${classData._id}/pairs/${text}`}>
+              {t("view")}
+            </Link>
+          </Button>
         </span>
       ),
       width: 150,
@@ -205,7 +215,11 @@ function PairList(props) {
         </Col>
         <Col span={12} className="class-detail__pairs-table--option-button">
           {addNewStudent ? null : (
-            <Button onClick={() => setAddNewStudent(true)} type="primary" disabled={!unRegisterStudents.length}>
+            <Button
+              onClick={() => setAddNewStudent(true)}
+              type="primary"
+              disabled={!unRegisterStudents.length}
+            >
               {t("register_pairs_for_student")} (
               {getArrayLength(unRegisterStudents)})
             </Button>
