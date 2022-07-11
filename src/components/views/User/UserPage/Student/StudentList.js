@@ -30,13 +30,10 @@ import {
   SUPER_ADMIN,
 } from "../../../../common/constant";
 import PermissionDenied from "../../../Error/PermissionDenied";
-import {
-  checkAdminAndMonitorRole,
-} from "../../../../common/function";
+import { checkAdminAndMonitorRole } from "../../../../common/function";
 import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUserData";
 import useFetchClassNameList from "../../../../../hook/Class/useFetchClassNameList";
 import useFetchStudentTypes from "../../../../../hook/CommonData.js/useFetchStudentTypes";
-import TableNodata from "../../../NoData/TableNodata";
 import moment from "moment";
 import useFetchSemesters from "../../../../../hook/CommonData.js/useFetchSemesters";
 import apis from "../../../../../apis";
@@ -52,6 +49,7 @@ function StudentList(props) {
   defaultParams.limit = 10;
   const [listParams, setListParams] = useState(defaultParams);
   const [numberOfStudent, setNumberOfStudent] = useState();
+  const [popoverVisible, setPopoverVisible] = useState(false);
   const [filter, setFilter] = useState();
   const { t } = useTranslation();
   const [studentsData, setStudentsData] = useState([]);
@@ -130,6 +128,7 @@ function StudentList(props) {
       );
       return listParams;
     });
+    setPopoverVisible(false);
   };
 
   const resetFilter = () => {
@@ -146,6 +145,7 @@ function StudentList(props) {
       );
       return listParams;
     });
+    setPopoverVisible(false);
   };
 
   const layout = {
@@ -225,15 +225,12 @@ function StudentList(props) {
 
   const content = (
     <div>
-      <Form
-        {...layout}
-        style={{ width: "700px" }}
-      >
+      <Form {...layout} style={{ width: "700px" }}>
         <Item label={t("class")}>
           <Select
             value={filter?.classInfo}
             placeholder={t("select_class")}
-            onChange={(value) => setFilter({...filter, classInfo: value})}
+            onChange={(value) => setFilter({ ...filter, classInfo: value })}
           >
             {classNameList?.map((option) => (
               <Option key={option._id} value={option._id}>
@@ -247,7 +244,7 @@ function StudentList(props) {
             mode="multiple"
             placeholder={t("select_student_type")}
             value={filter?.studentTypes}
-            onChange={(value) => setFilter({...filter, studentTypes: value})}
+            onChange={(value) => setFilter({ ...filter, studentTypes: value })}
           >
             {studentTypes?.map((option) => (
               <Option key={option._id} value={option._id}>
@@ -265,7 +262,7 @@ function StudentList(props) {
                 placeholder={t("select_achievement_type")}
                 value={filter?.achievementType}
                 onChange={(value) =>
-                  setFilter({...filter, achievementType: value})
+                  setFilter({ ...filter, achievementType: value })
                 }
               >
                 {ACHIEVEMENT_SELECT_OPTION?.map((option) => (
@@ -278,12 +275,15 @@ function StudentList(props) {
           </Col>
           <Col span={10}>
             {" "}
-            {filter?.achievementType ===
-            ACHIEVEMENT_SELECT_TITLE.BY_MONTH ? (
+            {filter?.achievementType === ACHIEVEMENT_SELECT_TITLE.BY_MONTH ? (
               <Item {...tailLayout} label={t("select_month")}>
                 <MonthPicker
                   onChange={(date, dateString) =>
-                    setFilter({...filter, semester: undefined, month: dateString})
+                    setFilter({
+                      ...filter,
+                      semester: undefined,
+                      month: dateString,
+                    })
                   }
                   defaultValue={moment(currentMonth, FORMAT_MONTH_STRING)}
                   format={FORMAT_MONTH_STRING}
@@ -296,7 +296,9 @@ function StudentList(props) {
                 <Select
                   placeholder={t("select_semester")}
                   value={filter?.semester}
-                  onChange={(value) =>setFilter({...filter, month: undefined, semester: value}) }
+                  onChange={(value) =>
+                    setFilter({ ...filter, month: undefined, semester: value })
+                  }
                 >
                   {semesters.map((option) => (
                     <Option key={option._id} value={option._id}>
@@ -316,7 +318,9 @@ function StudentList(props) {
               <Select
                 placeholder={t("select_compare_type")}
                 value={filter?.compareType}
-                onChange={(value) => setFilter({...filter, compareType: value})}
+                onChange={(value) =>
+                  setFilter({ ...filter, compareType: value })
+                }
               >
                 {COMPARE_SELECT_OPTION?.map((option) => (
                   <Option key={option.key} value={option.key}>
@@ -332,7 +336,7 @@ function StudentList(props) {
               min={0}
               max={10}
               value={filter?.point}
-              onChange={(value) => setFilter({...filter, point: value})}
+              onChange={(value) => setFilter({ ...filter, point: value })}
             />
           </Col>
         </Row>
@@ -340,7 +344,11 @@ function StudentList(props) {
           <Button onClick={() => resetFilter()} style={{ marginRight: "10px" }}>
             {t("reset_filter")}
           </Button>
-          <Button type="primary" htmlType="submit" onClick={() => handleChangeFilter()}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            onClick={() => handleChangeFilter()}
+          >
             {t("filter")}
           </Button>
         </div>
@@ -362,12 +370,20 @@ function StudentList(props) {
       <div>
         <div className="student-list__title">{t("student_list")}</div>
         <Row>
-          <Popover content={content} trigger="click">
+          <Popover
+            content={content}
+            trigger="click"
+            visible={popoverVisible}
+            onClick={() => setPopoverVisible(!popoverVisible)}
+            placement="bottomLeft"
+            getPopupContainer={(trigger) => trigger.parentElement}
+          >
             {filterIcon}
           </Popover>
           <Input
             className="student-list__search"
             prefix={<Icon type="search" />}
+            placeholder={t("search_by_name_phone_email")}
             defaultValue={defaultParams.search || undefined}
             onChange={(e) => handleChangeSearchInput(e)}
           />
@@ -378,28 +394,24 @@ function StudentList(props) {
             </Button>
           )}
         </Row>
-        {getArrayLength(studentsData) ? (
-          <Table
-            rowClassName={(record) =>
-              `student-list__table--${
-                record.isRetirement.key ? "deactive" : "active"
-              }-row`
-            }
-            columns={columns}
-            dataSource={studentsData}
-            pagination={{
-              total: numberOfStudent,
-              defaultCurrent: defaultParams.offset
-                ? parseInt(defaultParams.offset)
-                : 1,
-              onChange: (pageNumber) => handleChangePagination(pageNumber),
-              pageSize: listParams.limit,
-              title: null,
-            }}
-          />
-        ) : (
-          <TableNodata />
-        )}
+        <Table
+          rowClassName={(record) =>
+            `student-list__table--${
+              record.isRetirement.key ? "deactive" : "active"
+            }-row`
+          }
+          columns={columns}
+          dataSource={studentsData}
+          pagination={{
+            total: numberOfStudent,
+            defaultCurrent: defaultParams.offset
+              ? parseInt(defaultParams.offset)
+              : 1,
+            onChange: (pageNumber) => handleChangePagination(pageNumber),
+            pageSize: listParams.limit,
+            title: null,
+          }}
+        />
       </div>
     </div>
   );

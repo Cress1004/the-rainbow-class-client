@@ -17,8 +17,6 @@ import { checkAdminAndMonitorRole } from "../../../../common/function";
 import useFetchCurrentUserData from "../../../../../hook/User/useFetchCurrentUserData";
 import { CLASS_MONITOR, SUB_CLASS_MONITOR } from "../../../../common/constant";
 import useFetchClassNameList from "../../../../../hook/Class/useFetchClassNameList";
-import { getArrayLength } from "../../../../common/transformData";
-import TableNodata from "../../../NoData/TableNodata";
 import apis from "../../../../../apis";
 import queryString from "query-string";
 import { parsePageSearchFilter } from "../../../../common/function/parseQueryString";
@@ -31,6 +29,7 @@ function VolunteerList(props) {
   defaultParams.limit = 10;
   const [listParams, setListParams] = useState(defaultParams);
   const [numberOfVolunteer, setNumberOfVolunteer] = useState();
+  const [popoverVisible, setPopoverVisible] = useState(false);
   const [classInfo, setClassInfo] = useState();
   const { t } = useTranslation();
   const [volunteerData, setVolunteerData] = useState([]);
@@ -43,9 +42,11 @@ function VolunteerList(props) {
   };
 
   useEffect(() => {
-    const filterData = listParams.query ? JSON.parse(decodeURI(listParams.query)) : undefined;
+    const filterData = listParams.query
+      ? JSON.parse(decodeURI(listParams.query))
+      : undefined;
     fetchVolunteers(listParams);
-    setClassInfo(filterData?.classInfo)
+    setClassInfo(filterData?.classInfo);
   }, [listParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchVolunteers = async () => {
@@ -178,6 +179,7 @@ function VolunteerList(props) {
       );
       return listParams;
     });
+    setPopoverVisible(false);
   };
 
   const resetFilter = () => {
@@ -194,6 +196,7 @@ function VolunteerList(props) {
       );
       return listParams;
     });
+    setPopoverVisible(false);
   };
 
   const content = (
@@ -242,11 +245,17 @@ function VolunteerList(props) {
       <div className="volunteer-list__title">{t("volunteer_list")}</div>
       <Row>
         {userRole.isAdmin ? (
-          <Popover content={content} trigger="click" placement="bottomLeft">
+          <Popover
+            content={content}
+            trigger="click"
+            visible={popoverVisible}
+            onClick={() => setPopoverVisible(!popoverVisible)}
+            placement="bottomLeft"
+            getPopupContainer={(trigger) => trigger.parentElement}
+          >
             {filterIcon}
           </Popover>
         ) : null}
-
         <Input
           className="volunteer-list__search"
           prefix={<Icon type="search" />}
@@ -268,28 +277,24 @@ function VolunteerList(props) {
         <span className="volunteer-list__note--deactive-record-note"></span>
         <span>{t("deactive_volunteer")}</span>
       </Row>
-      {getArrayLength(volunteerData) ? (
-        <Table
-          columns={columns}
-          dataSource={volunteerData}
-          rowClassName={(record) =>
-            `volunteer-list__table--${
-              record?.isActive ? "active" : "deactive"
-            }-row`
-          }
-          pagination={{
-            total: numberOfVolunteer,
-            defaultCurrent: defaultParams.offset
-              ? parseInt(defaultParams.offset)
-              : 1,
-            onChange: (pageNumber) => handleChangePagination(pageNumber),
-            pageSize: listParams.limit,
-            title: null,
-          }}
-        />
-      ) : (
-        <TableNodata />
-      )}
+      <Table
+        columns={columns}
+        dataSource={volunteerData}
+        rowClassName={(record) =>
+          `volunteer-list__table--${
+            record?.isActive ? "active" : "deactive"
+          }-row`
+        }
+        pagination={{
+          total: numberOfVolunteer,
+          defaultCurrent: defaultParams.offset
+            ? parseInt(defaultParams.offset)
+            : 1,
+          onChange: (pageNumber) => handleChangePagination(pageNumber),
+          pageSize: listParams.limit,
+          title: null,
+        }}
+      />
     </div>
   );
 }
