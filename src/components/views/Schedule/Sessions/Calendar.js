@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import { setColorForClass } from "../../../common/function";
-import { useTranslation } from "react-i18next";
 import { Popover } from "antd";
 import { Link } from "react-router-dom";
 import {
@@ -14,8 +13,7 @@ import useFetchAllClasses from "../../../../hook/Class/useFetchAllClasses";
 
 const localizer = momentLocalizer(moment);
 function MyCalendar(props) {
-  const { t } = useTranslation();
-  const { data } = props;
+  const { data, isAdmin, t } = props;
   const events = data.map((item) => transformEventOfLesson(item));
   const [classColors, setClassColors] = useState([]);
   const classes = useFetchAllClasses();
@@ -64,12 +62,14 @@ function MyCalendar(props) {
           >
             {t("detail")}
           </Link>
-          <Link
-            to={`/classes/${event.classId}?tab=report`}
-            className="redirect-to-report"
-          >
-            {t("add_report")}
-          </Link>
+          {isAdmin ? null : (
+            <Link
+              to={`/classes/${event.classId}?tab=report`}
+              className="redirect-to-report"
+            >
+              {t("add_report")}
+            </Link>
+          )}
         </>
       );
   };

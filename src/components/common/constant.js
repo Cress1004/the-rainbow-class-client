@@ -160,8 +160,19 @@ export const STUDENT_STATUS = [
   { key: 0, value: "studing", text: "Đang học", color: "#219e6e" },
   { key: 1, value: "retired", text: "Đã thôi học", color: "#e2a534" },
 ];
+
 export const STUDENT_STATUS_TITLE = {
   STUDING: 0,
+  RETIRED: 1,
+};
+
+export const VOLUNTEER_STATUS = [
+  { key: 0, value: "working", text: "Đang hoạt động", color: "#219e6e" },
+  { key: 1, value: "retired", text: "Đã nghỉ hoạt động", color: "#e2a534" },
+];
+
+export const VOLUNTEER_STATUS_TITLE = {
+  WORKING: 0,
   RETIRED: 1,
 };
 

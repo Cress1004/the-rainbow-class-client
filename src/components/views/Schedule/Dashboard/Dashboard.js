@@ -19,7 +19,7 @@ function Dashboard(props) {
   }
 
   if (userRole && userRole.isAdmin) {
-    return <AdminDashboard t={t}/>;
+    return <AdminDashboard t={t} isAdmin={userRole.isAdmin} />;
   }
 
   if (userRole && !userRole.isAdmin && userRole.role === VOLUNTEER)

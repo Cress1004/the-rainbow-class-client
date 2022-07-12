@@ -126,6 +126,19 @@ const getVolunteerCount = async () => {
   }
 }
 
+const changeStatus = async (volunteerId, data) => {
+  try {
+    const response = await api({
+      method: "POST",
+      url: `${VOLUNTEER_API}/${volunteerId}/change-status`,
+      data: data,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
 export {
   addVolunteer,
   getVolunteers,
@@ -135,5 +148,6 @@ export {
   getCurrentVolunteer,
   getTotalVolunteers,
   getVolunteersWithParams,
-  getVolunteerCount
+  getVolunteerCount,
+  changeStatus
 };

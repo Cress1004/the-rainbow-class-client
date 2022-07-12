@@ -9,7 +9,7 @@ import Report from "./Report";
 const { Option } = Select;
 
 function AdminDashboard(props) {
-  const { t } = props;
+  const { t, isAdmin } = props;
   const [schedule, setSchedule] = useState([]);
   const [classData, setClassData] = useState();
   const classes = useFetchAllClasses();
@@ -66,7 +66,7 @@ function AdminDashboard(props) {
           </Form.Item>
         </Col>
       </Row>
-      {schedule && <MyCalendar data={schedule} />}
+      {schedule && <MyCalendar data={schedule} isAdmin={isAdmin} t={t}/>}
     </div>
   );
 }

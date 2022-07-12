@@ -104,6 +104,20 @@
     .ant-row .ant-form-item {
         margin: 0px;
     }
+    &__status {
+        .ant-btn {
+          text-align: center;
+          &--working {
+            .ant-btn {
+              background-color: $waiting-color;
+              border: none;
+            }
+          }
+          &--retired {
+            background-color: $pending-color;
+          }
+        }
+    }
 }
 
 .edit-volunteer {
