@@ -71,3 +71,28 @@ $label-font-weight: bolder;
 .ant-form-item label:after {
   content: none;
 }
+
+.add-button {
+  border-radius: 15px;
+  padding: 0px 10px;
+  margin-left: 10px;
+  a {
+      color: $white-color;
+  }
+}
+
+.input-search {
+  width: 290px;
+  > .ant-input {
+      border-radius: 15px;
+  }
+}
+
+.tool-flex {
+  display: flex;
+  float: right;
+}
+
+.action-icon {
+  display: flex;
+}

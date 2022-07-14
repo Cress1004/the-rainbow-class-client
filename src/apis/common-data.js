@@ -39,11 +39,33 @@ const getWards = async (provinceId, districtId) => {
   }
 };
 
+
 const getStudentTypes = async () => {
   try {
     const response = await api({
       method: "GET",
       url: `${COMMON_DATA_API}/student-types`,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
+const getStudentTypesWithParams = async ({
+  search,
+  offset,
+  limit,
+}) => {
+  try {
+    const response = await api({
+      method: "GET",
+      url: `${COMMON_DATA_API}/student-types`,
+      params: {
+        search,
+        offset,
+        limit,
+      },
     });
     return response;
   } catch (error) {
@@ -63,6 +85,20 @@ const addStudentType = async (data) => {
     return error.response?.data;
   }
 };
+
+const updateStudentType = async (data) => {
+  try {
+    const response = await api({
+      method: "POST",
+      url: `${COMMON_DATA_API}/edit-student-type`,
+      data: data,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
 
 const deleteStudentType = async (id) => {
   try {
@@ -195,6 +231,7 @@ export {
   getLocation,
   getStudentTypes,
   addStudentType,
+  updateStudentType,
   deleteStudentType,
   getDistricts,
   getWards,
@@ -207,4 +244,5 @@ export {
   getSemesters,
   addSemester,
   deleteSemester,
+  getStudentTypesWithParams
 };

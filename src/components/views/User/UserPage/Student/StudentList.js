@@ -17,7 +17,6 @@ import {
 import "./student.scss";
 import { Link } from "react-router-dom";
 import {
-  getArrayLength,
   transformStudentTypes,
 } from "../../../../common/transformData";
 import {

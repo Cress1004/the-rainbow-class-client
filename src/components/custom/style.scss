@@ -1,0 +1,51 @@
+@import '../views/style/app.scss';
+
+.custom-action {
+    &__button {
+        .ant-btn {
+            min-width: 32px;
+            text-align: center;
+            border-radius: 50%;
+            padding-right: 0px;
+            padding-left: 0px;
+            border: none;
+            margin: 3px;
+        }
+    }
+    &__view-icon {
+        .ant-btn:hover, 
+        .anticon .anticon-eye:hover {
+            background-color: $primary-color;
+            color: white;
+        }
+        .ant-btn, 
+        .anticon .anticon-eye{
+            color: $primary-color;
+            background-color: white;
+        }
+    } 
+    &__edit-icon {
+        .ant-btn:hover, 
+        .anticon .anticon-edit:hover {
+            background-color: $success-color;
+            color: white;
+        }
+        .ant-btn,
+        .anticon .anticon-edit{
+            color: $success-color;
+            background-color: white;
+        }
+    } 
+    &__delete-icon {
+        .ant-btn:hover, 
+        .anticon .anticon-delete:hover {
+            background-color: $danger-color;
+            color: white;
+        }
+        .ant-btn,
+        .anticon .anticon-delete{
+            color: $danger-color;
+            background-color: white;
+        }
+    } 
+}

@@ -165,7 +165,7 @@ function CVList(props) {
       dataIndex: "classInfo",
       key: "_id",
       width: 170,
-      render: (classInfo, record) => renderData(classInfo.name, record),
+      render: (classInfo, record) => renderData(classInfo?.name, record),
     },
     {
       title: t("status"),

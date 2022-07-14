@@ -95,13 +95,13 @@ function EditStudent(props) {
     const addressData = studentData.address;
     if (addressData) {
       setAddress(addressData);
-      setProvince(addressData.address.province);
-      setDistrict(addressData.address.district);
-      setWard(addressData.address.ward);
-      fetchDistricts(addressData.address.province.id);
+      setProvince(addressData.address?.province);
+      setDistrict(addressData.address?.district);
+      setWard(addressData.address?.ward);
+      fetchDistricts(addressData.address?.province.id);
       fetchWards(
-        addressData.address.province.id,
-        addressData.address.district.id
+        addressData.address?.province.id,
+        addressData.address?.district.id
       );
     }
   }, [studentData]);
@@ -264,7 +264,7 @@ function EditStudent(props) {
             onChange={handleChangeDistrict}
             className="edit-student__input-address-center-form"
           >
-            {districts.length
+            {districts?.length
               ? districts.map((option) => (
                   <Option key={option._id} value={option.id}>
                     {option.name}
@@ -278,7 +278,7 @@ function EditStudent(props) {
             placeholder={t("input_ward")}
             onChange={handleChangeWard}
           >
-            {wards.length
+            {wards?.length
               ? wards.map((option) => (
                   <Option key={option._id} value={option.id}>
                     {option.name}

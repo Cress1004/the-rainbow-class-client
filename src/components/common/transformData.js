@@ -102,7 +102,7 @@ export function transformEventOfLesson(data) {
         email: data.email,
         phoneNumber: data.phoneNumber,
         cvId: data._id,
-        classId: data.class._id,
+        classId: data.class?._id,
         personInCharge: data.schedule.personInCharge
           ? data.schedule.personInCharge.name
           : "unset",
