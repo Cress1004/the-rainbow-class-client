@@ -1,22 +1,28 @@
-import { Button, Table, Form, Input, message } from "antd";
+import { Button, Table, Form, Input, message, Icon } from "antd";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import "../../master-setting.scss";
 import apis from "../../../../apis";
-import { getArrayLength } from "../../../../common/transformData";
-import TableNodata from "../../../NoData/TableNodata";
+import Edit from "../../../../components/custom/action/Edit";
+import Delete from "../../../../components/custom/action/Delete";
+import BasicModalConfirm from "../../../../components/custom/modal/BasicModalConfirm";
+import UpdateSubject from "./UpdateSubject";
 
 function Subject() {
   const { t } = useTranslation();
-  const key = "updatable";
+  const [listParams, setListParams] = useState({ limit: 10 });
+  const [deleteItem, setDeleteItem] = useState();
+  const [updateItem, setUpdateItem] = useState(false);
+  const [isUpdate, setUpdate] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [numberOfSubjects, setNumberOfSubjects] = useState(0);
   const [subjects, setSubjects] = useState([]);
-  const [newType, setNewType] = useState("");
-  const [add, setAdd] = useState(false);
 
   const fetchSubjects = async () => {
-    const data = await apis.commonData.getSubjects();
+    const data = await apis.commonData.getSubjectsWithParams(listParams);
     if (data.success) {
       setSubjects(data.subjects);
+      setNumberOfSubjects(data.count);
     }
   };
 
@@ -24,9 +30,21 @@ function Subject() {
     const data = await apis.commonData.addSubject(dataToSend);
     if (data.success) {
       fetchSubjects();
-      setAdd(false);
+      setUpdate(false);
     } else if (!data.success) {
-      alert(data.message);
+      message.error(data.message);
+    }
+  };
+
+  const fetchUpdateSubject = async (dataToSend) => {
+    const data = await apis.commonData.updateSubject(dataToSend);
+    if (data.success) {
+      await fetchSubjects();
+      setUpdate(false);
+      setUpdateItem(null);
+      message.success("update subject success");
+    } else if (!data.success) {
+      message.error(data.message);
     }
   };
 
@@ -34,15 +52,15 @@ function Subject() {
     const data = await apis.commonData.deleteSubject(id);
     if (data.success) {
       fetchSubjects();
-      alert(t("delete success"));
+      message.success(t("delete success"));
     } else if (!data.success) {
-      alert(data.message);
+      message.error(data.message);
     }
   };
 
   useEffect(() => {
     fetchSubjects();
-  }, []);
+  }, [listParams]);
 
   const columns = [
     {
@@ -52,14 +70,18 @@ function Subject() {
       ellipsis: {
         showTitle: false,
       },
+      width: "80%",
       render: (text) => <span>{text}</span>,
     },
     {
       title: t("action"),
       key: "id",
       dataIndex: "id",
-      render: (id) => (
-        <button onClick={(e) => handleDelete(e, id)}>{t("delete")}</button>
+      render: (id, subject) => (
+        <div className="action-icon">
+          <Edit handleClick={() => handleEdit(subject)} />
+          <Delete handleClick={() => setShowModalDelete(id)} />
+        </div>
       ),
     },
   ];
@@ -71,63 +93,100 @@ function Subject() {
   }));
 
   const handleClickAdd = () => {
-    setAdd(true);
+    setUpdate(true);
+    setUpdateItem(null);
   };
 
   const handleClickBack = () => {
-    setAdd(false);
+    setUpdate(false);
+    setUpdateItem(null);
   };
 
-  const handleDelete = async (e, id) => {
-    e.preventDefault();
-    fetchDeleteSubject(id);
+  const handleDelete = async (id) => {
+    await fetchDeleteSubject(id);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    fetchAddSubject({ title: newType });
+  const handleEdit = (studentType) => {
+    setUpdate(true);
+    setUpdateItem(studentType);
   };
 
-  const openMessage = () => {
-    message.loading({ content: t("loading"), key });
-    setTimeout(() => {
-      message.success({ content: t("save_success"), key, duration: 3 });
-    }, 1000);
+  const setShowModalDelete = (id) => {
+    setDeleteItem(id);
+    setShowModal(true);
+  };
+
+  const handleCancel = () => {
+    setDeleteItem(null);
+    setHideModal();
+  };
+
+  const setHideModal = () => {
+    setShowModal(false);
+  };
+
+  const handleOk = async () => {
+    await handleDelete(deleteItem);
+    setDeleteItem(null);
+    setHideModal();
+  };
+
+  const handleChangeSearchInput = (e) => {
+    setListParams({ ...listParams, search: e.target.value, offset: 1 });
+  };
+
+  const handleChangePagination = (pageNumber) => {
+    setListParams({ ...listParams, offset: pageNumber });
   };
 
   return (
     <div>
-      <div className="type-of-student-list__title">{t("subject")}</div>
-      {add ? (
-        <div>
-          <Button onClick={handleClickBack}>{t("back")}</Button>
-          <Form onSubmit={handleSubmit}>
-            <Form.Item label={t("subject")} required>
-              <Input onChange={(e) => setNewType(e.target.value)} />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit" onClick={openMessage}>
-                {t("register")}
-              </Button>
-            </Form.Item>
-          </Form>
-        </div>
+      <div className="mastersetting__list--title">{t("subject")}</div>
+      {isUpdate ? (
+        <UpdateSubject
+          handleClickBack={handleClickBack}
+          t={t}
+          updateItem={updateItem}
+          fetchAddSubject={fetchAddSubject}
+          fetchUpdateSubject={fetchUpdateSubject}
+        />
       ) : (
         <div>
-          <Button
-            onClick={handleClickAdd}
-            type="primary"
-            className="add-new-student-type-button"
-          >
-            {t("add_new_subject")}
-          </Button>
-          {getArrayLength(data) ? (
-            <Table columns={columns} dataSource={data} />
-          ) : (
-            <TableNodata />
-          )}
+          <div className="tool-flex">
+            <Input
+              className="input-search"
+              prefix={<Icon type="search" />}
+              placeholder={t("search")}
+              onChange={(e) => handleChangeSearchInput(e)}
+            />
+            <Button
+              onClick={handleClickAdd}
+              type="primary"
+              className="add-button"
+            >
+              <Icon type="plus-circle" /> {t("add_new")}
+            </Button>
+          </div>
+          <Table
+            columns={columns}
+            dataSource={data}
+            pagination={{
+              total: numberOfSubjects,
+              defaultCurrent: listParams.offset,
+              onChange: (pageNumber) => handleChangePagination(pageNumber),
+              pageSize: listParams.limit,
+              title: null,
+            }}
+          />
         </div>
       )}
+      <BasicModalConfirm
+        title={t("confirm_delete_subject_title")}
+        content={t("confirm_delete_subject_content")}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+        visible={showModal}
+      />
     </div>
   );
 }

@@ -3,13 +3,13 @@ import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-function UpdateStudentType(props) {
+function UpdateSubject(props) {
   const {
     handleClickBack,
     t,
     updateItem,
-    fetchAddStudentType,
-    fetchUpdateStudentType,
+    fetchAddSubject,
+    fetchUpdateSubject,
   } = props;
   const layout = {
     labelCol: { span: 6 },
@@ -21,19 +21,19 @@ function UpdateStudentType(props) {
   const formik = useFormik({
     initialValues: {
       id: updateItem ? updateItem.id : undefined,
-      newType: updateItem ? updateItem.studentType : undefined,
+      newType: updateItem ? updateItem.subject : undefined,
     },
     validationSchema: Yup.object({
-      newType: Yup.string().required(t("required_student_type_message")),
+      newType: Yup.string().required(t("required_subject_message")),
     }),
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(async () => {
         updateItem
-          ? await fetchUpdateStudentType({
+          ? await fetchUpdateSubject({
               id: values.id,
               title: values.newType,
             })
-          : await fetchAddStudentType({ title: values.newType });
+          : await fetchAddSubject({ title: values.newType });
         await setSubmitting(false);
       }, 400);
     },
@@ -52,10 +52,10 @@ function UpdateStudentType(props) {
         {...layout}
         className="mastersetting__form"
       >
-        <Form.Item label={t("student_type")} required>
+        <Form.Item label={t("subject")} required>
           <Input
             name="newType"
-            placeholder={t("input_new_student_type")}
+            placeholder={t("input_new_subject")}
             defaultValue={formik.values.newType}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -76,4 +76,4 @@ function UpdateStudentType(props) {
   );
 }
 
-export default UpdateStudentType;
+export default UpdateSubject;

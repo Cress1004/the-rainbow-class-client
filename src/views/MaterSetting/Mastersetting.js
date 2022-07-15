@@ -28,7 +28,7 @@ function Mastersetting(props) {
   return (
     <div className="mastersetting">
       <div className="mastersetting__title">{t("master_setting")}</div>
-      <Tabs defaultActiveKey="tab" onChange={(key) => onChangeTab(key)}>
+      <Tabs defaultActiveKey="2" onChange={(key) => onChangeTab(key)}>
         <TabPane tab={t("student_type")} key="1">
           <StudentType />
         </TabPane>

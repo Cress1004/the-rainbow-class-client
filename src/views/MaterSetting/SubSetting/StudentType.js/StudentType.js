@@ -9,13 +9,6 @@ import Delete from "../../../../components/custom/action/Delete";
 import BasicModalConfirm from "../../../../components/custom/modal/BasicModalConfirm";
 
 function StudentType() {
-  const layout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 16 },
-  };
-  const tailLayout = {
-    wrapperCol: { offset: 18, span: 4 },
-  };
   const { t } = useTranslation();
   const [studentTypes, setStudentTypes] = useState([]);
   const [isUpdate, setUpdate] = useState(false);
@@ -132,7 +125,7 @@ function StudentType() {
     setShowModal(false);
   };
 
-  const handleCanCel = () => {
+  const handleCancel = () => {
     setDeleteItem(null);
     setHideModal();
   };
@@ -154,8 +147,6 @@ function StudentType() {
       {isUpdate ? (
         <UpdateStudentType
           handleClickBack={handleClickBack}
-          layout={layout}
-          tailLayout={tailLayout}
           t={t}
           updateItem={updateItem}
           fetchAddStudentType={fetchAddStudentType}
@@ -167,7 +158,7 @@ function StudentType() {
             <Input
               className="input-search"
               prefix={<Icon type="search" />}
-              placeholder={t("search_by_student_type")}
+              placeholder={t("search")}
               onChange={(e) => handleChangeSearchInput(e)}
             />
             <Button
@@ -195,7 +186,7 @@ function StudentType() {
         title={t("confirm_delete_student_type_title")}
         content={t("confirm_delete_student_type_content")}
         handleOk={handleOk}
-        handleCancel={handleCanCel}
+        handleCancel={handleCancel}
         visible={showModal}
       />
     </div>

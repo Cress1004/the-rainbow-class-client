@@ -39,7 +39,6 @@ const getWards = async (provinceId, districtId) => {
   }
 };
 
-
 const getStudentTypes = async () => {
   try {
     const response = await api({
@@ -52,11 +51,7 @@ const getStudentTypes = async () => {
   }
 };
 
-const getStudentTypesWithParams = async ({
-  search,
-  offset,
-  limit,
-}) => {
+const getStudentTypesWithParams = async ({ search, offset, limit }) => {
   try {
     const response = await api({
       method: "GET",
@@ -99,7 +94,6 @@ const updateStudentType = async (data) => {
   }
 };
 
-
 const deleteStudentType = async (id) => {
   try {
     const response = await api({
@@ -125,11 +119,41 @@ const getSubjects = async () => {
   }
 };
 
+const getSubjectsWithParams = async ({ search, offset, limit }) => {
+  try {
+    const response = await api({
+      method: "GET",
+      url: `${COMMON_DATA_API}/subjects`,
+      params: {
+        search,
+        offset,
+        limit,
+      },
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
 const addSubject = async (data) => {
   try {
     const response = await api({
       method: "POST",
       url: `${COMMON_DATA_API}/add-subject`,
+      data: data,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
+const updateSubject = async (data) => {
+  try {
+    const response = await api({
+      method: "POST",
+      url: `${COMMON_DATA_API}/edit-subject`,
       data: data,
     });
     return response;
@@ -244,5 +268,7 @@ export {
   getSemesters,
   addSemester,
   deleteSemester,
-  getStudentTypesWithParams
+  getStudentTypesWithParams,
+  getSubjectsWithParams,
+  updateSubject,
 };

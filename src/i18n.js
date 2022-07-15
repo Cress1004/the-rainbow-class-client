@@ -274,7 +274,7 @@ const resources = {
       input_grade: "Nhập vào khối lớp",
       pair_detail: "Chi tiết",
       volunteer_name: "TNV phụ trách hiện tại",
-      search_by_student_type: "Tìm kiếm",
+      search: "Tìm kiếm",
       add_new: "Thêm mới",
       //noti
       assign_success: "Đăng kí thành công",
