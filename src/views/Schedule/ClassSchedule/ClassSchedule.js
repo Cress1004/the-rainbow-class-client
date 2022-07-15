@@ -79,7 +79,7 @@ function ClassSchedule() {
               </Col>
             </Row>
           )}
-          {schedule && <MyCalendar data={schedule} userId={userId} />}
+          {schedule && <MyCalendar data={schedule} userId={userId} t={t}/>}
         </div>
       )}
     </div>

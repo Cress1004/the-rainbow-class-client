@@ -3,13 +3,13 @@ import { Col, Row, Select, Form } from "antd";
 import React, { useEffect, useState } from "react";
 import apis from "../../../apis";
 import useFetchAllClasses from "../../../hook/Class/useFetchAllClasses";
-import MyCalendar from "./Calendar";
-import Report from "./Report";
+import MyCalendar from "../Sessions/Calendar";
+import Report from "../Sessions/Report";
 
 const { Option } = Select;
 
 function AdminDashboard(props) {
-  const { t, isAdmin } = props;
+  const { t, userRole } = props;
   const [schedule, setSchedule] = useState([]);
   const [classData, setClassData] = useState();
   const classes = useFetchAllClasses();
@@ -51,6 +51,11 @@ function AdminDashboard(props) {
               value={classData?.name}
               onChange={(value) => onSelectClass(value)}
               showSearch
+              filterOption={(input, option) =>
+                option.props.children
+                  .toLowerCase()
+                  .indexOf(input.toLowerCase()) >= 0
+              }
               placeholder={t("select_class")}
               className="class-schedule__filter-input"
             >
@@ -66,7 +71,7 @@ function AdminDashboard(props) {
           </Form.Item>
         </Col>
       </Row>
-      {schedule && <MyCalendar data={schedule} isAdmin={isAdmin} t={t}/>}
+      {schedule ? <MyCalendar data={schedule} userRole={userRole} t={t} /> : null}
     </div>
   );
 }

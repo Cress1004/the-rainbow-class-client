@@ -25,6 +25,7 @@ import SetInterviewTime from "./Section/SetInterviewTime";
 import FreeTimeTable from "./Section/FreeTimeTable";
 import ConfirmPassStatus from "./Section/ConfirmPassStatus";
 import apis from "../../apis";
+import BasicModalConfirm from "../../components/custom/modal/BasicModalConfirm";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const { Item } = Form;
@@ -41,7 +42,7 @@ function CVDetail(props) {
   const leftLayout = {
     labelCol: { span: 5 },
     wrapperCol: { span: 19 },
-  }
+  };
   const { id } = useParams();
   const [cvData, setCVData] = useState({});
   const [totalPages, setTotalPages] = useState(null);
@@ -53,6 +54,7 @@ function CVDetail(props) {
   const [answers, setAnswers] = useState([]);
   const [viewCVAnswer, setViewCVAnswer] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
+  const [isDuplicateMail, setIsDuplicateMail] = useState(false);
   const cvStatus = CV_STATUS.find((item) => item.key === cvData?.status);
 
   const fetchCVData = async (id) => {
@@ -80,6 +82,7 @@ function CVDetail(props) {
       setConfirmReject(false);
       setConfirmInterview(false);
       setConfirmPass(false);
+      setIsDuplicateMail(data.duplicateMail);
       message.success("Mail was sent to user!");
     } else if (!data.success) {
       message.error(data.message);
@@ -98,7 +101,7 @@ function CVDetail(props) {
       date: cvData.schedule?.time?.date,
       startTime: cvData.schedule?.time?.startTime,
       endTime: cvData.schedule?.time?.endTime,
-      participants: cvData.schedule?.participants?.map(item => item._id),
+      participants: cvData.schedule?.participants?.map((item) => item._id),
       linkOnline: cvData.schedule?.linkOnline,
     },
     enableReinitialize: true,
@@ -245,7 +248,7 @@ function CVDetail(props) {
       <div className="cv-detail__title">{t("cv_detail")}</div>
       <Row>
         <Col span={14}>
-        <Form {...leftLayout} className="cv-detail__show-detail">
+          <Form {...leftLayout} className="cv-detail__show-detail">
             <Item label={t("user_name")}>{cvData.userName}</Item>
             <Item label={t("email")}>{cvData.email}</Item>
             <Item label={t("phone_number")}>{cvData.phoneNumber}</Item>
@@ -382,7 +385,6 @@ function CVDetail(props) {
         setConfirmReject={setConfirmReject}
         formik={formik}
       />
-      {console.log(cvData.linkOnline)}
       {cvData.class?._id ? (
         <SetInterviewTime
           t={t}
@@ -401,6 +403,13 @@ function CVDetail(props) {
         confirmPass={confirmPass}
         setConfirmPass={setConfirmPass}
         formik={formik}
+      />
+      <BasicModalConfirm
+        handleOk={() => setIsDuplicateMail(false)}
+        handleCancel={() => setIsDuplicateMail(false)}
+        title={t("alert_duplicate_email_modal_title")}
+        content={t("alert_duplicate_email_modal_content")}
+        visible={isDuplicateMail}
       />
     </div>
   );

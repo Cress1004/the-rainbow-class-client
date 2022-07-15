@@ -1,7 +1,7 @@
 import React from "react";
 import "../schedule.scss";
 import { STUDENT, VOLUNTEER } from "../../../common/constant";
-import AdminDashboard from "../Sessions/AdminDashboard";
+import AdminDashboard from "./AdminDashboard";
 import PermissionDenied from "../../../components/custom/Error/PermissionDenied";
 import StudentTimesheet from "./StudentTimesheet";
 import VolunteerTimesheet from "./VolunteerTimesheet";
@@ -15,15 +15,15 @@ function Dashboard(props) {
   const userRole = currentUserData.userRole;
 
   if (userRole && userRole.role === STUDENT) {
-    return <StudentTimesheet userId={userId} />;
+    return <StudentTimesheet userId={userId} t={t} userRole={userRole}/>;
   }
 
   if (userRole && userRole.isAdmin) {
-    return <AdminDashboard t={t} isAdmin={userRole.isAdmin} />;
+    return <AdminDashboard t={t} userRole={userRole} />;
   }
 
   if (userRole && !userRole.isAdmin && userRole.role === VOLUNTEER)
-    return <VolunteerTimesheet userId={userId} />;
+    return <VolunteerTimesheet userId={userId} t={t}/>;
   return <PermissionDenied />;
 }
 

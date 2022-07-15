@@ -300,7 +300,10 @@ const resources = {
         "Nếu bạn đánh trượt CV, sẽ không thể chuyển trạng thái của CV về Chờ duyệt hoặc Chờ phỏng vấn",
       confirm_pass_status: "Xác nhận ứng viên đỗ phỏng vấn",
       approve_this_CV_and_cannot_change_status:
-        "Sau khi xác nhận ứng viên đỗ phỏng vấn, tài khoản của TNV mới sẽ được tự động tạo và đưa vào hệ thống. Email kích hoạt tài khoản sẽ được gửi đến cho Tình nguyện viên mới.",
+        "Sau khi xác nhận ứng viên đỗ phỏng vấn, tài khoản của TNV mới sẽ được tự động tạo và đưa vào hệ thống. Email kích hoạt tài khoản sẽ được gửi đến cho Tình nguyện viên mới trong trường hợp email của TNV mới không trùng lặp với email trong hệ thống.",
+      alert_duplicate_email_modal_title:
+        "Không thể tự động thêm tài khoản vào hệ thống!",
+        alert_duplicate_email_modal_content: "Do đã phát hiện email của tình nguyện viên mới bị trùng lặp trong hệ thống nên tài khoản của TNV này sẽ không được tự động thêm vào hệ thống. Hãy kiểm tra và liên lạc lại với những người liên quan! Tài khoản của TNV này sẽ không được tự động thêm vào Hệ thống",
       //validation:
       required_name_message: "Hãy nhập vào tên của bạn",
       required_phone_number_message:
@@ -330,6 +333,7 @@ const resources = {
       reset_email_was_sent:
         "Email cấp lại mật khẩu đã được gửi. Hãy kiểm tra hòm thư!",
       some_thing_went_wrong: "Lỗi hệ thống!",
+      user: "Người dùng",
     },
   },
 };

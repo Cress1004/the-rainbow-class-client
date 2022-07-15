@@ -8,7 +8,13 @@ import { useTranslation } from "react-i18next";
 import Footer from "../Footer/Footer";
 import Notification from "../../../views/Notification/Notification";
 import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
-import { CLASS_MONITOR, STUDENT, SUB_CLASS_MONITOR, SUPER_ADMIN, VOLUNTEER } from "../../../common/constant";
+import {
+  CLASS_MONITOR,
+  STUDENT,
+  SUB_CLASS_MONITOR,
+  SUPER_ADMIN,
+  VOLUNTEER,
+} from "../../../common/constant";
 
 const { Title } = Typography;
 const { SubMenu } = Menu;
@@ -50,16 +56,27 @@ const DashboardLayout = ({ children, ...rest }) => {
                       <span>{t("dashboard")}</span>
                     </Link>
                   </Menu.Item>
-                  <Menu.Item key="volunteers">
-                    <Icon type="user" />
-                    <span>{t("volunteer")}</span>
-                    <Link to="/volunteers"></Link>
-                  </Menu.Item>
-                  <Menu.Item key="students">
-                    <Icon type="solution" />
-                    <span> {t("student")}</span>
-                    <Link to="/students"></Link>
-                  </Menu.Item>
+                  <SubMenu
+                    key="user_manager"
+                    title={
+                      <span>
+                        <Icon type="user" />
+                        <span>{t("user")}</span>
+                      </span>
+                    }
+                  >
+                    <Menu.Item key="admin">
+                      <Link to="/admin">{t("admin")}</Link>
+                    </Menu.Item>
+                    <Menu.Item key="volunteer">
+                      {t("volunteer")}
+                      <Link to="/volunteers"></Link>
+                    </Menu.Item>
+                    <Menu.Item key="student">
+                      {t("student")}
+                      <Link to="/students"></Link>
+                    </Menu.Item>
+                  </SubMenu>
                   <Menu.Item key="my_Class">
                     <Link to={`/classes/${userData.userClassId}`}>
                       <Icon type="book" />
@@ -119,7 +136,7 @@ const DashboardLayout = ({ children, ...rest }) => {
                       <span>{t("cv_manager")}</span>
                     </Link>
                   </Menu.Item> */}
-                   <SubMenu
+                  <SubMenu
                     key="cv_manager"
                     title={
                       <span>

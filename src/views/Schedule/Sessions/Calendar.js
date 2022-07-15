@@ -8,12 +8,16 @@ import {
   transformEventOfLesson,
   transformScheduleTimeData,
 } from "../../../common/transformData";
-import { INTERVIEW_SCHEDULE, LESSON_SCHEDULE } from "../../../common/constant";
+import {
+  INTERVIEW_SCHEDULE,
+  LESSON_SCHEDULE,
+  STUDENT,
+} from "../../../common/constant";
 import useFetchAllClasses from "../../../hook/Class/useFetchAllClasses";
 
 const localizer = momentLocalizer(moment);
 function MyCalendar(props) {
-  const { data, isAdmin, t } = props;
+  const { data, userRole, t } = props;
   const events = data.map((item) => transformEventOfLesson(item));
   const [classColors, setClassColors] = useState([]);
   const classes = useFetchAllClasses();
@@ -28,16 +32,20 @@ function MyCalendar(props) {
       return (
         <>
           <p>
-            {t("interviewer_name")}: {event.interviewerName}
+            <span className="custom__label">{t("interviewer_name")}:</span>{" "}
+            {event.interviewerName}
           </p>
           <p>
-            {t("email")}: {event.email}
+            <span className="custom__label">{t("email")}: </span>
+            {event.email}
           </p>
           <p>
-            {t("phone_number")}: {event.phoneNumber}
+            <span className="custom__label">{t("phone_number")}:</span>{" "}
+            {event.phoneNumber}
           </p>
           <p>
-            {t("time")}: {transformScheduleTimeData(event.time)}
+            <span className="custom__label">{t("time")}: </span>
+            {transformScheduleTimeData(event.time)}
           </p>
           <Link to={`/cv/${event.cvId}`} className="show-lesson-detail">
             {t("detail")}
@@ -48,13 +56,16 @@ function MyCalendar(props) {
       return (
         <>
           <p>
-            {t("lesson_name")}: {event.lessonTitle}
+            <span className="custom__label"> {t("lesson_name")}: </span>
+            {event.lessonTitle}
           </p>
           <p>
-            {t("time")}: {transformScheduleTimeData(event.time)}
+            <span className="custom__label">{t("time")}:</span>{" "}
+            {transformScheduleTimeData(event.time)}
           </p>
           <p>
-            {t("person_in_charge")}: {event.personInCharge}
+            <span className="custom__label">{t("person_in_charge")}: </span>
+            {event.personInCharge}
           </p>
           <Link
             to={`/classes/${event.classId}/lessons/${event.lessonId}`}
@@ -62,7 +73,7 @@ function MyCalendar(props) {
           >
             {t("detail")}
           </Link>
-          {isAdmin ? null : (
+          {userRole?.isAdmin || userRole?.role === STUDENT ? null : (
             <Link
               to={`/classes/${event.classId}?tab=report`}
               className="redirect-to-report"
@@ -76,7 +87,7 @@ function MyCalendar(props) {
 
   const EventComponent = ({ event }) => (
     <Popover
-      title={event.title}
+      title={<span className="custom__label">{event.title}</span>}
       trigger="click"
       placement="topLeft"
       content={content(event)}
@@ -87,7 +98,7 @@ function MyCalendar(props) {
 
   return (
     <div>
-      {events && classColors.length && (
+      {events && classColors.length ? (
         <Calendar
           localizer={localizer}
           startAccessor="start"
@@ -109,7 +120,7 @@ function MyCalendar(props) {
             event: EventComponent,
           }}
         />
-      )}
+      ) : null}
     </div>
   );
 }
