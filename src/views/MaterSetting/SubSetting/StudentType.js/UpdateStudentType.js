@@ -1,7 +1,6 @@
 import { Button, Icon, Input, Form, Row, Col } from "antd";
 import React from "react";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 
 function UpdateStudentType(props) {
   const {
@@ -23,9 +22,6 @@ function UpdateStudentType(props) {
       id: updateItem ? updateItem.id : undefined,
       newType: updateItem ? updateItem.studentType : undefined,
     },
-    validationSchema: Yup.object({
-      newType: Yup.string().required(t("required_student_type_message")),
-    }),
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(async () => {
         updateItem
@@ -38,6 +34,11 @@ function UpdateStudentType(props) {
       }, 400);
     },
   });
+
+  const fieldError = (formik) => {
+    return !formik.values.newType;
+  };
+
   return (
     <div>
       <Row className="mastersetting__close-icon">
@@ -67,7 +68,7 @@ function UpdateStudentType(props) {
           )}
         </Form.Item>
         <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" disabled={fieldError(formik)}>
             {updateItem ? t("update") : t("register")}
           </Button>
         </Form.Item>

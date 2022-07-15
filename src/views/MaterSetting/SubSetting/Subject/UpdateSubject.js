@@ -12,7 +12,7 @@ function UpdateSubject(props) {
     fetchUpdateSubject,
   } = props;
   const layout = {
-    labelCol: { span: 6 },
+    labelCol: { span: 5 },
     wrapperCol: { span: 14 },
   };
   const tailLayout = {
@@ -38,6 +38,11 @@ function UpdateSubject(props) {
       }, 400);
     },
   });
+
+  const fieldError = (formik) => {
+    return !formik.values.newType;
+  };
+
   return (
     <div>
       <Row className="mastersetting__close-icon">
@@ -67,7 +72,11 @@ function UpdateSubject(props) {
           )}
         </Form.Item>
         <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={fieldError(formik)}
+          >
             {updateItem ? t("update") : t("register")}
           </Button>
         </Form.Item>

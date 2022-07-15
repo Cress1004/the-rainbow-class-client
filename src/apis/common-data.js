@@ -282,6 +282,38 @@ const updateGrade = async (data) => {
   }
 };
 
+
+const getSemestersWithParams = async ({ search, offset, limit }) => {
+  try {
+    const response = await api({
+      method: "GET",
+      url: `${COMMON_DATA_API}/semesters`,
+      params: {
+        search,
+        offset,
+        limit,
+      },
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
+
+const updateSemester = async (data) => {
+  try {
+    const response = await api({
+      method: "POST",
+      url: `${COMMON_DATA_API}/edit-semester`,
+      data: data,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
 export {
   getLocation,
   getStudentTypes,
@@ -303,5 +335,7 @@ export {
   getSubjectsWithParams,
   updateSubject,
   getGradesWithParams,
-  updateGrade
+  updateGrade,
+  getSemestersWithParams,
+  updateSemester
 };

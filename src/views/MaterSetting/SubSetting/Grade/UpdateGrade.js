@@ -4,15 +4,10 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 function UpdateGrade(props) {
-  const {
-    handleClickBack,
-    t,
-    updateItem,
-    fetchAddGrade,
-    fetchUpdateGrade,
-  } = props;
+  const { handleClickBack, t, updateItem, fetchAddGrade, fetchUpdateGrade } =
+    props;
   const layout = {
-    labelCol: { span: 6 },
+    labelCol: { span: 5 },
     wrapperCol: { span: 14 },
   };
   const tailLayout = {
@@ -23,9 +18,6 @@ function UpdateGrade(props) {
       id: updateItem ? updateItem.id : undefined,
       newType: updateItem ? updateItem.grade : undefined,
     },
-    validationSchema: Yup.object({
-      newType: Yup.string().required(t("required_grade_message")),
-    }),
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(async () => {
         updateItem
@@ -38,6 +30,11 @@ function UpdateGrade(props) {
       }, 400);
     },
   });
+
+  const fieldError = (formik) => {
+    return formik.values.newType;
+  };
+
   return (
     <div>
       <Row className="mastersetting__close-icon">
@@ -60,14 +57,13 @@ function UpdateGrade(props) {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           />{" "}
-          {formik.errors.name && formik.touched.name && (
-            <span className="custom__error-message">
-              {formik.errors.newType}
-            </span>
-          )}
         </Form.Item>
         <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={!fieldError(formik)}
+          >
             {updateItem ? t("update") : t("register")}
           </Button>
         </Form.Item>
