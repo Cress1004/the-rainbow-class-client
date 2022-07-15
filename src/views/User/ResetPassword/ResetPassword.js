@@ -7,7 +7,7 @@ import { Form, Icon, Input, Button, Typography } from "antd";
 
 import "./ResetPassword.scss";
 import { STATUS } from "../../../common/constant";
-import CustomFlashMessage from "../../FlashMessage/CustomFlashMessage";
+import CustomFlashMessage from "../../../components/custom/FlashMessage/CustomFlashMessage";
 import apis from "../../../apis";
 
 const { Title } = Typography;

@@ -1,8 +1,8 @@
 import React from "react";
 import FlashMessage from "react-flash-message";
 import { Col, Icon } from "antd";
-import "../../components/app.scss";
-import { STATUS } from "../../common/constant";
+import "../../app.scss";
+import { STATUS } from "../../../common/constant";
 
 function CustomFlashMessage(props) {
   const { message } = props;

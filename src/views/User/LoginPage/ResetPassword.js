@@ -4,9 +4,9 @@ import "./LoginPage.scss";
 import { Modal, Button, Form, Input } from "antd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import CustomFlashMessage from "../../FlashMessage/CustomFlashMessage";
 import { STATUS } from "../../../common/constant";
 import apis from "../../../apis";
+import CustomFlashMessage from "../../../components/custom/FlashMessage/CustomFlashMessage";
 
 function ResetPassword(props) {
   const { t } = useTranslation();
