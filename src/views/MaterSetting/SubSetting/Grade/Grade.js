@@ -1,22 +1,28 @@
-import { Button, Table, Form, Input, message } from "antd";
+import { Button, Table, Form, Input, message, Icon } from "antd";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import "../../master-setting.scss";
 import apis from "../../../../apis";
-import { getArrayLength } from "../../../../common/transformData";
-import TableNodata from "../../../../components/custom/NoData/TableNodata";
+import Edit from "../../../../components/custom/action/Edit";
+import Delete from "../../../../components/custom/action/Delete";
+import BasicModalConfirm from "../../../../components/custom/modal/BasicModalConfirm";
+import UpdateGrade from "./UpdateGrade";
 
 function Grade() {
   const { t } = useTranslation();
-  const key = "updatable";
+  const [listParams, setListParams] = useState({ limit: 10 });
+  const [deleteItem, setDeleteItem] = useState();
+  const [updateItem, setUpdateItem] = useState(false);
+  const [isUpdate, setUpdate] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [numberOfGrades, setNumberOfGrades] = useState(0);
   const [grades, setGrades] = useState([]);
-  const [newType, setNewType] = useState("");
-  const [add, setAdd] = useState(false);
 
   const fetchGrades = async () => {
-    const data = await apis.commonData.getGrades();
+    const data = await apis.commonData.getGradesWithParams(listParams);
     if (data.success) {
       setGrades(data.grades);
+      setNumberOfGrades(data.count);
     }
   };
 
@@ -24,9 +30,21 @@ function Grade() {
     const data = await apis.commonData.addGrade(dataToSend);
     if (data.success) {
       fetchGrades();
-      setAdd(false);
+      setUpdate(false);
     } else if (!data.success) {
-      alert(data.message);
+      message.error(data.message);
+    }
+  };
+
+  const fetchUpdateGrade = async (dataToSend) => {
+    const data = await apis.commonData.updateGrade(dataToSend);
+    if (data.success) {
+      await fetchGrades();
+      setUpdate(false);
+      setUpdateItem(null);
+      message.success("update grade success");
+    } else if (!data.success) {
+      message.error(data.message);
     }
   };
 
@@ -34,15 +52,15 @@ function Grade() {
     const data = await apis.commonData.deleteGrade(id);
     if (data.success) {
       fetchGrades();
-      alert(t("delete success"));
+      message.success(t("delete success"));
     } else if (!data.success) {
-      alert(data.message);
+      message.error(data.message);
     }
   };
 
   useEffect(() => {
     fetchGrades();
-  }, []);
+  }, [listParams]);
 
   const columns = [
     {
@@ -52,82 +70,123 @@ function Grade() {
       ellipsis: {
         showTitle: false,
       },
+      width: "80%",
       render: (text) => <span>{text}</span>,
     },
     {
       title: t("action"),
       key: "id",
       dataIndex: "id",
-      render: (id) => (
-        <button onClick={(e) => handleDelete(e, id)}>{t("delete")}</button>
+      render: (id, grade) => (
+        <div className="action-icon">
+          <Edit handleClick={() => handleEdit(grade)} />
+          <Delete handleClick={() => setShowModalDelete(id)} />
+        </div>
       ),
     },
   ];
 
-  const data = grades.map((item, index) => ({
+  const data = grades?.map((item, index) => ({
     key: index,
     id: item._id,
     grade: item.title,
   }));
 
   const handleClickAdd = () => {
-    setAdd(true);
+    setUpdate(true);
+    setUpdateItem(null);
   };
 
   const handleClickBack = () => {
-    setAdd(false);
+    setUpdate(false);
+    setUpdateItem(null);
   };
 
-  const handleDelete = async (e, id) => {
-    e.preventDefault();
-    fetchDeleteGrade(id);
+  const handleDelete = async (id) => {
+    await fetchDeleteGrade(id);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    fetchAddGrade({ title: newType });
+  const handleEdit = (studentType) => {
+    setUpdate(true);
+    setUpdateItem(studentType);
   };
 
-  const openMessage = () => {
-    message.loading({ content: t("loading"), key });
-    setTimeout(() => {
-      message.success({ content: t("save_success"), key, duration: 3 });
-    }, 1000);
+  const setShowModalDelete = (id) => {
+    setDeleteItem(id);
+    setShowModal(true);
+  };
+
+  const handleCancel = () => {
+    setDeleteItem(null);
+    setHideModal();
+  };
+
+  const setHideModal = () => {
+    setShowModal(false);
+  };
+
+  const handleOk = async () => {
+    await handleDelete(deleteItem);
+    setDeleteItem(null);
+    setHideModal();
+  };
+
+  const handleChangeSearchInput = (e) => {
+    setListParams({ ...listParams, search: e.target.value, offset: 1 });
+  };
+
+  const handleChangePagination = (pageNumber) => {
+    setListParams({ ...listParams, offset: pageNumber });
   };
 
   return (
     <div>
-      <div className="type-of-student-list__title">{t("grade")}</div>
-      {add ? (
-        <div>
-          <Button onClick={handleClickBack}>{t("back")}</Button>
-          <Form onSubmit={handleSubmit}>
-            <Form.Item label={t("grade")} required>
-              <Input onChange={(e) => setNewType(e.target.value)} />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit" onClick={openMessage}>
-                {t("register")}
-              </Button>
-            </Form.Item>
-          </Form>
-        </div>
+      <div className="mastersetting__list--title">{t("grade")}</div>
+      {isUpdate ? (
+        <UpdateGrade
+          handleClickBack={handleClickBack}
+          t={t}
+          updateItem={updateItem}
+          fetchAddGrade={fetchAddGrade}
+          fetchUpdateGrade={fetchUpdateGrade}
+        />
       ) : (
         <div>
-          <Button
-            onClick={handleClickAdd}
-            type="primary"
-            className="add-new-student-type-button"
-          >
-            {t("add_new_grade")}
-          </Button>
-          {getArrayLength(data) ? (
-            <Table columns={columns} dataSource={data} />
-          ) : (
-            <TableNodata />
-          )}
+          <div className="tool-flex">
+            <Input
+              className="input-search"
+              prefix={<Icon type="search" />}
+              placeholder={t("search")}
+              onChange={(e) => handleChangeSearchInput(e)}
+            />
+            <Button
+              onClick={handleClickAdd}
+              type="primary"
+              className="add-button"
+            >
+              <Icon type="plus-circle" /> {t("add_new")}
+            </Button>
+          </div>
+          <Table
+            columns={columns}
+            dataSource={data}
+            pagination={{
+              total: numberOfGrades,
+              defaultCurrent: listParams.offset,
+              onChange: (pageNumber) => handleChangePagination(pageNumber),
+              pageSize: listParams.limit,
+              title: null,
+            }}
+          />
         </div>
       )}
+      <BasicModalConfirm
+        title={t("confirm_delete_grade_title")}
+        content={t("confirm_delete_grade_content")}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+        visible={showModal}
+      />
     </div>
   );
 }

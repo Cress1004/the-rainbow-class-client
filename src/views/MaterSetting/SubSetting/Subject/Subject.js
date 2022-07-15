@@ -86,7 +86,7 @@ function Subject() {
     },
   ];
 
-  const data = subjects.map((item, index) => ({
+  const data = subjects?.map((item, index) => ({
     key: index,
     id: item._id,
     subject: item.title,

@@ -88,7 +88,7 @@ function StudentType() {
     },
   ];
 
-  const data = studentTypes.map((item, index) => ({
+  const data = studentTypes?.map((item, index) => ({
     key: index,
     id: item._id,
     studentType: item.title,

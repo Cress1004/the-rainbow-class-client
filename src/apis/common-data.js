@@ -251,6 +251,37 @@ const deleteSemester = async (id) => {
   }
 };
 
+const getGradesWithParams = async ({ search, offset, limit }) => {
+  try {
+    const response = await api({
+      method: "GET",
+      url: `${COMMON_DATA_API}/grades`,
+      params: {
+        search,
+        offset,
+        limit,
+      },
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
+
+const updateGrade = async (data) => {
+  try {
+    const response = await api({
+      method: "POST",
+      url: `${COMMON_DATA_API}/edit-grade`,
+      data: data,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
 export {
   getLocation,
   getStudentTypes,
@@ -271,4 +302,6 @@ export {
   getStudentTypesWithParams,
   getSubjectsWithParams,
   updateSubject,
+  getGradesWithParams,
+  updateGrade
 };
