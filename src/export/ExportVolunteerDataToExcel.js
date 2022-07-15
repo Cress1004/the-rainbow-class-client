@@ -1,6 +1,6 @@
 import React from "react";
-import { convertRoleName } from "../components/common/function";
-import { transformAddressData } from "../components/common/transformData";
+import { convertRoleName } from "../common/function";
+import { transformAddressData } from "../common/transformData";
 import ExportVolunteerCSV from "./Component/ExportVolunteerCSV";
 
 function ExportVolunteerDataToExcel(props) {

@@ -1,10 +1,10 @@
 import React from "react";
-import { STUDENT_STATUS } from "../components/common/constant";
+import { STUDENT_STATUS } from "../common/constant";
 import {
   transformAddressData,
   transformDate,
   transformStudentTypes,
-} from "../components/common/transformData";
+} from "../common/transformData";
 import ExportStudentCSV from "./Component/ExportStudentCSV";
 
 function ExportStudentDataToExcel(props) {

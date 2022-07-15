@@ -1,0 +1,145 @@
+@import '../../../../components/app.scss';
+.student-list {
+    &__title {
+        font-size: $title-font-size;
+        font-weight: $title-font-weight;
+        color: $primary-color;
+        padding-bottom: $title-padding-bottom;
+    }
+    .ant-row {
+        text-align: right;
+    }
+    &__add-student-button {
+        border-radius: 15px;
+        padding: 0px 10px;
+        margin-left: 10px;
+        a {
+            color: $white-color;
+        }
+    }
+    .ant-table-wrapper {
+        padding-top: 20px;
+    }
+    &__search {
+        width: 290px;
+        > .ant-input {
+            border-radius: 15px;
+        }
+    }
+    &__filter {
+        background-color: rgb(230, 230, 230);
+        height: 30px;
+        width: 30px;
+        padding: 8px;
+        border-radius: 15px;
+        margin-right: 10px;
+        &--active {
+            background-color: $primary-color;
+            color: white;
+        }
+    }
+    &__table {
+        &--deactive-row {
+            background-color: $gray-color;
+        }
+    }
+}
+
+.add-student {
+    &__title {
+        font-size: $title-font-size;
+        font-weight: $title-font-weight;
+        color: $primary-color;
+        padding-bottom: $title-padding-bottom;
+    }
+    &__input-address-select-form {
+        .ant-select {
+            display: inline-block;
+            width: calc(33% - 12px);
+        }
+    }
+    &__input-address-center-form{
+        margin: 0px 20px;
+    }
+}
+
+.student-detail {
+    &__title {
+        font-size: $title-font-size;
+        font-weight: $title-font-weight;
+        color: $primary-color;
+        padding-bottom: $title-padding-bottom;
+    }
+    &__left-block {
+        display: block;
+        float: left;
+        text-align: center;
+    }
+    &__right-block {
+        display: block;
+        float: right;
+        padding: 50px;
+    }
+    &__avatar {
+        border-radius: 50%;
+        height: 200px;
+        margin: 20px;
+    }
+    &__description-area {
+        margin: 0px 100px;
+        textarea {
+            resize: none;
+        }
+    }
+    &__delete-student-button {
+        margin-left: 10px;
+    }
+    &__action-row {
+        text-align: right;
+    }
+    .ant-row .ant-form-item {
+        margin: 0px;
+    }
+    &__description-button {
+        text-align: right;
+        &--cancel{
+            margin-left: 10px;
+        }
+    }
+    &__status {
+        .ant-btn {
+          text-align: center;
+          &--studing {
+            .ant-btn {
+              background-color: $waiting-color;
+              border: none;
+            }
+          }
+          &--retired {
+            background-color: $pending-color;
+          }
+        }
+    }
+}
+
+.edit-student {
+    &__title {
+        font-size: $title-font-size;
+        font-weight: $title-font-weight;
+        color: $primary-color;
+        padding-bottom: $title-padding-bottom;
+    }
+    &__input-address-select-form {
+        .ant-select {
+            display: inline-block;
+            width: calc(33% - 12px);
+        }
+    }
+    &__input-address-center-form{
+        margin: 0px 20px;
+    }
+}
+
+.ant-form-item-label {
+    font-weight: $label-font-weight;
+}
