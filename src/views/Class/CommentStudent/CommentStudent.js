@@ -6,7 +6,7 @@ import useFetchStudentByClass from "../../../hook/Class/useFetchStudentByClass";
 import { getArrayLength } from "../../../common/transformData";
 import EditCommentModal from "./EditComment/EditCommentModal";
 import { checkCurrentVolunteerBelongToCurrentClass } from "../../../common/checkRole";
-import PermissionDenied from "../../Error/PermissionDenied";
+import PermissionDenied from "../../../components/custom/Error/PermissionDenied";
 import "./comment-student.scss";
 import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
 import useFetchAllLessonByClass from "../../../hook/Lesson/useFetchAllLessonByClass";

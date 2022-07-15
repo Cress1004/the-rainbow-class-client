@@ -1,7 +1,7 @@
 import { Table } from "antd";
 import React from "react";
 import { getArrayLength } from "../../../common/transformData";
-import TableNodata from "../../NoData/TableNodata";
+import TableNodata from "../../../components/custom/NoData/TableNodata";
 
 function FreeTimeTable(props) {
   const { fixedData, columns } = props;

@@ -10,7 +10,6 @@ import {
   getArrayLength,
   transformDate,
 } from "../../../../common/transformData";
-import TableNodata from "../../../NoData/TableNodata";
 
 function Semester() {
   const { t } = useTranslation();
@@ -150,11 +149,7 @@ function Semester() {
           >
             {t("add_new_semester")}
           </Button>
-          {getArrayLength(data) ? (
             <Table columns={columns} dataSource={data} />
-          ) : (
-            <TableNodata />
-          )}
         </div>
       )}
     </div>

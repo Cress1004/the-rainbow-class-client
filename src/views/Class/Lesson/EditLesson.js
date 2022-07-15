@@ -24,7 +24,7 @@ import { convertDateStringToMoment } from "../../../common/transformData";
 import { generateKey } from "../../../common/function";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import PermissionDenied from "../../Error/PermissionDenied";
+import PermissionDenied from "../../../components/custom/Error/PermissionDenied";
 import { checkCurrentMonitorBelongToCurrentClass } from "../../../common/checkRole";
 import moment from "moment";
 import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";

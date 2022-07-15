@@ -6,7 +6,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./volunteer.scss";
 import { phoneRegExp, urlRegExp } from "../../../../common/constant";
-import PermissionDenied from "../../../Error/PermissionDenied";
+import PermissionDenied from "../../../../components/custom/Error/PermissionDenied";
 import { checkAdminAndMonitorRole } from "../../../../common/function";
 import useFetchAllClasses from "../../../../hook/Class/useFetchAllClasses";
 import apis from "../../../../apis";

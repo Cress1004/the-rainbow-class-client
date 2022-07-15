@@ -20,7 +20,7 @@ import * as Yup from "yup";
 import { generateKey } from "../../common/function";
 import { WEEKDAY, FORMAT_TIME_SCHEDULE } from "../../common/constant";
 import { checkCurrentMonitorBelongToCurrentClass } from "../../common/checkRole";
-import PermissionDenied from "../Error/PermissionDenied";
+import PermissionDenied from "../../components/custom/Error/PermissionDenied";
 import moment from "moment";
 import useFetchCurrentUserData from "../../hook/User/useFetchCurrentUserData";
 import useFetchLocation from "../../hook/CommonData.js/useFetchLocation";

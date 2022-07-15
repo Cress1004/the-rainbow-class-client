@@ -10,7 +10,6 @@ import {
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FORMAT_MONTH_STRING } from "../../../../../common/constant";
-import TableNodata from "../../../../NoData/TableNodata";
 import moment from "moment";
 import {
   getArrayLength,
@@ -18,6 +17,7 @@ import {
 } from "../../../../../common/transformData";
 import apis from "../../../../../apis";
 import { checkNowOverSemesterTime, getMonthRangeBetweenTwoDate } from "../../../../../common/function/checkTime";
+import TableNodata from "../../../../../components/custom/NoData/TableNodata";
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
 

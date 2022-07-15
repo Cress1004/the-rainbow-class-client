@@ -17,7 +17,7 @@ import {
   transformDate,
   transformScheduleTimeData,
 } from "../../../common/transformData";
-import TableNodata from "../../NoData/TableNodata";
+import TableNodata from "../../../components/custom/NoData/TableNodata";
 const { MonthPicker } = DatePicker;
 
 function TeachByClassMyReportList(props) {

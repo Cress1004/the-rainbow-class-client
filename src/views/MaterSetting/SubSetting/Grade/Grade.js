@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import "../../master-setting.scss";
 import apis from "../../../../apis";
 import { getArrayLength } from "../../../../common/transformData";
-import TableNodata from "../../../NoData/TableNodata";
+import TableNodata from "../../../../components/custom/NoData/TableNodata";
 
 function Grade() {
   const { t } = useTranslation();

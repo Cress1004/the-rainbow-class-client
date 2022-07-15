@@ -4,8 +4,8 @@ import { Route, Redirect, Switch } from "react-router-dom";
 import Auth from "../hoc/auth";
 import "antd/dist/antd.css";
 /** Layouts **/
-import LoginLayoutRoute from "../views/Layouts/LoginLayoutRoute";
-import DashboardLayoutRoute from "../views/Layouts/DashboardLayoutRoute";
+import LoginLayoutRoute from "../components/layout/Layouts/LoginLayoutRoute";
+import DashboardLayoutRoute from "../components/layout/Layouts/DashboardLayoutRoute";
 /** Components **/
 import UserPage from "../views/User/UserPage/UserPage";
 import LoginPage from "../views/User/LoginPage/LoginPage";

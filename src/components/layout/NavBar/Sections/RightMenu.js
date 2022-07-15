@@ -5,9 +5,9 @@ import axios from "axios";
 import { withRouter } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { USER_API } from "../../../config";
-import { convertRole } from "../../../common/function";
+import { USER_API } from "../../../../config";
 import "./right-menu.scss";
+import { convertRole } from "../../../../common/function";
 
 function RightMenu(props) {
   const { t } = useTranslation();

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import "./master-setting.scss";
 import StudentType from "./SubSetting/StudentType.js/StudentType";
 import { checkAdminRole } from "../../common/checkRole";
-import PermissionDenied from "../Error/PermissionDenied";
+import PermissionDenied from "../../components/custom/Error/PermissionDenied";
 import useFetchCurrentUserData from "../../hook/User/useFetchCurrentUserData";
 import { Tabs } from "antd";
 import Subject from "./SubSetting/Subject/Subject";

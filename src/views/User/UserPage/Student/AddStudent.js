@@ -17,7 +17,7 @@ import * as Yup from "yup";
 import "./student.scss";
 import { FORMAT_DATE, phoneRegExp } from "../../../../common/constant";
 import { checkAdminAndMonitorRole } from "../../../../common/function";
-import PermissionDenied from "../../../Error/PermissionDenied";
+import PermissionDenied from "../../../../components/custom/Error/PermissionDenied";
 import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
 import useFetchLocation from "../../../../hook/CommonData.js/useFetchLocation";
 import useFetchStudentTypes from "../../../../hook/CommonData.js/useFetchStudentTypes";

@@ -19,7 +19,7 @@ import { useHistory } from "react-router";
 import { WEEKDAY, FORMAT_TIME_SCHEDULE } from "../../common/constant";
 import { generateKey } from "../../common/function";
 import { checkAdminRole } from "../../common/checkRole";
-import PermissionDenied from "../Error/PermissionDenied";
+import PermissionDenied from "../../components/custom/Error/PermissionDenied";
 import useFetchCurrentUserData from "../../hook/User/useFetchCurrentUserData";
 import useFetchLocation from "../../hook/CommonData.js/useFetchLocation";
 import useFetchStudentTypes from "../../hook/CommonData.js/useFetchStudentTypes";

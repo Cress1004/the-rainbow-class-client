@@ -2,7 +2,7 @@ import React from "react";
 import "../schedule.scss";
 import { STUDENT, VOLUNTEER } from "../../../common/constant";
 import AdminDashboard from "../Sessions/AdminDashboard";
-import PermissionDenied from "../../Error/PermissionDenied";
+import PermissionDenied from "../../../components/custom/Error/PermissionDenied";
 import StudentTimesheet from "./StudentTimesheet";
 import VolunteerTimesheet from "./VolunteerTimesheet";
 import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";

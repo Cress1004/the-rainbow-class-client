@@ -4,7 +4,7 @@ import "../schedule.scss";
 import MyCalendar from "../Sessions/Calendar";
 import { Col, Form, Row, Select } from "antd";
 import { STUDENT, SUPER_ADMIN, VOLUNTEER } from "../../../common/constant";
-import PermissionDenied from "../../Error/PermissionDenied";
+import PermissionDenied from "../../../components/custom/Error/PermissionDenied";
 import apis from "../../../apis";
 import useFetchAllClasses from "../../../hook/Class/useFetchAllClasses";
 import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";

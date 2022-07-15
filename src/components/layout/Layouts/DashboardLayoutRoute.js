@@ -5,16 +5,10 @@ import { Link } from "react-router-dom";
 import "./style.scss";
 import RightMenu from "../NavBar/Sections/RightMenu";
 import { useTranslation } from "react-i18next";
-import {
-  CLASS_MONITOR,
-  STUDENT,
-  SUB_CLASS_MONITOR,
-  SUPER_ADMIN,
-  VOLUNTEER,
-} from "../../common/constant";
 import Footer from "../Footer/Footer";
-import Notification from "../Notification/Notification";
-import useFetchCurrentUserData from "../../hook/User/useFetchCurrentUserData";
+import Notification from "../../../views/Notification/Notification";
+import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
+import { CLASS_MONITOR, STUDENT, SUB_CLASS_MONITOR, SUPER_ADMIN, VOLUNTEER } from "../../../common/constant";
 
 const { Title } = Typography;
 const { SubMenu } = Menu;

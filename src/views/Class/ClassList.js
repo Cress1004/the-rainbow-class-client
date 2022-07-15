@@ -24,7 +24,7 @@ import {
   checkAdminAndVolunteerRole,
   checkAdminRole,
 } from "../../common/checkRole";
-import PermissionDenied from "../Error/PermissionDenied";
+import PermissionDenied from "../../components/custom/Error/PermissionDenied";
 import useFetchCurrentUserData from "../../hook/User/useFetchCurrentUserData";
 import common from "../../common";
 import queryString from "query-string";

@@ -19,9 +19,9 @@ import {
 import { getArrayLength, transformDate } from "../../common/transformData";
 import "./upload-cv.scss";
 import useFetchCurrentUserData from "../../hook/User/useFetchCurrentUserData";
-import PermissionDenied from "../Error/PermissionDenied";
+import PermissionDenied from "../../components/custom/Error/PermissionDenied";
 import useFetchClassNameList from "../../hook/Class/useFetchClassNameList";
-import TableNodata from "../NoData/TableNodata";
+import TableNodata from "../../components/custom/NoData/TableNodata";
 import apis from "../../apis";
 import queryString from "query-string";
 import {

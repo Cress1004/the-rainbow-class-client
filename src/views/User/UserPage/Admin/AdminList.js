@@ -3,8 +3,6 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Icon, Input, message, Table } from "antd";
 import "./admin.scss";
-import { getArrayLength } from "../../../../common/transformData";
-import TableNodata from "../../../NoData/TableNodata";
 import apis from "../../../../apis";
 import queryString from "query-string";
 import { parsePageAndSearch } from "../../../../common/function/parseQueryString";
@@ -106,7 +104,6 @@ function AdminList(props) {
           defaultValue={defaultParams.search || undefined}
           onChange={(e) => handleChangeSearchInput(e)}
         />
-        {getArrayLength(admin) ? (
           <Table
             columns={columns}
             dataSource={admin}
@@ -120,9 +117,6 @@ function AdminList(props) {
               title: null,
             }}
           />
-        ) : (
-          <TableNodata />
-        )}
       </div>
     </div>
   );

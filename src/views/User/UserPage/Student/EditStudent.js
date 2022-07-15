@@ -6,7 +6,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./student.scss";
 import { phoneRegExp } from "../../../../common/constant";
-import PermissionDenied from "../../../Error/PermissionDenied";
+import PermissionDenied from "../../../../components/custom/Error/PermissionDenied";
 import { checkAdminAndMonitorRole } from "../../../../common/function";
 import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
 import useFetchLocation from "../../../../hook/CommonData.js/useFetchLocation";

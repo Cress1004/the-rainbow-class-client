@@ -28,7 +28,7 @@ import {
   STUDENT_STATUS,
   SUPER_ADMIN,
 } from "../../../../common/constant";
-import PermissionDenied from "../../../Error/PermissionDenied";
+import PermissionDenied from "../../../../components/custom/Error/PermissionDenied";
 import { checkAdminAndMonitorRole } from "../../../../common/function";
 import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
 import useFetchClassNameList from "../../../../hook/Class/useFetchClassNameList";

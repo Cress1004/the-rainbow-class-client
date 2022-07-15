@@ -9,7 +9,7 @@ import {
   checkCurrentMonitorBelongToCurrentClass,
 } from "../../common/checkRole";
 import { SUPER_ADMIN } from "../../common/constant";
-import PermissionDenied from "../Error/PermissionDenied";
+import PermissionDenied from "../../components/custom/Error/PermissionDenied";
 import useFetchCurrentUserData from "../../hook/User/useFetchCurrentUserData";
 import apis from "../../apis";
 import useFetchAllLessonByClass from "../../hook/Lesson/useFetchAllLessonByClass";

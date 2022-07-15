@@ -8,7 +8,7 @@ import {
   transformDate,
   transformScheduleTimeData,
 } from "../../../common/transformData";
-import TableNodata from "../../NoData/TableNodata";
+import TableNodata from "../../../components/custom/NoData/TableNodata";
 import PairDetail from "../PairSessions/PairDetail";
 import AddReport from "./AddReport";
 import "./report.scss";

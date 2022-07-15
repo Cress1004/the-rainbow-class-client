@@ -26,7 +26,7 @@ import {
   VOLUNTEER_STATUS,
   VOLUNTEER_STATUS_TITLE,
 } from "../../../../common/constant";
-import PermissionDenied from "../../../Error/PermissionDenied";
+import PermissionDenied from "../../../../components/custom/Error/PermissionDenied";
 import { checkAdminAndMonitorRole } from "../../../../common/function";
 import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
 import apis from "../../../../apis";

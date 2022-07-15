@@ -10,7 +10,7 @@ import {
 import { OFFLINE_OPTION, STUDENT } from "../../../common/constant";
 import ParticipantList from "./Participant/ParticipantList";
 import { checkCurrentUserBelongToCurrentClass } from "../../../common/checkRole";
-import PermissionDenied from "../../Error/PermissionDenied";
+import PermissionDenied from "../../../components/custom/Error/PermissionDenied";
 import { checkAdminAndMonitorRole } from "../../../common/function";
 import {
   checkOverTimeToRegister,

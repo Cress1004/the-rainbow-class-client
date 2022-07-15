@@ -9,7 +9,7 @@ import {
 } from "../../../common/transformData";
 import { useFormik } from "formik";
 import RegisterPairForNewStudent from "../ClassDetailSessions/Tabs/RegisterPairForNewStudent";
-import TableNodata from "../../NoData/TableNodata";
+import TableNodata from "../../../components/custom/NoData/TableNodata";
 import "../class-list.scss";
 import { checkStringContentSubString } from "../../../common/function";
 import { Link } from "react-router-dom";

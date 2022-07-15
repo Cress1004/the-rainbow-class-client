@@ -13,7 +13,7 @@ import {
   transformStudentTypes,
 } from "../../../../common/transformData";
 import { checkStudentAndCurrentUserSameClass } from "../../../../common/function";
-import PermissionDenied from "../../../Error/PermissionDenied";
+import PermissionDenied from "../../../../components/custom/Error/PermissionDenied";
 import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
 import apis from "../../../../apis";
 import {

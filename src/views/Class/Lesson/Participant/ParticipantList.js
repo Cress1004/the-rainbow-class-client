@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Table } from "antd";
 import SetPersonInCharge from "./SetPersonInCharge";
 import { getArrayLength } from "../../../../common/transformData";
-import TableNodata from "../../../NoData/TableNodata";
+import TableNodata from "../../../../components/custom/NoData/TableNodata";
 
 function ParticipantList(props) {
   const { t } = useTranslation();
