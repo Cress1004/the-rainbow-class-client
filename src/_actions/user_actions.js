@@ -7,7 +7,7 @@ import {
   RESET_PASSWORD,
 } from "./types";
 import { SERVER_API_URL, USER_API } from "../config";
-import { setCookie } from "../cookies/cookies";
+import { deleteAllCookies, setCookie } from "../cookies/cookies";
 
 export function registerUser(dataToSubmit) {
   const request = axios
@@ -37,7 +37,12 @@ export function loginUser(dataToSubmit) {
 
 export function auth() {
   const request = axios
-    .get(`${SERVER_API_URL}${USER_API}/auth`, { withCredentials: true })
+    .get(`${SERVER_API_URL}${USER_API}/auth`, {
+      headers: {
+        "Content-Type": "application/json",
+        cookies: document.cookies,
+      },
+    })
     .then((response) => response.data);
 
   return {
@@ -48,8 +53,17 @@ export function auth() {
 
 export function logoutUser() {
   const request = axios
-    .get(`${SERVER_API_URL}${USER_API}/logout`, { withCredentials: true })
-    .then((response) => response.data);
+    .get(`${SERVER_API_URL}${USER_API}/logout`, {
+      headers: {
+        "Content-Type": "application/json",
+        cookies: document.cookies,
+      },
+    })
+
+    .then((response) => {
+      deleteAllCookies();
+      return response.data;
+    });
 
   return {
     type: LOGOUT_USER,

@@ -1,3 +1,5 @@
+import { SERVER_API_URL } from "../config";
+
 export const WEEKDAY = [
   { key: 1, value: "Sun", text: "Chủ Nhật" },
   { key: 2, value: "Mon", text: "Thứ Hai" },
@@ -121,7 +123,7 @@ export const CV_STATUS_NAME = {
 export const LESSON_SCHEDULE = 0;
 export const INTERVIEW_SCHEDULE = 2;
 
-export const CONNECTION_PORT = "http://localhost:5000";
+export const CONNECTION_PORT =  SERVER_API_URL
 
 export const NOTI_TYPE = [
   { key: 0, value: "newCV", text: "Có CV mới!" },
