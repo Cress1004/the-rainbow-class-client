@@ -40,7 +40,7 @@ export function auth() {
     .get(`${SERVER_API_URL}${USER_API}/auth`, {
       headers: {
         "Content-Type": "application/json",
-        cookies: document.cookies,
+        cookies: document.cookie,
       },
     })
     .then((response) => response.data);
@@ -53,13 +53,7 @@ export function auth() {
 
 export function logoutUser() {
   const request = axios
-    .get(`${SERVER_API_URL}${USER_API}/logout`, {
-      headers: {
-        "Content-Type": "application/json",
-        cookies: document.cookies,
-      },
-    })
-
+    .get(`${SERVER_API_URL}${USER_API}/logout`)
     .then((response) => {
       deleteAllCookies();
       return response.data;
