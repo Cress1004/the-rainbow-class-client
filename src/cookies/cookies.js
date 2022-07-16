@@ -20,13 +20,8 @@ export function getCookie(cname) {
   return "";
 }
 
-export function deleteAllCookies() {
-  var cookies = document.cookie.split(";");
-
-  for (var i = 0; i < cookies.length; i++) {
-      var cookie = cookies[i];
-      var eqPos = cookie.indexOf("=");
-      var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-      document.cookie = name + "=;expires=" + new Date().toUTCString();
-  }
+export function deleteCookies() {
+  var allCookies = document.cookie.split(";");
+  for (var i = 0; i < allCookies.length; i++)
+    document.cookie = allCookies[i] + "=;expires=" + new Date(0).toUTCString();
 }

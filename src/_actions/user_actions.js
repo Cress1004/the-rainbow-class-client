@@ -7,7 +7,7 @@ import {
   RESET_PASSWORD,
 } from "./types";
 import { SERVER_API_URL, USER_API } from "../config";
-import { deleteAllCookies, setCookie } from "../cookies/cookies";
+import { deleteCookies, setCookie } from "../cookies/cookies";
 
 export function registerUser(dataToSubmit) {
   const request = axios
@@ -55,7 +55,7 @@ export function logoutUser() {
   const request = axios
     .get(`${SERVER_API_URL}${USER_API}/logout`)
     .then((response) => {
-      deleteAllCookies();
+      deleteCookies();
       return response.data;
     });
 
