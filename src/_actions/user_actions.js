@@ -37,7 +37,12 @@ export function loginUser(dataToSubmit) {
 
 export function auth() {
   const request = axios
-    .get(`${SERVER_API_URL}${USER_API}/auth`, { withCredentials: true })
+    .get(`${SERVER_API_URL}${USER_API}/auth`, {
+      headers: {
+        "Content-Type": "application/json",
+        cookies: document.cookies,
+      },
+    })
     .then((response) => response.data);
 
   return {

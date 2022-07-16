@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { LOCAL_API_URL } from '../config';
+import { SERVER_API_URL } from '../config';
 
 const axiosClient = axios.create({
-  baseURL: `${LOCAL_API_URL}`,
+  baseURL: `${SERVER_API_URL}`,
   responseType: 'json',
   timeout: 15 * 1000,
   withCredentials: true
