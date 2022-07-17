@@ -5,16 +5,18 @@ import axios from "axios";
 import { withRouter } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { USER_API } from "../../../../config";
+import { SERVER_API_URL, USER_API } from "../../../../config";
 import "./right-menu.scss";
 import { convertRole } from "../../../../common/function";
+import { deleteCookies } from "../../../../cookies/cookies";
 
 function RightMenu(props) {
   const { t } = useTranslation();
   const user = useSelector((state) => state.user.userData);
 
   const logoutHandler = () => {
-    axios.get(`${USER_API}/logout`).then((response) => {
+    axios.get(`${SERVER_API_URL}${USER_API}/logout`).then((response) => {
+      deleteCookies();
       if (response.status === 200) {
         props.history.push("/login");
       } else {
@@ -44,7 +46,7 @@ function RightMenu(props) {
     );
   } else {
     return (
-      <Dropdown overlay={menu} className="right-menu" trigger={['click']}>
+      <Dropdown overlay={menu} className="right-menu" trigger={["click"]}>
         <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
           {user && (
             <>
@@ -53,10 +55,12 @@ function RightMenu(props) {
                 src={user.image ? user.image : "/image/default-image.jpg"}
               />
               <div className="right-menu__user-info">
-              <span className="right-menu__user-name">{user.name}</span>
-              <span className="right-menu__role">{convertRole(user.role)?.vie}</span>
+                <span className="right-menu__user-name">{user.name}</span>
+                <span className="right-menu__role">
+                  {convertRole(user.role)?.vie}
+                </span>
               </div>
-              <Icon type="down" className="right-menu__dropdown-icon"/>
+              <Icon type="down" className="right-menu__dropdown-icon" />
             </>
           )}
         </a>
