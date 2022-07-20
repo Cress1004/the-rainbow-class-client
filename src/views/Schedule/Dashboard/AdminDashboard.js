@@ -2,34 +2,33 @@
 import { Col, Row, Select, Form } from "antd";
 import React, { useEffect, useState } from "react";
 import apis from "../../../apis";
-import useFetchAllClasses from "../../../hook/Class/useFetchAllClasses";
 import MyCalendar from "../Sessions/Calendar";
 import Report from "../Sessions/Report";
 
 const { Option } = Select;
 
 function AdminDashboard(props) {
-  const { t, userRole } = props;
+  const { t, userRole, monthRange, setMonthRange, classes } = props;
   const [schedule, setSchedule] = useState([]);
   const [classData, setClassData] = useState();
-  const classes = useFetchAllClasses();
-
+  const [classId, setClassId] = useState(0);
+  
   const onSelectClass = (value) => {
-    fetchClassschedule({ classId: value });
+    setClassId(value);
   };
 
-  useEffect(() => {
-    fetchClassschedule({ classId: 0 });
-  }, []);
-
-  const fetchClassschedule = async (dataToSend) => {
-    const data = await apis.classes.getClassSchedules(dataToSend);
+  const fetchClassschedule = async () => {
+    const data = await apis.classes.getClassSchedules({classId: classId, monthRange: monthRange});
     if (data.success) {
       const classData = data.classData;
       setClassData(classData ? classData : { _id: "0", name: t("all_option") });
       setSchedule(data.schedule);
     }
   };
+
+  useEffect(() => {
+    fetchClassschedule();
+  }, [classId, monthRange]);
 
   return (
     <div>
@@ -71,7 +70,16 @@ function AdminDashboard(props) {
           </Form.Item>
         </Col>
       </Row>
-      {schedule ? <MyCalendar data={schedule} userRole={userRole} t={t} /> : null}
+      {schedule ? (
+        <MyCalendar
+          data={schedule}
+          userRole={userRole}
+          t={t}
+          monthRange={monthRange}
+          setMonthRange={setMonthRange}
+          classes={classes}
+        />
+      ) : null}
     </div>
   );
 }

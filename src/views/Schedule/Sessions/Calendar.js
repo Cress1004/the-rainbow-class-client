@@ -13,14 +13,13 @@ import {
   LESSON_SCHEDULE,
   STUDENT,
 } from "../../../common/constant";
-import useFetchAllClasses from "../../../hook/Class/useFetchAllClasses";
+import { getMonthRangeBetweenTwoDate } from "../../../common/function/checkTime";
 
 const localizer = momentLocalizer(moment);
 function MyCalendar(props) {
-  const { data, userRole, t } = props;
+  const { data, userRole, t, monthRange, setMonthRange, classes } = props;
   const events = data.map((item) => transformEventOfLesson(item));
   const [classColors, setClassColors] = useState([]);
-  const classes = useFetchAllClasses();
 
   useEffect(() => {
     const colors = setColorForClass(classes);
@@ -102,6 +101,14 @@ function MyCalendar(props) {
     <div>
       {events && classColors.length ? (
         <Calendar
+          onNavigate={(month) =>
+            setMonthRange(
+              getMonthRangeBetweenTwoDate(
+                new Date(month.getFullYear(), month.getMonth() - 1, 1),
+                new Date(month.getFullYear(), month.getMonth() + 1, 1)
+              )
+            )
+          }
           localizer={localizer}
           startAccessor="start"
           endAccessor="end"
