@@ -66,10 +66,24 @@ const getReportByClassAndMonth = async (classId, month) => {
   }
 };
 
+const getReportByStudentAndMonth = async (studentId, month) => {
+  try {
+    const response = await api({
+      method: "POST",
+      url: `${REPORT_API}/get-reports-by-student`,
+      data: { studentId: studentId, month: month },
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
 export {
   addNewReport,
   getReportByPairAndMonth,
   addTeachByClassReport,
   getReportByVolunteerAndMonth,
-  getReportByClassAndMonth
+  getReportByClassAndMonth,
+  getReportByStudentAndMonth
 };

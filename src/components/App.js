@@ -4,42 +4,41 @@ import { Route, Redirect, Switch } from "react-router-dom";
 import Auth from "../hoc/auth";
 import "antd/dist/antd.css";
 /** Layouts **/
-import LoginLayoutRoute from "./views/Layouts/LoginLayoutRoute";
-import DashboardLayoutRoute from "./views/Layouts/DashboardLayoutRoute";
+import LoginLayoutRoute from "../components/layout/Layouts/LoginLayoutRoute";
+import DashboardLayoutRoute from "../components/layout/Layouts/DashboardLayoutRoute";
 /** Components **/
-import UserPage from "./views/User/UserPage/UserPage";
-import LoginPage from "./views/User/LoginPage/LoginPage";
-import ResetPassword from "./views/User/ResetPassword/ResetPassword";
-import Dashboard from "./views/Schedule/Dashboard/Dashboard";
-import ClassList from "./views/Class/ClassList";
-import VolunteerList from "./views/User/UserPage/Volunteer/VolunteerList";
-import AddVolunteer from "./views/User/UserPage/Volunteer/AddVolunteer";
-import Mastersetting from "./views/MaterSetting/Mastersetting";
-import AddClass from "./views/Class/AddClass";
-import ClassDetail from "./views/Class/ClassDetail";
-import EditClass from "./views/Class/EditClass";
-import VolunteerDetail from "./views/User/UserPage/Volunteer/VolunteerDetail";
-import EditVolunteer from "./views/User/UserPage/Volunteer/EditVolunteer";
-import AddStudent from "./views/User/UserPage/Student/AddStudent";
-import StudentList from "./views/User/UserPage/Student/StudentList";
-import EditStudent from "./views/User/UserPage/Student/EditStudent";
-import StudentDetail from "./views/User/UserPage/Student/StudentDetail";
-import Profile from "./views/User/Profile/Profile";
-import EditProfile from "./views/User/Profile/EditProfile";
-import AddLesson from "./views/Class/Lesson/AddLesson";
-import LessonDetail from "./views/Class/Lesson/LessonDetail";
-import EditLesson from "./views/Class/Lesson/EditLesson";
-import ClassSchedule from "./views/Schedule/ClassSchedule/ClassSchedule";
-import AdminList from "./views/User/UserPage/Admin/AdminList";
-import SetMonitor from "./views/Class/Session/SetMonitor";
-import CommentStudent from "./views/Class/CommentStudent/CommentStudent";
-import HomePageLayoutRoute from "./views/Layouts/HomePageLayoutRoute";
-import UploadCV from "./views/CV/UploadCV";
-import CVList from "./views/CV/CVList";
-import CVDetail from "./views/CV/CVDetail";
-import { CONNECTION_PORT } from "./common/constant";
-import CVQuestion from "./views/CV/CVQuestion";
-// import Report from "./views/Statistic/Statistic";
+import UserPage from "../views/User/UserPage/UserPage";
+import LoginPage from "../views/User/LoginPage/LoginPage";
+import ResetPassword from "../views/User/ResetPassword/ResetPassword";
+import Dashboard from "../views/Schedule/Dashboard/Dashboard";
+import ClassList from "../views/Class/ClassList";
+import VolunteerList from "../views/User/UserPage/Volunteer/VolunteerList";
+import AddVolunteer from "../views/User/UserPage/Volunteer/AddVolunteer";
+import Mastersetting from "../views/MaterSetting/Mastersetting";
+import AddClass from "../views/Class/AddClass";
+import ClassDetail from "../views/Class/ClassDetail";
+import EditClass from "../views/Class/EditClass";
+import VolunteerDetail from "../views/User/UserPage/Volunteer/VolunteerDetail";
+import EditVolunteer from "../views/User/UserPage/Volunteer/EditVolunteer";
+import AddStudent from "../views/User/UserPage/Student/AddStudent";
+import StudentList from "../views/User/UserPage/Student/StudentList";
+import EditStudent from "../views/User/UserPage/Student/EditStudent";
+import StudentDetail from "../views/User/UserPage/Student/StudentDetail";
+import Profile from "../views/User/Profile/Profile";
+import EditProfile from "../views/User/Profile/EditProfile";
+import AddLesson from "../views/Class/Lesson/AddLesson";
+import LessonDetail from "../views/Class/Lesson/LessonDetail";
+import EditLesson from "../views/Class/Lesson/EditLesson";
+import ClassSchedule from "../views/Schedule/ClassSchedule/ClassSchedule";
+import AdminList from "../views/User/UserPage/Admin/AdminList";
+import SetMonitor from "../views/Class/Session/SetMonitor";
+import CommentStudent from "../views/Class/CommentStudent/CommentStudent";
+import CVList from "../views/CV/CVList";
+import CVDetail from "../views/CV/CVDetail";
+import { CONNECTION_PORT } from "../common/constant";
+import CVQuestion from "../views/CV/CVQuestion";
+import PairDetail from "../views/Class/PairSessions/PairDetail";
+// import Report from "../views/Statistic/Statistic";
 
 function App(props) {
   let socket = io(CONNECTION_PORT, {});
@@ -55,7 +54,7 @@ function App(props) {
 
   useEffect(() => {
     setupSocket();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -63,10 +62,6 @@ function App(props) {
         <Route exact path="/">
           <Redirect to="/dashboard" />
         </Route>
-        <HomePageLayoutRoute
-          path="/upload-cv"
-          component={Auth(UploadCV, false)}
-        />
         <DashboardLayoutRoute
           path="/dashboard"
           exact={true}
@@ -123,6 +118,12 @@ function App(props) {
           path="/classes/:id/lessons/:lessonId/edit"
           exact={true}
           component={Auth(EditLesson, true)}
+          socket={socket}
+        />
+         <DashboardLayoutRoute
+          path="/classes/:id/pairs/:pairId"
+          exact={true}
+          component={Auth(PairDetail, true)}
           socket={socket}
         />
         <DashboardLayoutRoute

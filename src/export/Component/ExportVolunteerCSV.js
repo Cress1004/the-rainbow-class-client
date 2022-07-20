@@ -62,7 +62,7 @@ const ExportVolunteerCSV = ({ csvData, fileName, wscols }) => {
       variant="warning"
       onClick={(e) => exportToCSV(csvData, fileName, wscols)}
     >
-      <Icon style={{color: "green"}} type="file-excel" />
+      <Icon type="file-excel" />
       {t("export_volunteers_data_to_excel")}
     </Button>
   );

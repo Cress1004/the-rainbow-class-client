@@ -114,6 +114,31 @@ const getTotalVolunteers = async () => {
   }
 };
 
+const getVolunteerCount = async () => {
+  try {
+    const response = await api({
+      method: "GET",
+      url: `${VOLUNTEER_API}/volunteer-count`,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+}
+
+const changeStatus = async (volunteerId, data) => {
+  try {
+    const response = await api({
+      method: "POST",
+      url: `${VOLUNTEER_API}/${volunteerId}/change-status`,
+      data: data,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
 export {
   addVolunteer,
   getVolunteers,
@@ -122,5 +147,7 @@ export {
   deleteVolunteer,
   getCurrentVolunteer,
   getTotalVolunteers,
-  getVolunteersWithParams
+  getVolunteersWithParams,
+  getVolunteerCount,
+  changeStatus
 };

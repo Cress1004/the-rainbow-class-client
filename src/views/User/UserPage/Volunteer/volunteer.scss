@@ -1,0 +1,134 @@
+@import '../../../../components/app.scss';
+.volunteer-list {
+    &__title {
+        font-size: $title-font-size;
+        font-weight: $title-font-weight;
+        color: $primary-color;
+        padding-bottom: $title-padding-bottom;
+    }
+    .ant-row {
+        text-align: right;
+    }
+    &__add-volunteer-button {
+        border-radius: 15px;
+        padding: 0px 10px;
+        margin-left: 10px;
+        a {
+            color: $white-color;
+        }
+    }
+    .ant-table-wrapper {
+        padding-top: 20px;
+    }
+    &__search {
+        width: 290px;
+        > .ant-input {
+            border-radius: 15px;
+        }
+    }
+    &__table {
+        &--deactive-row {
+            background-color: $gray-color;
+        }
+    }
+    &__note {
+        float: left;
+        display: flex;
+        margin-bottom: 10px;
+        &--deactive-record-note {
+            background-color: $gray-color;
+            width: 50px;
+            height: 20px;
+            margin-right: 5px;
+        }
+    }
+    &__filter {
+        background-color: rgb(230, 230, 230);
+        height: 30px;
+        width: 30px;
+        padding: 8px;
+        border-radius: 15px;
+        margin-right: 10px;
+        &--active {
+            background-color: $primary-color;
+            color: white;
+        }
+      }
+    &__export-button {
+        .ant-btn {
+            border-radius: 15px;
+            background-color: $success-color;
+            color: white;
+        }
+    }
+}
+
+.add-volunteer {
+    &__title {
+        font-size: $title-font-size;
+        font-weight: $title-font-weight;
+        color: $primary-color;
+        padding-bottom: $title-padding-bottom;
+    }
+}
+
+.volunteer-detail {
+    &__title {
+        font-size: $title-font-size;
+        font-weight: $title-font-weight;
+        color: $primary-color;
+        padding-bottom: $title-padding-bottom;
+    }
+    &__left-block {
+        display: block;
+        float: left;
+        text-align: center;
+    }
+    &__right-block {
+        display: block;
+        float: right;
+        padding: 50px;
+    }
+    &__avatar {
+        border-radius: 50%;
+        height: 200px;
+        width: 200px;
+        margin: 20px;
+    }
+    &__action-row {
+        text-align: right;
+    }
+    &__delete-volunteer-button {
+        margin-left: 10px;
+    }
+    .ant-row .ant-form-item {
+        margin: 0px;
+    }
+    &__status {
+        .ant-btn {
+          text-align: center;
+          &--working {
+            .ant-btn {
+              background-color: $waiting-color;
+              border: none;
+            }
+          }
+          &--retired {
+            background-color: $pending-color;
+          }
+        }
+    }
+}
+
+.edit-volunteer {
+    &__title {
+        font-size: $title-font-size;
+        font-weight: $title-font-weight;
+        color: $primary-color;
+        padding-bottom: $title-padding-bottom;
+    }
+}
+
+.ant-form-item-label {
+    font-weight: $label-font-weight;
+}

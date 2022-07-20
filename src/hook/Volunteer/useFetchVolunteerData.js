@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import { useState, useEffect } from "react";
 import apis from "../../apis";
 
@@ -20,7 +22,8 @@ export default function useFetchVolunteerData(volunteerId) {
         className: volunteer.user.class?.name,
         isAdmin: volunteer.isAdmin,
         role: data.volunteerRole,
-        linkFacebook: volunteer.user.linkFacebook
+        linkFacebook: volunteer.user.linkFacebook,
+        retirementDate: volunteer.retirementDate,
       });
     }
   };

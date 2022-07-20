@@ -13,11 +13,19 @@ const getCVData = async (cvId) => {
   }
 };
 
-const getAllCV = async () => {
+const getAllCV = async ({ search, query, fields, offset, limit, sort }) => {
   try {
     const response = await api({
       method: "GET",
       url: `${CV_API}/get-all-cv`,
+      params: {
+        search,
+        query,
+        fields,
+        offset,
+        limit,
+        sort,
+      },
     });
     return response;
   } catch (error) {
