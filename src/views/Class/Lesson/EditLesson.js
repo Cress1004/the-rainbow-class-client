@@ -21,13 +21,12 @@ import {
   urlRegExp,
 } from "../../../common/constant";
 import { convertDateStringToMoment } from "../../../common/transformData";
-import { generateKey } from "../../../common/function";
+import { generateKey, getCurrentUserUserData } from "../../../common/function";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import PermissionDenied from "../../../components/custom/Error/PermissionDenied";
 import { checkCurrentMonitorBelongToCurrentClass } from "../../../common/checkRole";
 import moment from "moment";
-import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
 import useFetchLocation from "../../../hook/CommonData.js/useFetchLocation";
 import apis from "../../../apis";
 import useFetchClassData from "../../../hook/Class/useFetchClassData";
@@ -50,7 +49,7 @@ function EditLesson(props) {
   const [time, setTime] = useState({});
   const [address, setAddress] = useState({});
   const [teachOption, setTeachOption] = useState();
-  const currentUser = useFetchCurrentUserData();
+  const currentUser = getCurrentUserUserData();
   const classData = useFetchClassData(id);
   const location = useFetchLocation();
   const lessonData = useFetchLessonData(id, lessonId);

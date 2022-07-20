@@ -4,17 +4,17 @@ import "./master-setting.scss";
 import StudentType from "./SubSetting/StudentType.js/StudentType";
 import { checkAdminRole } from "../../common/checkRole";
 import PermissionDenied from "../../components/custom/Error/PermissionDenied";
-import useFetchCurrentUserData from "../../hook/User/useFetchCurrentUserData";
 import { Tabs } from "antd";
 import Subject from "./SubSetting/Subject/Subject";
 import Grade from "./SubSetting/Grade/Grade";
 import Semester from "./SubSetting/Semester/Semester";
+import { getCurrentUserUserData } from "../../common/function";
 
 const { TabPane } = Tabs;
 
 function Mastersetting(props) {
   const { t } = useTranslation();
-  const userData = useFetchCurrentUserData();
+  const userData = getCurrentUserUserData();
   const [tab, setTab] = useState("1");
 
   const onChangeTab = (key) => {

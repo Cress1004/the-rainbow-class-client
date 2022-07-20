@@ -78,3 +78,12 @@ export function convertRoleName(roleId) {
     return { eng: "Volunteer", vie: "Tình nguyện viên" };
   else return null;
 }
+
+export function getCurrentUserUserData() {
+  const userRole = JSON.parse(localStorage.getItem("userRole"));
+  const userClassId = JSON.parse(localStorage.getItem("classId"));
+  return {
+    userRole,
+    userClassId,
+  };
+}

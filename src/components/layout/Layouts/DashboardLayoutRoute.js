@@ -7,7 +7,6 @@ import RightMenu from "../NavBar/Sections/RightMenu";
 import { useTranslation } from "react-i18next";
 import Footer from "../Footer/Footer";
 import Notification from "../../../views/Notification/Notification";
-import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
 import {
   CLASS_MONITOR,
   STUDENT,
@@ -15,6 +14,7 @@ import {
   SUPER_ADMIN,
   VOLUNTEER,
 } from "../../../common/constant";
+import { getCurrentUserUserData } from "../../../common/function";
 
 const { Title } = Typography;
 const { SubMenu } = Menu;
@@ -23,7 +23,7 @@ const { Header, Content, Sider } = Layout;
 const DashboardLayout = ({ children, ...rest }) => {
   const { t } = useTranslation();
   const [collapsed, setCollapsed] = useState(false);
-  const userData = useFetchCurrentUserData();
+  const userData = getCurrentUserUserData();
   const userRole = userData.userRole;
   const handleCollapse = (collapsed) => {
     setCollapsed(collapsed);

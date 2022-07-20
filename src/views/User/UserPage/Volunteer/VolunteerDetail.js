@@ -27,8 +27,7 @@ import {
   VOLUNTEER_STATUS_TITLE,
 } from "../../../../common/constant";
 import PermissionDenied from "../../../../components/custom/Error/PermissionDenied";
-import { checkAdminAndMonitorRole } from "../../../../common/function";
-import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
+import { checkAdminAndMonitorRole, getCurrentUserUserData } from "../../../../common/function";
 import apis from "../../../../apis";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -48,7 +47,7 @@ function VolunteerDetail(props) {
     useState(false);
   const [volunteerStatus, setVolunteerStatus] = useState();
   const [volunteerData, setVolunteerData] = useState();
-  const currentUser = useFetchCurrentUserData();
+  const currentUser = getCurrentUserUserData();
   const userRole = currentUser.userRole;
 
   const leftLayout = {

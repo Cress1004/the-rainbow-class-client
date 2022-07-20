@@ -29,8 +29,7 @@ import {
   SUPER_ADMIN,
 } from "../../../../common/constant";
 import PermissionDenied from "../../../../components/custom/Error/PermissionDenied";
-import { checkAdminAndMonitorRole } from "../../../../common/function";
-import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
+import { checkAdminAndMonitorRole, getCurrentUserUserData } from "../../../../common/function";
 import useFetchClassNameList from "../../../../hook/Class/useFetchClassNameList";
 import useFetchStudentTypes from "../../../../hook/CommonData.js/useFetchStudentTypes";
 import moment from "moment";
@@ -52,7 +51,7 @@ function StudentList(props) {
   const [filter, setFilter] = useState();
   const { t } = useTranslation();
   const [studentsData, setStudentsData] = useState([]);
-  const userData = useFetchCurrentUserData();
+  const userData = getCurrentUserUserData();
   const userRole = userData.userRole;
   const classNameList = useFetchClassNameList();
   const studentTypes = useFetchStudentTypes();

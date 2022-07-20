@@ -89,7 +89,7 @@ export function transformEventOfLesson(data) {
         lessonId: data._id,
         personInCharge: data.schedule.personInCharge
           ? data.schedule.personInCharge.name
-          : "unset",
+          : "Chưa xếp",
         time: time,
         start: new Date(`${time.date} ${time.startTime}`),
         end: new Date(`${time.date} ${time.endTime}`),
@@ -105,7 +105,7 @@ export function transformEventOfLesson(data) {
         classId: data.class?._id,
         personInCharge: data.schedule.personInCharge
           ? data.schedule.personInCharge.name
-          : "unset",
+          : "Chưa xếp",
         time: time,
         start: new Date(`${time.date} ${time.startTime}`),
         end: new Date(`${time.date} ${time.endTime}`),

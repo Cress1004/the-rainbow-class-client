@@ -7,8 +7,7 @@ import * as Yup from "yup";
 import "./student.scss";
 import { phoneRegExp } from "../../../../common/constant";
 import PermissionDenied from "../../../../components/custom/Error/PermissionDenied";
-import { checkAdminAndMonitorRole } from "../../../../common/function";
-import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
+import { checkAdminAndMonitorRole, getCurrentUserUserData } from "../../../../common/function";
 import useFetchLocation from "../../../../hook/CommonData.js/useFetchLocation";
 import useFetchStudentTypes from "../../../../hook/CommonData.js/useFetchStudentTypes";
 import apis from "../../../../apis";
@@ -28,7 +27,7 @@ function EditStudent(props) {
   const [wards, setWards] = useState([]);
   const [ward, setWard] = useState({});
   const [province, setProvince] = useState({});
-  const userData = useFetchCurrentUserData();
+  const userData = getCurrentUserUserData();
   const userRole = userData.userRole;
   const location = useFetchLocation();
   const studentTypes = useFetchStudentTypes();

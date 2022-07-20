@@ -7,7 +7,7 @@ import { STUDENT, SUPER_ADMIN, VOLUNTEER } from "../../../common/constant";
 import PermissionDenied from "../../../components/custom/Error/PermissionDenied";
 import apis from "../../../apis";
 import useFetchAllClasses from "../../../hook/Class/useFetchAllClasses";
-import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
+import { getCurrentUserUserData } from "../../../common/function";
 
 const { Option } = Select;
 function ClassSchedule() {
@@ -16,7 +16,7 @@ function ClassSchedule() {
   const [schedule, setSchedule] = useState([]);
   const [classData, setClassData] = useState();
   const classes = useFetchAllClasses();
-  const currentUser = useFetchCurrentUserData();
+  const currentUser = getCurrentUserUserData();
   const userRole = currentUser.userRole;
 
   const fetchCurrentUserClassSchedule = async () => {

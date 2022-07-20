@@ -4,13 +4,12 @@ import { useTranslation } from "react-i18next";
 import { Row, Button, Modal, Icon, Menu, Dropdown, message } from "antd";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router";
-import { checkAdminAndMonitorRole } from "../../common/function";
+import { checkAdminAndMonitorRole, getCurrentUserUserData } from "../../common/function";
 import {
   checkCurrentMonitorBelongToCurrentClass,
 } from "../../common/checkRole";
 import { SUPER_ADMIN } from "../../common/constant";
 import PermissionDenied from "../../components/custom/Error/PermissionDenied";
-import useFetchCurrentUserData from "../../hook/User/useFetchCurrentUserData";
 import apis from "../../apis";
 import useFetchAllLessonByClass from "../../hook/Lesson/useFetchAllLessonByClass";
 import common from "../../common";
@@ -22,7 +21,7 @@ function ClassDetail(props) {
   const history = useHistory();
   const { id } = useParams();
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const currentUserData = useFetchCurrentUserData();
+  const currentUserData = getCurrentUserUserData();
   const userRole = currentUserData.userRole;
   const [classData, setClassData] = useState({});
   const lessons = useFetchAllLessonByClass(id);

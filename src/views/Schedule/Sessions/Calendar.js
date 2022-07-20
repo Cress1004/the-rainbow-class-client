@@ -86,14 +86,16 @@ function MyCalendar(props) {
   };
 
   const EventComponent = ({ event }) => (
-    <Popover
-      title={<span className="custom__label">{event.title}</span>}
-      trigger="click"
-      placement="topLeft"
-      content={content(event)}
-    >
-      {event.title}
-    </Popover>
+    <div>
+      <Popover
+        title={<span className="custom__label">{event.title}</span>}
+        trigger="click"
+        placement="topLeft"
+        content={content(event)}
+      >
+        {event.title}
+      </Popover>
+    </div>
   );
 
   return (

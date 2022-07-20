@@ -16,9 +16,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./student.scss";
 import { FORMAT_DATE, phoneRegExp } from "../../../../common/constant";
-import { checkAdminAndMonitorRole } from "../../../../common/function";
+import { checkAdminAndMonitorRole, getCurrentUserUserData } from "../../../../common/function";
 import PermissionDenied from "../../../../components/custom/Error/PermissionDenied";
-import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
 import useFetchLocation from "../../../../hook/CommonData.js/useFetchLocation";
 import useFetchStudentTypes from "../../../../hook/CommonData.js/useFetchStudentTypes";
 import apis from "../../../../apis";
@@ -38,7 +37,7 @@ function AddStudent(props) {
   const [ward, setWard] = useState({});
   const [province, setProvince] = useState({});
   const classes = useFetchAllClasses();
-  const currentUser = useFetchCurrentUserData();
+  const currentUser = getCurrentUserUserData();
   const location = useFetchLocation();
   const studentTypes = useFetchStudentTypes();
 

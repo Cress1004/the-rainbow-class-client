@@ -41,10 +41,17 @@ function LoginPage(props) {
             dispatch(loginUser(dataToSubmit))
               .then((response) => {
                 if (response.payload.loginSuccess) {
-                  window.localStorage.setItem(
-                    "userId",
-                    response.payload.userId
-                  );
+                  var storageItem = [
+                    { key: "userId", value: response.payload.userId },
+                    { key: "userRole", value: response.payload.userRole },
+                    { key: "classId", value: response.payload.classId },
+                  ];
+                  storageItem.forEach((item) => {
+                    window.localStorage.setItem(
+                      item.key,
+                      JSON.stringify(item.value)
+                    );
+                  });
                   props.history.push("/");
                 } else {
                   setFormErrorMessage(t("error_email_or_password_message"));

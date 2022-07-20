@@ -12,9 +12,8 @@ import {
   transformDate,
   transformStudentTypes,
 } from "../../../../common/transformData";
-import { checkStudentAndCurrentUserSameClass } from "../../../../common/function";
+import { checkStudentAndCurrentUserSameClass, getCurrentUserUserData } from "../../../../common/function";
 import PermissionDenied from "../../../../components/custom/Error/PermissionDenied";
-import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
 import apis from "../../../../apis";
 import {
   STUDENT_STATUS,
@@ -42,7 +41,7 @@ function StudentDetail(props) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [showPopupInputRetiredDate, setShowPopupInputRetiredDate] =
     useState(false);
-  const currentUserData = useFetchCurrentUserData();
+  const currentUserData = getCurrentUserUserData();
   const userRole = currentUserData?.userRole;
   const studentStatus = STUDENT_STATUS.find(
     (item) => item.key === studentData?.status

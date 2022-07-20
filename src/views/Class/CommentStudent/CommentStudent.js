@@ -8,8 +8,8 @@ import EditCommentModal from "./EditComment/EditCommentModal";
 import { checkCurrentVolunteerBelongToCurrentClass } from "../../../common/checkRole";
 import PermissionDenied from "../../../components/custom/Error/PermissionDenied";
 import "./comment-student.scss";
-import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
 import useFetchAllLessonByClass from "../../../hook/Lesson/useFetchAllLessonByClass";
+import { getCurrentUserUserData } from "../../../common/function";
 
 function CommentStudent(props) {
   const { t } = useTranslation();
@@ -18,7 +18,7 @@ function CommentStudent(props) {
   const [editingAchievement, setEditingAchievement] = useState({});
   const lessonData = useFetchAllLessonByClass(id);
   const studentData = useFetchStudentByClass(id);
-  const currentUser = useFetchCurrentUserData();
+  const currentUser = getCurrentUserUserData();
 
   const fixedColumns = [
     {

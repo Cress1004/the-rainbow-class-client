@@ -6,8 +6,7 @@ import { phoneRegExp, urlRegExp } from "../../../../common/constant";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import PermissionDenied from "../../../../components/custom/Error/PermissionDenied";
-import { checkAdminAndMonitorRole } from "../../../../common/function";
-import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
+import { checkAdminAndMonitorRole, getCurrentUserUserData } from "../../../../common/function";
 import useFetchLocation from "../../../../hook/CommonData.js/useFetchLocation";
 import apis from "../../../../apis";
 import useFetchVolunteerData from "../../../../hook/Volunteer/useFetchVolunteerData";
@@ -28,7 +27,7 @@ function EditVolunteer(props) {
   const tailLayout = {
     wrapperCol: { offset: 18, span: 4 },
   };
-  const userData = useFetchCurrentUserData();
+  const userData = getCurrentUserUserData();
   const userRole = userData.userRole;
   const location = useFetchLocation();
   const volunteerData = useFetchVolunteerData(id);

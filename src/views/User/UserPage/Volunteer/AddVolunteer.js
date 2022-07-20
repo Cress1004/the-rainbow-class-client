@@ -7,10 +7,9 @@ import * as Yup from "yup";
 import "./volunteer.scss";
 import { phoneRegExp, urlRegExp } from "../../../../common/constant";
 import PermissionDenied from "../../../../components/custom/Error/PermissionDenied";
-import { checkAdminAndMonitorRole } from "../../../../common/function";
+import { checkAdminAndMonitorRole, getCurrentUserUserData } from "../../../../common/function";
 import useFetchAllClasses from "../../../../hook/Class/useFetchAllClasses";
 import apis from "../../../../apis";
-import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
 
 const { Option } = Select;
 
@@ -18,7 +17,7 @@ function AddVolunteer(props) {
   const { t } = useTranslation();
   const history = useHistory();
   const userId = localStorage.getItem("userId");
-  const currentUserData = useFetchCurrentUserData();
+  const currentUserData = getCurrentUserUserData();
   const userRole = currentUserData.userRole;
   const classes = useFetchAllClasses();
 
