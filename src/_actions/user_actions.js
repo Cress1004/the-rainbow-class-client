@@ -24,6 +24,7 @@ export function loginUser(dataToSubmit) {
   const request = axios
     .post(`${SERVER_API_URL}${USER_API}/login`, dataToSubmit)
     .then((response) => {
+      console.log(response);
       setCookie("w_authExp", response.data.w_authExp);
       setCookie("w_auth", response.data.w_auth);
       return response.data;
@@ -37,8 +38,15 @@ export function loginUser(dataToSubmit) {
 
 export function auth() {
   const request = axios
-    .get(`${SERVER_API_URL}${USER_API}/auth`, { withCredentials: true })
-    .then((response) => response.data);
+    .get(`${SERVER_API_URL}${USER_API}/auth`, {
+      headers: {
+        "Content-Type": "application/json",
+        cookies: document.cookie,
+      },
+    })
+    .then((response) => {
+      console.log(document.cookie)
+      return response.data});
 
   return {
     type: AUTH_USER,
