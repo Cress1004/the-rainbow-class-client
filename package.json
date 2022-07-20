@@ -63,5 +63,7 @@
   "devDependencies": {
     "@ant-design/compatible": "^1.0.8",
     "http-proxy-middleware": "^1.0.3"
-  }
+  },
+  "proxy": "https://the-rainbow-class-api.azurewebsites.net:8080",
+  "homepage": "."
 }
