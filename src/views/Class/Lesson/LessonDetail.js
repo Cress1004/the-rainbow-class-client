@@ -11,12 +11,11 @@ import { OFFLINE_OPTION, STUDENT } from "../../../common/constant";
 import ParticipantList from "./Participant/ParticipantList";
 import { checkCurrentUserBelongToCurrentClass } from "../../../common/checkRole";
 import PermissionDenied from "../../../components/custom/Error/PermissionDenied";
-import { checkAdminAndMonitorRole } from "../../../common/function";
+import { checkAdminAndMonitorRole, getCurrentUserUserData } from "../../../common/function";
 import {
   checkOverTimeToRegister,
   checkUserCanUnRegisterAction,
 } from "../../../common/checkCondition";
-import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
 import apis from "../../../apis";
 
 const { Item } = Form;
@@ -33,7 +32,7 @@ function LessonDetail(props) {
   const [lessonData, setLessonData] = useState({});
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [assign, setAssign] = useState(false);
-  const currentUser = useFetchCurrentUserData();
+  const currentUser = getCurrentUserUserData();
   const userRole = currentUser.userRole;
 
   const fetchLessonData = async (classId, lessonId) => {

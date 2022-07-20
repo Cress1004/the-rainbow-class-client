@@ -17,12 +17,11 @@ import {
 } from "antd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { generateKey } from "../../common/function";
+import { generateKey, getCurrentUserUserData } from "../../common/function";
 import { WEEKDAY, FORMAT_TIME_SCHEDULE } from "../../common/constant";
 import { checkCurrentMonitorBelongToCurrentClass } from "../../common/checkRole";
 import PermissionDenied from "../../components/custom/Error/PermissionDenied";
 import moment from "moment";
-import useFetchCurrentUserData from "../../hook/User/useFetchCurrentUserData";
 import useFetchLocation from "../../hook/CommonData.js/useFetchLocation";
 import useFetchStudentTypes from "../../hook/CommonData.js/useFetchStudentTypes";
 import apis from "../../apis";
@@ -52,7 +51,7 @@ function EditClass(props) {
   const [province, setProvince] = useState({});
   const [defaultSchedule, setDefaultSchedule] = useState([]);
   const [address, setAddress] = useState({});
-  const currentUser = useFetchCurrentUserData();
+  const currentUser = getCurrentUserUserData();
   const location = useFetchLocation();
   const studentTypes = useFetchStudentTypes();
   const classData = useFetchClassData(id);

@@ -13,8 +13,7 @@ import {
 } from "antd";
 import "./volunteer.scss";
 import { Link } from "react-router-dom";
-import { checkAdminAndMonitorRole } from "../../../../common/function";
-import useFetchCurrentUserData from "../../../../hook/User/useFetchCurrentUserData";
+import { checkAdminAndMonitorRole, getCurrentUserUserData } from "../../../../common/function";
 import { CLASS_MONITOR, SUB_CLASS_MONITOR } from "../../../../common/constant";
 import useFetchClassNameList from "../../../../hook/Class/useFetchClassNameList";
 import apis from "../../../../apis";
@@ -33,7 +32,7 @@ function VolunteerList(props) {
   const [classInfo, setClassInfo] = useState();
   const { t } = useTranslation();
   const [volunteerData, setVolunteerData] = useState([]);
-  const currentUser = useFetchCurrentUserData();
+  const currentUser = getCurrentUserUserData();
   const classNameList = useFetchClassNameList();
   const userRole = currentUser.userRole;
   const layout = {

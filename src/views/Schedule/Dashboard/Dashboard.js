@@ -5,13 +5,13 @@ import AdminDashboard from "./AdminDashboard";
 import PermissionDenied from "../../../components/custom/Error/PermissionDenied";
 import StudentTimesheet from "./StudentTimesheet";
 import VolunteerTimesheet from "./VolunteerTimesheet";
-import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
 import { useTranslation } from "react-i18next";
+import { getCurrentUserUserData } from "../../../common/function";
 
 function Dashboard(props) {
   const { t } = useTranslation();
   const userId = localStorage.getItem("userId");
-  const currentUserData = useFetchCurrentUserData();
+  const currentUserData = getCurrentUserUserData();
   const userRole = currentUserData.userRole;
 
   if (userRole && userRole.role === STUDENT) {

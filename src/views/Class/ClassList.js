@@ -25,10 +25,10 @@ import {
   checkAdminRole,
 } from "../../common/checkRole";
 import PermissionDenied from "../../components/custom/Error/PermissionDenied";
-import useFetchCurrentUserData from "../../hook/User/useFetchCurrentUserData";
 import common from "../../common";
 import queryString from "query-string";
 import apis from "../../apis";
+import { getCurrentUserUserData } from "../../common/function";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -42,7 +42,7 @@ function ClassList(props) {
   const [numberOfClasses, setNumberOfClasses] = useState();
   const [teachingOption, setTeachingOption] = useState();
   const [popoverVisible, setPopoverVisible] = useState(false);
-  const currentUserData = useFetchCurrentUserData();
+  const currentUserData = getCurrentUserUserData();
   const userRole = currentUserData.userRole;
   const teachingOptions = common.classConstant.TEACHING_OPTIONS;
 

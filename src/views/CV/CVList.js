@@ -15,10 +15,10 @@ import { CV_STATUS } from "../../common/constant";
 import {
   checkAdminAndMonitorRole,
   checkStringContentSubString,
+  getCurrentUserUserData,
 } from "../../common/function";
 import { getArrayLength, transformDate } from "../../common/transformData";
 import "./upload-cv.scss";
-import useFetchCurrentUserData from "../../hook/User/useFetchCurrentUserData";
 import PermissionDenied from "../../components/custom/Error/PermissionDenied";
 import useFetchClassNameList from "../../hook/Class/useFetchClassNameList";
 import TableNodata from "../../components/custom/NoData/TableNodata";
@@ -40,7 +40,7 @@ function CVList(props) {
   const [totalNumberOfCV, setTotalNumberOfCV] = useState();
   const [filter, setFilter] = useState();
   const [popoverVisible, setPopoverVisible] = useState(false);
-  const currentUserData = useFetchCurrentUserData();
+  const currentUserData = getCurrentUserUserData();
   const classNameList = useFetchClassNameList();
 
   const layout = {

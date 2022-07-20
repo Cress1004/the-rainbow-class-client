@@ -3,9 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import apis from "../../../apis";
-import useFetchCurrentUserData from "../../../hook/User/useFetchCurrentUserData";
 import { OFFLINE_OPTION } from "../../../common/constant";
-import { checkAdminAndMonitorRole } from "../../../common/function";
+import { checkAdminAndMonitorRole, getCurrentUserUserData } from "../../../common/function";
 import {
   transformAddressData,
   transformSubjects,
@@ -20,7 +19,7 @@ function PairDetail(props) {
   const { t } = useTranslation();
   const { id, pairId } = useParams();
   const classData = { _id: id };
-  const currentUserData = useFetchCurrentUserData();
+  const currentUserData = getCurrentUserUserData();
   const [pairData, setPairData] = useState();
   const [lessons, setLessons] = useState([]);
 
