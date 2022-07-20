@@ -18,7 +18,7 @@ const getAllClasses = async () => {
   try {
     const response = await api({
       method: "GET",
-      url: `${CLASS_API}/get-all-classes`,
+      url: `${CLASS_API}/get-list-class-with-name`,
     });
     return response;
   } catch (error) {
@@ -140,11 +140,12 @@ const getAdminMonitor = async (classId) => {
   }
 };
 
-const getCurrentUserClassSchedule = async () => {
+const getCurrentUserClassSchedule = async (data) => {
   try {
     const response = await api({
-      method: "GET",
+      method: "POST",
       url: `${CLASS_API}/my-class-schedules`,
+      data: data
     });
     return response;
   } catch (error) {
