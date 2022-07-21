@@ -75,7 +75,7 @@ function BasicInfo(props) {
               <h3>{studentData.name}</h3>
               {checkAdminAndMonitorRole(userRole) ? (
                 <Item className="student-detail__status">
-                  {studentStatus.key === STUDENT_STATUS_TITLE.STUDING ? (
+                  {studentStatus?.key === STUDENT_STATUS_TITLE.STUDING ? (
                     <div className={`student-detail__status`}>
                       <Dropdown.Button
                         className={`ant-btn--${studentStatus.value}`}
@@ -88,8 +88,8 @@ function BasicInfo(props) {
                       </Dropdown.Button>
                     </div>
                   ) : (
-                    <Button className={`ant-btn--${studentStatus.value}`}>
-                      {studentStatus.text}
+                    <Button className={`ant-btn--${studentStatus?.value}`}>
+                      {studentStatus?.text}
                     </Button>
                   )}
                 </Item>
@@ -108,9 +108,9 @@ function BasicInfo(props) {
               )}
               <Form {...leftLayout} className="student-detail__info-area">
                 <Item label={t("admission_day")}>
-                  {studentData.admissionDay}
+                  {studentData?.admissionDay}
                 </Item>
-                {studentStatus.key === STUDENT_STATUS_TITLE.RETIRED ? (
+                {studentStatus?.key === STUDENT_STATUS_TITLE.RETIRED ? (
                   <div>
                     <Item label={t("retirement_date")}>
                       {studentData.retirementDate}

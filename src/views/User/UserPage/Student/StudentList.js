@@ -16,9 +16,7 @@ import {
 } from "antd";
 import "./student.scss";
 import { Link } from "react-router-dom";
-import {
-  transformStudentTypes,
-} from "../../../../common/transformData";
+import { transformStudentTypes } from "../../../../common/transformData";
 import {
   ACHIEVEMENT_SELECT_OPTION,
   ACHIEVEMENT_SELECT_TITLE,
@@ -29,7 +27,10 @@ import {
   SUPER_ADMIN,
 } from "../../../../common/constant";
 import PermissionDenied from "../../../../components/custom/Error/PermissionDenied";
-import { checkAdminAndMonitorRole, getCurrentUserUserData } from "../../../../common/function";
+import {
+  checkAdminAndMonitorRole,
+  getCurrentUserUserData,
+} from "../../../../common/function";
 import useFetchClassNameList from "../../../../hook/Class/useFetchClassNameList";
 import useFetchStudentTypes from "../../../../hook/CommonData.js/useFetchStudentTypes";
 import moment from "moment";
@@ -226,9 +227,16 @@ function StudentList(props) {
       <Form {...layout} style={{ width: "700px" }}>
         <Item label={t("class")}>
           <Select
+            allowClear
             value={filter?.classInfo}
             placeholder={t("select_class")}
             onChange={(value) => setFilter({ ...filter, classInfo: value })}
+            showSearch
+            filterOption={(input, option) =>
+              option.props.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
           >
             {classNameList?.map((option) => (
               <Option key={option._id} value={option._id}>
@@ -239,6 +247,7 @@ function StudentList(props) {
         </Item>
         <Item label={t("target_student")}>
           <Select
+            allowClear
             mode="multiple"
             placeholder={t("select_student_type")}
             value={filter?.studentTypes}
@@ -257,6 +266,7 @@ function StudentList(props) {
             {" "}
             <Item {...tailLayout} label={t("achievement")}>
               <Select
+                allowClear
                 placeholder={t("select_achievement_type")}
                 value={filter?.achievementType}
                 onChange={(value) =>
@@ -292,6 +302,7 @@ function StudentList(props) {
             ) : (
               <Item {...tailLayout} label={t("select_semester")}>
                 <Select
+                  allowClear
                   placeholder={t("select_semester")}
                   value={filter?.semester}
                   onChange={(value) =>
@@ -314,6 +325,7 @@ function StudentList(props) {
             {" "}
             <Item {...tailLayout} label={t("achievement")}>
               <Select
+                allowClear
                 placeholder={t("select_compare_type")}
                 value={filter?.compareType}
                 onChange={(value) =>
@@ -373,8 +385,8 @@ function StudentList(props) {
             trigger="click"
             visible={popoverVisible}
             onClick={() => setPopoverVisible(!popoverVisible)}
-            placement="bottomLeft"
             getPopupContainer={(trigger) => trigger.parentElement}
+            arrowPointAtCenter
           >
             {filterIcon}
           </Popover>
