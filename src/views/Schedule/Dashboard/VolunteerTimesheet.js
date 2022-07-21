@@ -5,7 +5,7 @@ import apis from "../../../apis";
 
 function VolunteerTimesheet(props) {
   const { t } = useTranslation();
-  const { userId } = props;
+  const { userId, monthRange, setMonthRange, classes } = props;
   const [schedule, setSchedule] = useState([]);
 
   const fetchCurrentUserSchedule = async () => {
@@ -20,7 +20,14 @@ function VolunteerTimesheet(props) {
   return (
     <div className="dashboard">
       <div className="dashboard__title">{t("my_schedule")}</div>
-      <MyCalendar data={schedule} userId={userId} t={t}/>
+      <MyCalendar
+        data={schedule}
+        userId={userId}
+        t={t}
+        monthRange={monthRange}
+        setMonthRange={setMonthRange}
+        classes={classes}
+      />
     </div>
   );
 }
