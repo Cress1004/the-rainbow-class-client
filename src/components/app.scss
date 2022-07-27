@@ -5,7 +5,7 @@ $warning-color: #e2a534;
 $danger-color: #ff4d4f;
 $disable-color: #858383;
 $white-color: #ffffff;
-$pending-color: #e2a534;
+$pending-color: #d8ac0c;
 $waiting-color: #4f9fd4;
 $pass-color: #219e6e;
 $fail-color: #858383;
@@ -79,6 +79,7 @@ $label-font-weight: bolder;
   border-radius: 15px;
   padding: 0px 10px;
   margin-left: 10px;
+  margin-bottom: 10px;
   a {
       color: $white-color;
   }
@@ -86,6 +87,7 @@ $label-font-weight: bolder;
 
 .input-search {
   width: 290px;
+  height: 32px;
   > .ant-input {
       border-radius: 15px;
   }

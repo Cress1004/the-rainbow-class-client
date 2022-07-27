@@ -37,6 +37,7 @@ export const NOON_TIME = [
 export const FORMAT_TIME_SCHEDULE = "HH:mm";
 export const FORMAT_DATE = "YYYY/MM/DD";
 export const FORMAT_MONTH_STRING = "YYYY-MM";
+export const FORMAT_TIME = "YYYY/MM/DD HH:mm";
 
 export const OFFLINE_OPTION = 1;
 export const ONLINE_OPTION = 0;
@@ -107,7 +108,7 @@ export const urlRegExp =
 export const LIMIT_PDF_FILE_SIZE = 1; //MB
 
 export const CV_STATUS = [
-  { key: 0, value: "pending", text: "Chưa duyệt", color: "#e2a534" },
+  { key: 0, value: "pending", text: "Chưa duyệt", color: "#d8ac0c" },
   { key: 1, value: "waiting", text: "Chờ phỏng vấn", color: "#4f9fd4" },
   { key: 2, value: "pass", text: "Đỗ phỏng vấn", color: "#219e6e" },
   { key: 3, value: "fail", text: "Trượt", color: "#858383" },
@@ -123,7 +124,7 @@ export const CV_STATUS_NAME = {
 export const LESSON_SCHEDULE = 0;
 export const INTERVIEW_SCHEDULE = 2;
 
-export const CONNECTION_PORT =  SERVER_API_URL
+export const CONNECTION_PORT = SERVER_API_URL;
 
 export const NOTI_TYPE = [
   { key: 0, value: "newCV", text: "Có CV mới!" },

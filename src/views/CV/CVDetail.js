@@ -1,4 +1,4 @@
-import { Col, Row, Form, Button, Icon, Divider, message } from "antd";
+import { Button, Icon, message, Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
@@ -8,27 +8,22 @@ import "video-react/dist/video-react.css";
 import {
   CV_STATUS,
   CV_STATUS_NAME,
-  FORMAT_DATE,
   NOON_TIME,
   WEEKDAY,
 } from "../../common/constant";
-import moment from "moment";
-import {
-  getArrayLength,
-  transformScheduleTimeData,
-} from "../../common/transformData";
+import { getArrayLength } from "../../common/transformData";
 import { Menu } from "antd";
-import { Dropdown } from "antd";
 import { useFormik } from "formik";
 import ConfirmRejectStatus from "./Section/ConfirmRejectStatus";
 import SetInterviewTime from "./Section/SetInterviewTime";
-import FreeTimeTable from "./Section/FreeTimeTable";
 import ConfirmPassStatus from "./Section/ConfirmPassStatus";
+import CVBasicInfo from "./Section/CVBasicInfo";
 import apis from "../../apis";
 import BasicModalConfirm from "../../components/custom/modal/BasicModalConfirm";
+import CVNote from "./Section/CVNote";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-const { Item } = Form;
+const { TabPane } = Tabs;
 const MAX_SCALE = 2.1;
 const MIN_SCALE = 0.5;
 const SCALE_STEP = 0.1;
@@ -246,139 +241,35 @@ function CVDetail(props) {
   return (
     <div className="cv-detail">
       <div className="cv-detail__title">{t("cv_detail")}</div>
-      <Row>
-        <Col span={14}>
-          <Form {...leftLayout} className="cv-detail__show-detail">
-            <Item label={t("user_name")}>{cvData.userName}</Item>
-            <Item label={t("email")}>{cvData.email}</Item>
-            <Item label={t("phone_number")}>{cvData.phoneNumber}</Item>
-          </Form>
-          <Item label={t("free_time_table")}>
-            <FreeTimeTable t={t} columns={columns} fixedData={fixedData} />
-          </Item>{" "}
-          <Item label={t("note")}>{cvData?.note || t("no_comment")}</Item>
-        </Col>
-        <Col span={10}>
-          <Form {...rightLayout} className="cv-detail__show-detail">
-            <Item label={t("create_time")}>
-              {moment(cvData.created_at).format(FORMAT_DATE)}
-            </Item>
-            <Item label={t("register_class")}>{cvData.class?.name}</Item>
-            {cvStatus ? (
-              <div>
-                <Item label={t("status")}>
-                  <div className={`cv-detail__status`}>
-                    <Dropdown.Button
-                      className={`ant-btn--${cvStatus.value}`}
-                      overlay={statusMenuList}
-                      icon={<Icon type="down" />}
-                      trigger={["click"]}
-                      disabled={
-                        checkCVDataStatus(CV_STATUS_NAME.FAIL) ||
-                        checkCVDataStatus(CV_STATUS_NAME.PASS)
-                      }
-                      getPopupContainer={(trigger) => trigger.parentElement}
-                    >
-                      {cvStatus.text}
-                    </Dropdown.Button>
-                  </div>
-                </Item>
-                {cvData.status === CV_STATUS_NAME.WAITING ? (
-                  <>
-                    <Item label={t("interview_time")}>
-                      {transformScheduleTimeData(cvData.schedule.time)}{" "}
-                      <Icon
-                        type="edit"
-                        onClick={() => setConfirmInterview(true)}
-                      />
-                    </Item>
-                    <Item label={t("interview_link")}>
-                      <a
-                        href={cvData.schedule?.linkOnline}
-                      >{`${cvData.schedule?.linkOnline?.slice(0, 25)}...`}</a>
-                    </Item>
-                  </>
-                ) : null}
-                {getArrayLength(cvData.schedule?.participants) ? (
-                  <Item label={t("interviewer")}>
-                    {cvData.schedule.participants.map((item) => (
-                      <>
-                        <span>{item.name}</span>
-                        <br />
-                      </>
-                    ))}
-                  </Item>
-                ) : null}
-              </div>
-            ) : null}
-          </Form>
-        </Col>
-      </Row>
-      <Divider />
-      <div className="cv-detail__subtitle">
-        {t("show_cv")}
-        <Icon
-          type={showCV ? "down-circle" : "right-circle"}
-          onClick={() => setShowCV(!showCV)}
-          className="cv-detail__show-icon"
-        />
-      </div>
-      {showCV ? (
-        <>
-          {scale}
-          <div style={{ textAlign: "right" }}>
-            <a onClick={() => downloadFile()} target="_blank">
-              {t("download_cv_here")}
-            </a>
-          </div>
-          <div className="all-page-container">{pdfDoc}</div>
-        </>
-      ) : null}
-      <Divider />
-      <div className="cv-detail__subtitle">
-        {t("show_cv_answers")}
-        <Icon
-          type={viewCVAnswer ? "down-circle" : "right-circle"}
-          onClick={() => setViewCVAnswer(!viewCVAnswer)}
-          className="cv-detail__show-icon"
-        />
-      </div>
-      {viewCVAnswer ? (
-        <>
-          {answers.map((answer) => (
-            <div className="cv-detail__answer-detail">
-              <Item
-                label={answer.question.content}
-                required={answer.question.isRequired}
-              >
-                {answer.content}
-              </Item>
-            </div>
-          ))}
-        </>
-      ) : null}
-      <Divider />
-      {cvData.audioFileLink ? (
-        <>
-          {" "}
-          <div className="cv-detail__subtitle">
-            {t("audio_intro_by_english")}
-            <Icon
-              type={showVideo ? "down-circle" : "right-circle"}
-              onClick={() => setShowVideo(!showVideo)}
-              className="cv-detail__show-icon"
-            />
-          </div>
-          {showVideo ? (
-            <div style={{ textAlign: "center", marginTop: "15px" }}>
-              <audio controls>
-                <source src={cvData.audioFileLink} type="video/mp4" />
-              </audio>
-            </div>
-          ) : null}
-          <Divider />
-        </>
-      ) : null}
+      <Tabs defaultActiveKey="1">
+        <TabPane tab={t("cv_basic_tab")} key="cv-basic-tab">
+          <CVBasicInfo
+            leftLayout={leftLayout}
+            t={t}
+            cvData={cvData}
+            columns={columns}
+            fixedData={fixedData}
+            rightLayout={rightLayout}
+            cvStatus={cvStatus}
+            setConfirmInterview={setConfirmInterview}
+            showCV={showCV}
+            showVideo={showVideo}
+            setShowCV={setShowCV}
+            setShowVideo={setShowVideo}
+            answers={answers}
+            viewCVAnswer={viewCVAnswer}
+            setViewCVAnswer={setViewCVAnswer}
+            statusMenuList={statusMenuList}
+            pdfDoc={pdfDoc}
+            scale={scale}
+            downloadFile={downloadFile}
+            checkCVDataStatus={checkCVDataStatus}
+          />
+        </TabPane>
+        <TabPane tab={t("cv_note_tab")} key="cv-note-tab">
+          <CVNote t={t} cvId={id}/>
+        </TabPane>
+      </Tabs>
       <ConfirmRejectStatus
         t={t}
         confirmReject={confirmReject}

@@ -58,4 +58,64 @@ const updateCVStatus = async (values) => {
   }
 };
 
-export { getCVData, getAllCV, updateCVStatus, getNumberOfCV };
+const getNotes = async (cvId) => {
+  try {
+    const response = await api({
+      method: "GET",
+      url: `${CV_API}/${cvId}/get-all-notes`,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
+const addNote = async (data) => {
+  try {
+    const response = await api({
+      method: "POST",
+      url: `${CV_API}/${data.cv}/add-note`,
+      data: data,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
+const editNote = async (data) => {
+  try {
+    const response = await api({
+      method: "POST",
+      url: `${CV_API}/edit-note`,
+      data: data,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
+const deleteNote = async (id) => {
+  try {
+    const response = await api({
+      method: "POST",
+      url: `${CV_API}/delete/${id}`,
+      data: { id: id },
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
+export {
+  getCVData,
+  getAllCV,
+  updateCVStatus,
+  getNumberOfCV,
+  addNote,
+  editNote,
+  getNotes,
+  deleteNote,
+};

@@ -17,16 +17,13 @@ import {
   checkStringContentSubString,
   getCurrentUserUserData,
 } from "../../common/function";
-import { getArrayLength, transformDate } from "../../common/transformData";
+import { transformDate } from "../../common/transformData";
 import "./upload-cv.scss";
 import PermissionDenied from "../../components/custom/Error/PermissionDenied";
 import useFetchClassNameList from "../../hook/Class/useFetchClassNameList";
-import TableNodata from "../../components/custom/NoData/TableNodata";
 import apis from "../../apis";
 import queryString from "query-string";
-import {
-  parsePageSearchFilter,
-} from "../../common/function/parseQueryString";
+import { parsePageSearchFilter } from "../../common/function/parseQueryString";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -180,10 +177,7 @@ function CVList(props) {
           <>
             {currentStatus ? (
               <div
-                className="cv-list__status"
-                style={{
-                  backgroundColor: `${currentStatus.color}`,
-                }}
+                className={`cv-list__status cv-list__status--${currentStatus.value}`}
               >
                 {currentStatus.text}
               </div>
@@ -286,7 +280,7 @@ function CVList(props) {
           visible={popoverVisible}
           onClick={() => setPopoverVisible(!popoverVisible)}
           placement="bottomLeft"
-          getPopupContainer={trigger => trigger.parentElement}
+          getPopupContainer={(trigger) => trigger.parentElement}
         >
           {filterIcon}
         </Popover>
@@ -298,23 +292,19 @@ function CVList(props) {
           onChange={(e) => handleChangeSearchInput(e)}
         />
       </div>
-      {getArrayLength(cvList) ? (
-        <Table
-          columns={columns}
-          dataSource={cvList}
-          pagination={{
-            total: totalNumberOfCV,
-            defaultCurrent: defaultParams.offset
-              ? parseInt(defaultParams.offset)
-              : 1,
-            onChange: (pageNumber) => handleChangePagination(pageNumber),
-            pageSize: listParams.limit,
-            title: null,
-          }}
-        />
-      ) : (
-        <TableNodata />
-      )}
+      <Table
+        columns={columns}
+        dataSource={cvList}
+        pagination={{
+          total: totalNumberOfCV,
+          defaultCurrent: defaultParams.offset
+            ? parseInt(defaultParams.offset)
+            : 1,
+          onChange: (pageNumber) => handleChangePagination(pageNumber),
+          pageSize: listParams.limit,
+          title: null,
+        }}
+      />
     </div>
   );
 }

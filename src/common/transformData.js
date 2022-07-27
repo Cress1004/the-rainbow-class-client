@@ -5,6 +5,7 @@ import {
   FORMAT_DATE,
   LESSON_SCHEDULE,
   INTERVIEW_SCHEDULE,
+  FORMAT_TIME,
 } from "./constant";
 
 export function transformAddressData(data) {
@@ -114,10 +115,16 @@ export function transformEventOfLesson(data) {
 }
 
 export function transformScheduleTimeData(time) {
-  return `${moment(new Date(time?.date)).format(FORMAT_DATE)} ${time?.startTime} - ${time?.endTime}`;
+  return `${moment(new Date(time?.date)).format(FORMAT_DATE)} ${
+    time?.startTime
+  } - ${time?.endTime}`;
 }
 
 export function transformDate(date) {
   if (date) return moment(new Date(date)).format(FORMAT_DATE);
-  else return ''
+  else return "";
+}
+
+export function transformTime(time) {
+  return time ? moment(new Date(time)).format(FORMAT_TIME) : null;
 }

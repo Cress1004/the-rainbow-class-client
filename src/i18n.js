@@ -276,6 +276,15 @@ const resources = {
       volunteer_name: "TNV phụ trách hiện tại",
       search: "Tìm kiếm",
       add_new: "Thêm mới",
+      cv_basic_tab: "Thông tin CV",
+      cv_note_tab: "Ghi chú phỏng vấn",
+      register_info: "Thông tin đăng ký",
+      content: "Nội dung",
+      created_at: "Thời gian tạo",
+      add_note: "Thêm ghi chú",
+      update_note: "Sửa ghi chú",
+      filter: "Lọc",
+      reset_filter: "Hủy lọc",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",
@@ -303,7 +312,10 @@ const resources = {
         "Sau khi xác nhận ứng viên đỗ phỏng vấn, tài khoản của TNV mới sẽ được tự động tạo và đưa vào hệ thống. Email kích hoạt tài khoản sẽ được gửi đến cho Tình nguyện viên mới trong trường hợp email của TNV mới không trùng lặp với email trong hệ thống.",
       alert_duplicate_email_modal_title:
         "Không thể tự động thêm tài khoản vào hệ thống!",
-        alert_duplicate_email_modal_content: "Do đã phát hiện email của tình nguyện viên mới bị trùng lặp trong hệ thống nên tài khoản của TNV này sẽ không được tự động thêm vào hệ thống. Hãy kiểm tra và liên lạc lại với những người liên quan! Tài khoản của TNV này sẽ không được tự động thêm vào Hệ thống",
+      alert_duplicate_email_modal_content:
+        "Do đã phát hiện email của tình nguyện viên mới bị trùng lặp trong hệ thống nên tài khoản của TNV này sẽ không được tự động thêm vào hệ thống. Hãy kiểm tra và liên lạc lại với những người liên quan! Tài khoản của TNV này sẽ không được tự động thêm vào Hệ thống",
+      confirm_delete_note_title: "Xác nhận xóa ghi chú",
+      confirm_delete_note_content: "Bạn có chắc chắn muốn xóa ghi chú này?",
       //validation:
       required_name_message: "Hãy nhập vào tên của bạn",
       required_phone_number_message:

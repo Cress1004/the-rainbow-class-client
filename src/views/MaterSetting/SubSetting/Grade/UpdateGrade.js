@@ -1,7 +1,6 @@
 import { Button, Icon, Input, Form, Row, Col } from "antd";
 import React from "react";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 
 function UpdateGrade(props) {
   const { handleClickBack, t, updateItem, fetchAddGrade, fetchUpdateGrade } =
