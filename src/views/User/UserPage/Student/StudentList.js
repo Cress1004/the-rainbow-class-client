@@ -270,7 +270,12 @@ function StudentList(props) {
                 placeholder={t("select_achievement_type")}
                 value={filter?.achievementType}
                 onChange={(value) =>
-                  setFilter({ ...filter, achievementType: value })
+                  setFilter({
+                    ...filter,
+                    achievementType: value,
+                    month: undefined,
+                    semester: undefined,
+                  })
                 }
               >
                 {ACHIEVEMENT_SELECT_OPTION?.map((option) => (
@@ -293,7 +298,6 @@ function StudentList(props) {
                       month: dateString,
                     })
                   }
-                  defaultValue={moment(currentMonth, FORMAT_MONTH_STRING)}
                   format={FORMAT_MONTH_STRING}
                   placeholder={t("select_month")}
                   style={{ width: "100%" }}
