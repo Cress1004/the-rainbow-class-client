@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, Form, Input, Select, Radio } from "antd";
+import { Button, Form, Input, Select, Radio, message } from "antd";
 import { useHistory, useParams } from "react-router-dom";
 import { phoneRegExp, urlRegExp } from "../../../../common/constant";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import PermissionDenied from "../../../../components/custom/Error/PermissionDenied";
-import { checkAdminAndMonitorRole, getCurrentUserUserData } from "../../../../common/function";
+import {
+  checkAdminAndMonitorRole,
+  getCurrentUserUserData,
+} from "../../../../common/function";
 import useFetchLocation from "../../../../hook/CommonData.js/useFetchLocation";
 import apis from "../../../../apis";
 import useFetchVolunteerData from "../../../../hook/Volunteer/useFetchVolunteerData";
@@ -57,6 +60,7 @@ function EditVolunteer(props) {
     const data = await apis.volunteer.editVolunteer(valueToSend);
     if (data.success) {
       history.push(`/volunteers/${id}`);
+      message.success("edit volunteer success");
     } else if (!data.success) {
       alert(data.message);
     }
@@ -76,7 +80,16 @@ function EditVolunteer(props) {
     }
   }, [volunteerData]);
   const formik = useFormik({
-    initialValues: volunteerData ? volunteerData : {},
+    initialValues: {
+      id: volunteerData.id,
+      email: volunteerData.email,
+      name: volunteerData.name,
+      gender: volunteerData.gender,
+      phoneNumber: volunteerData.phoneNumber,
+      address: volunteerData.address,
+      linkFacebook: volunteerData.linkFacebook,
+      class: volunteerData.classId,
+    },
     enableReinitialize: true,
     validationSchema: Yup.object({
       name: Yup.string().required(t("required_name_message")),
@@ -237,6 +250,11 @@ function EditVolunteer(props) {
         <Item label={t("address")}>
           <Select
             showSearch
+            filterOption={(input, option) =>
+              option.props.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
             style={{
               display: "inline-block",
               width: "calc(33% - 12px)",
@@ -254,6 +272,11 @@ function EditVolunteer(props) {
           </Select>
           <Select
             showSearch
+            filterOption={(input, option) =>
+              option.props.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
             style={{
               display: "inline-block",
               width: "calc(33% - 12px)",
@@ -273,6 +296,11 @@ function EditVolunteer(props) {
           </Select>
           <Select
             showSearch
+            filterOption={(input, option) =>
+              option.props.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
             style={{
               display: "inline-block",
               width: "calc(33% - 12px)",
@@ -299,14 +327,19 @@ function EditVolunteer(props) {
         <Item label={t("class")} required>
           <Select
             showSearch
+            filterOption={(input, option) =>
+              option.props.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
             style={{
               display: "inline-block",
               width: "100%",
               marginRight: "10px",
             }}
-            value={formik.values.className}
+            value={formik.values.class}
             placeholder={t("input_class")}
-            onChange={(key) => formik.setFieldValue("className", key)}
+            onChange={(key) => formik.setFieldValue("class", key)}
           >
             {classes.map((option) => (
               <Option key={option._id} value={option._id}>

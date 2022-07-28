@@ -10,15 +10,21 @@ import {
   Form,
   Select,
   Popover,
+  Col,
 } from "antd";
 import "./volunteer.scss";
 import { Link } from "react-router-dom";
-import { checkAdminAndMonitorRole, getCurrentUserUserData } from "../../../../common/function";
+import {
+  checkAdminAndMonitorRole,
+  convertRole,
+  getCurrentUserUserData,
+} from "../../../../common/function";
 import { CLASS_MONITOR, SUB_CLASS_MONITOR } from "../../../../common/constant";
 import useFetchClassNameList from "../../../../hook/Class/useFetchClassNameList";
 import apis from "../../../../apis";
 import queryString from "query-string";
 import { parsePageSearchFilter } from "../../../../common/function/parseQueryString";
+import { checkOverCurrentTime } from "../../../../common/function/checkTime";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -36,8 +42,8 @@ function VolunteerList(props) {
   const classNameList = useFetchClassNameList();
   const userRole = currentUser.userRole;
   const layout = {
-    labelCol: { span: 9 },
-    wrapperCol: { span: 15 },
+    labelCol: { span: 6 },
+    wrapperCol: { span: 16 },
   };
 
   useEffect(() => {
@@ -80,6 +86,8 @@ function VolunteerList(props) {
       classId: item?.classInfo?._id,
       email: item.user.email,
       isActive: item.user.isActive,
+      isRetiremented:
+        item.retirementDate && checkOverCurrentTime(item.retirementDate),
     }));
   };
 
@@ -272,16 +280,12 @@ function VolunteerList(props) {
           </Button>
         )}
       </Row>
-      <Row className="volunteer-list__note">
-        <span className="volunteer-list__note--deactive-record-note"></span>
-        <span>{t("deactive_volunteer")}</span>
-      </Row>
       <Table
         columns={columns}
         dataSource={volunteerData}
         rowClassName={(record) =>
           `volunteer-list__table--${
-            record?.isActive ? "active" : "deactive"
+            !record?.isRetiremented ? "active" : "deactive"
           }-row`
         }
         pagination={{
@@ -294,6 +298,19 @@ function VolunteerList(props) {
           title: null,
         }}
       />
+      <Row className="volunteer-list__note" style={{ margin: "10px 0px" }}>
+        <Col span={3} style={{fontWeight: "bold", textAlign: "left"}}>{t("Chú thích")}:</Col>
+        <Col span={7} style={{display: "flex"}}>
+          <span className="volunteer-list__note--deactive-record-note"></span>
+          <span>{t("deactive_volunteer")}</span>
+        </Col>
+        <Col span={7}>
+          <span>LT: Lớp trưởng</span>
+        </Col>
+        <Col span={7}>
+          <span>LP: Lớp phó</span>
+        </Col>
+      </Row>
     </div>
   );
 }

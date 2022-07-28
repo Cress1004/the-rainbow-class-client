@@ -27,10 +27,14 @@ import {
   VOLUNTEER_STATUS_TITLE,
 } from "../../../../common/constant";
 import PermissionDenied from "../../../../components/custom/Error/PermissionDenied";
-import { checkAdminAndMonitorRole, getCurrentUserUserData } from "../../../../common/function";
+import {
+  checkAdminAndMonitorRole,
+  getCurrentUserUserData,
+} from "../../../../common/function";
 import apis from "../../../../apis";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { checkOverCurrentTime } from "../../../../common/function/checkTime";
 
 const { Item } = Form;
 const layout = {
@@ -105,11 +109,16 @@ function VolunteerDetail(props) {
         role: data.volunteerRole,
         linkFacebook: volunteer.user.linkFacebook,
         retirementDate: volunteer.retirementDate,
-        updatedBy: volunteer.updatedBy?.name
+        updatedBy: volunteer.updatedBy?.name,
       });
       setVolunteerStatus(
         VOLUNTEER_STATUS.find(
-          (item) => item.key === (volunteer.retirementDate ? 1 : 0)
+          (item) =>
+            item.key ===
+            (volunteer.retirementDate &&
+            checkOverCurrentTime(volunteer.retirementDate)
+              ? 1
+              : 0)
         )
       );
     } else if (!data.success) {
@@ -158,8 +167,14 @@ function VolunteerDetail(props) {
   };
 
   const transformRoleWithClass = (className, role) => {
-    if (role === CLASS_MONITOR) return `${t("class_monitor")} - ${className}`;
-    if (role === SUB_CLASS_MONITOR)
+    if (role.isAdmin) return t("admin");
+    if (!className) {
+      if (role.subRole === CLASS_MONITOR) return `${t("class_monitor")}`;
+      if (role.subRole === SUB_CLASS_MONITOR) return `${t("sub_class_monitor")}`;
+      return `${t("volunteer")}`;
+    }
+    if (role.subRole === CLASS_MONITOR) return `${t("class_monitor")} - ${className}`;
+    if (role.subRole === SUB_CLASS_MONITOR)
       return `${t("sub_class_monitor")} - ${className}`;
     return `${t("volunteer")} - ${className}`;
   };
@@ -207,7 +222,9 @@ function VolunteerDetail(props) {
                         icon={<Icon type="down" />}
                         trigger={["click"]}
                         disabled={
-                          volunteerStatus?.key === VOLUNTEER_STATUS[1].key
+                          volunteerStatus?.key === VOLUNTEER_STATUS[1].key ||
+                          checkAdminAndMonitorRole(volunteerData.role) ||
+                          volunteerData.retirementDate
                         }
                       >
                         {volunteerStatus?.text}
@@ -232,13 +249,15 @@ function VolunteerDetail(props) {
                   )}
                 </Item>
               )}
-               <Form {...leftLayout} className="student-detail__info-area">
-                {volunteerStatus?.key === VOLUNTEER_STATUS_TITLE.RETIRED ? (
+              <Form {...leftLayout} className="student-detail__info-area">
+                {volunteerData.retirementDate ? (
                   <div>
                     <Item label={t("Ngày nghỉ HĐ")}>
                       {transformDate(volunteerData.retirementDate)}
                     </Item>
-                    <Item label={t("updated_by")}>{volunteerData.updatedBy}</Item>
+                    <Item label={t("updated_by")}>
+                      {volunteerData.updatedBy}
+                    </Item>
                   </div>
                 ) : null}
               </Form>
@@ -261,7 +280,7 @@ function VolunteerDetail(props) {
                 <Item label={t("role")}>
                   {transformRoleWithClass(
                     volunteerData.className,
-                    volunteerData.volunteerRole
+                    volunteerData.role
                   )}
                 </Item>
               </Form>

@@ -20,6 +20,7 @@ export default function useFetchVolunteerData(volunteerId) {
         phoneNumber: volunteer.user.phoneNumber,
         volunteerRole: volunteer.role,
         className: volunteer.user.class?.name,
+        classId: volunteer.user.class?._id,
         isAdmin: volunteer.isAdmin,
         role: data.volunteerRole,
         linkFacebook: volunteer.user.linkFacebook,

@@ -173,7 +173,7 @@ const resources = {
       pair_manager_list: "Danh sách dạy kèm",
       teaching_option: "Hình thức dạy",
       lessons: "Bài học",
-      deactive_volunteer: "TNV chưa kích hoạt tài khoản",
+      deactive_volunteer: "TNV đã nghỉ hoạt động",
       pairs_table: "Danh sách dạy kèm",
       number_of_lessons: "Số tiết học",
       volunteer_incharge: "TNV phụ trách",

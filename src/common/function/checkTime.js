@@ -19,5 +19,11 @@ export function getMonthRangeBetweenTwoDate(start, end) {
     timeValues.push(dateStart.format("YYYY-MM"));
     dateStart.add(1, "month");
   }
-  return timeValues
+  return timeValues;
+}
+
+export function checkOverCurrentTime(time) {
+  const currentTime = new Date();
+  const compareTime = new Date(time);
+  return currentTime.getTime() - compareTime.getTime() > 0;
 }
