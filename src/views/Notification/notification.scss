@@ -24,7 +24,6 @@
             position: absolute;
             font-size: 8px;
             color: white;
-            font-weight: bold;
             background-color: red;
             border-radius: 50%;
             padding: 3px;
@@ -73,7 +72,7 @@
             margin-top: -7px;
             align-items: center;
             button {
-                font-weight: 900;
+                font-weight: bold;
             }
         }
 
@@ -116,6 +115,5 @@
 }
 
 .infinite-container {
-    height: 600px;
     overflow: auto;
 }

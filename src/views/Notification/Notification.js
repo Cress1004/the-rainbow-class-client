@@ -20,12 +20,12 @@ function Notification(props) {
   const ref = useRef(null);
   const [notifications, setNoti] = useState([]);
   const [unreadNoti, setUnreadNoti] = useState(0);
-  const [pagination, setPagination] = useState({ limit: 10 });
+  const [limit, setLimit] = useState(10);
   const [visible, setVisible] = useState(false);
   const { socket } = props;
 
-  const fetchNotifications = async () => {
-    const data = await apis.notifications.getNotifications(pagination);
+  const fetchNotifications = async (limit) => {
+    const data = await apis.notifications.getNotifications(limit);
     if (data.success) {
       setNoti(data.notifications);
       setUnreadNoti(data.count);
@@ -39,12 +39,20 @@ function Notification(props) {
   const fetchReadNotification = (id) => {
     Axios.get(`/api/notification/${id}`).then((response) => {
       if (response.data.success) {
-        message.success("update status done!");
-        fetchNotifications();
+        fetchNotifications(limit);
       } else if (!response.data.success) {
         message.error("update status fail!");
       }
     });
+  };
+
+  const fetchReadAllNotification = async () => {
+    await apis.notifications.markAllAsRead();
+  };
+
+  const onReadAll = async () => {
+    await fetchReadAllNotification();
+    await fetchNotifications(limit)
   };
 
   useEffect(() => {
@@ -58,13 +66,13 @@ function Notification(props) {
   useEffect(() => {
     if (socket) {
       socket.on("new-cv-noti", (data) => {
-        fetchNotifications();
+        fetchNotifications(limit);
       });
     }
   }, []);
 
   useEffect(() => {
-    fetchNotifications();
+    fetchNotifications(limit);
   }, []);
 
   const showNoti = () => {
@@ -91,25 +99,31 @@ function Notification(props) {
     return NOTI_TYPE.find((item) => item.key === type);
   };
 
-  const content = (
-    data,
-    // onRead, loading, hasMore, handleInfiniteOnLoad,
-    t
-  ) =>
-    getArrayLength(data) ? (
+  const handleLoadMore = async () => {
+    const currentLimit = limit;
+    if (limit < unreadNoti) {
+      await fetchNotifications(currentLimit + 5);
+      setLimit(currentLimit + 5);
+    }
+  };
+
+  const content = (data, t) =>
+    getArrayLength(data) > 0 ? (
       <div className="notification">
         <div ref={ref}>
           {displayNoti ? (
             <div className="infinite-container">
               <InfiniteScroll
                 pageStart={0}
-                // loadMore={() => handleFetch({ _limit: comments.length + 10 })}
-                // hasMore={true || false}
+                loadMore={() => handleLoadMore()}
+                hasMore={true || false}
                 useWindow={false}
                 loader={
-                  <div key="loading" className="loader">
-                    Loading ...
-                  </div>
+                  limit < unreadNoti ? (
+                    <div key="loading" className="loader">
+                      Loading ...
+                    </div>
+                  ) : null
                 }
               >
                 <List
@@ -237,20 +251,16 @@ function Notification(props) {
                       />
                     </List.Item>
                   )}
-                >
-                  {/* {loading && hasMore && (
-                  <div>
-                    <Spin />
-                  </div>
-                )} */}
-                </List>
+                ></List>
               </InfiniteScroll>
             </div>
           ) : null}
         </div>
       </div>
     ) : (
-      t("no_notification")
+      <div style={{ textAlign: "center", marginTop: "20px" }}>
+        {t("no_notification")}
+      </div>
     );
 
   return (
@@ -266,10 +276,7 @@ function Notification(props) {
       title={
         <div className="header__notification--title">
           <div>{t("notification")}</div>
-          <Button
-            type="link"
-            // onClick={() => onReadAll()}
-          >
+          <Button type="link" onClick={() => onReadAll()}>
             {t("mark_all_as_read")}
           </Button>
         </div>

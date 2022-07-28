@@ -109,13 +109,11 @@
           text-align: center;
           &--working {
             .ant-btn {
-              color: white;
               background-color: $waiting-color;
               border: none;
             }
           }
           &--retired {
-            color: white;
             background-color: $pending-color;
             border: none;
           }

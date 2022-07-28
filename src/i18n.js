@@ -285,6 +285,9 @@ const resources = {
       update_note: "Sửa ghi chú",
       filter: "Lọc",
       reset_filter: "Hủy lọc",
+      notification: "Thông báo",
+      mark_all_as_read: "Đánh dấu tất cả là đã đọc",
+      no_notification: "Bạn không có thông báo nào",
       //noti
       assign_success: "Đăng kí thành công",
       unassign_success: "Hủy đăng kí thành công",

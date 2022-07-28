@@ -66,7 +66,7 @@ function BasicInfo(props) {
       {studentData && (
         <>
           <Row>
-            <Col className="student-detail__left-block" span={6}>
+            <Col className="student-detail__left-block" span={8}>
               <img
                 className="student-detail__avatar"
                 src={studentData.image}
@@ -120,7 +120,7 @@ function BasicInfo(props) {
                 ) : null}
               </Form>
             </Col>
-            <Col className="student-detail__right-block" span={18}>
+            <Col className="student-detail__right-block" span={16}>
               <Form {...layout} className="student-detail__info-area">
                 <Item label={t("user_name")}>{studentData.name}</Item>
                 <Item label={t("email")}>{studentData.email}</Item>

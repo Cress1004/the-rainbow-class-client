@@ -166,8 +166,8 @@ function Achievement(props) {
     <div>
       <div className="report-list">
         <Row>
-          <Col span={12}></Col>
-          <Col span={4}>
+          <Col span={10}></Col>
+          <Col span={6}>
             <Switch
               style={{ width: "150px", marginTop: "5px" }}
               checkedChildren={t("monthly_report")}

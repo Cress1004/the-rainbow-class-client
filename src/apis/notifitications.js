@@ -1,18 +1,13 @@
 import { NOTIFICATION_API } from "../config";
 import api from "./api";
 
-const getNotifications = async ({ search, query, fields, offset, limit, sort }) => {
+const getNotifications = async (limit) => {
   try {
     const response = await api({
       method: "GET",
       url: `${NOTIFICATION_API}/get-notifications`,
       params: {
-        search,
-        query,
-        fields,
-        offset,
         limit,
-        sort,
       },
     });
     return response;
@@ -21,4 +16,16 @@ const getNotifications = async ({ search, query, fields, offset, limit, sort }) 
   }
 };
 
-export { getNotifications };
+const markAllAsRead = async () => {
+  try {
+    const response = await api({
+      method: "GET",
+      url: `${NOTIFICATION_API}/mark-all-as-read`,
+    });
+    return response;
+  } catch (error) {
+    return error.response?.data;
+  }
+};
+
+export { getNotifications, markAllAsRead };
